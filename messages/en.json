@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "KING STUDIO",
+    "subtitle": "K-POP recording experience in Seoul."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist."
+  }
+}
