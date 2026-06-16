@@ -1,7 +1,22 @@
 // KING STUDIO — Prisma schema (CLAUDE.md §1: Prisma + Prisma Migrate, PostgreSQL 16).
-// Skeleton only. Domain models (users, bookings, consents, packages, rooms, blackouts …)
-// land in a later session per PRD §5.3 / §5.5 / §5.7 / §5.10. Migrations via Prisma Migrate
-// only — never edit production SQL directly (CLAUDE.md §7.3).
+//
+// Built incrementally in domain-group stages (see prisma/schema.prisma history / PR notes):
+//   Stage 1 accounts·auth | 2 booking·slots | 3 payment·refund | 4 content·delivery
+//   5 consent·legal | 6 marketing | 7 notif·audit·SEO
+//
+// Conventions:
+//   - PK: cuid() string by default; consents uses UUID per PRD §5.7 (Stage 5).
+//   - createdAt/updatedAt on every table (join tables use a composite PK per PRD).
+//   - @@map → PRD snake_case table names; @map → snake_case columns.
+//   - PRD enum → Prisma enum; PRD JSONB → Json.
+//   - Migrations via Prisma Migrate ONLY — never hand-edit production SQL (CLAUDE.md §7.3).
+//
+// CLAUDE.md §3 hard constraints reflected here (enforced fully at the DB/app layer):
+//   §3.1 consents append-only — Prisma can't block UPDATE/DELETE; a raw-SQL trigger
+//        migration must add it (planned in Stage 5).
+//   §3.2 payment amount/policy stored as a snapshot on the booking (Stage 2/3), never
+//        retro-mutated.
+//   §3.6 password/PII/payment data must never hit logs — sensitive columns flagged below.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,4 +25,542 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// =========================================================================================
+// SHARED ENUMS
+// =========================================================================================
+
+/// 5 supported locales (PRD §5.1 / CLAUDE.md §5). Hyphenated zh variants are mapped because
+/// Prisma enum identifiers can't contain hyphens. Reused by users, consents, reviews, etc.
+enum Locale {
+  ko
+  en
+  ja
+  zh_Hans @map("zh-Hans")
+  zh_Hant @map("zh-Hant")
+}
+
+// =========================================================================================
+// STAGE 1 — ACCOUNTS · AUTH
+// =========================================================================================
+//
+// ✅ RESOLVED: (C) HYBRID (Aiden, Stage 1 review). CLAUDE.md §1 locks "Auth.js v5 + Prisma
+// Adapter". We delegate OAuth (Google·Apple) account-linking + token verification to the
+// STOCK @auth/prisma-adapter models `Account` and `VerificationToken` — standard field names
+// & conventions, NOT customized. Sessions use the JWT strategy backed by the PRD-custom
+// `user_sessions` table (device_fingerprint·country·ip·unfamiliar-country detection·
+// global-logout); the adapter's standard `Session` model is intentionally NOT used.
+//
+// Consequences encoded below:
+//   - PRD §5.10 `user_social_connections` is REPLACED by the standard `Account` model.
+//     → PRD §5.10 NEEDS A CORRECTION to drop user_social_connections in favor of Account.
+//   - `User.emailVerified` is the Auth.js-standard `DateTime?` (null = unverified), replacing
+//     PRD's separate email_verified(bool)+email_verified_at. PRD §5.10 correction noted.
+//   - Standard adapter models (PascalCase tables: Account, VerificationToken) COEXIST with
+//     PRD-custom snake_case tables (users, user_sessions, …). Each follows ITS OWN convention
+//     — do not mix (no snake_case @map on adapter models; no adapter reshaping of PRD tables).
+//   - `email_verifications` / `password_resets` are KEPT for the credentials (email+password)
+//     lifecycle, which the adapter does not manage. `VerificationToken` is the adapter's own
+//     token store (OAuth email verification / future Auth.js Email provider).
+
+/// Customer account. Guests can book without one (PRD §5.10); membership unlocks history,
+/// auto-fill, referral coupons. Auto-deactivated 7 days after signup if email unverified.
+enum UserStatus {
+  active
+  inactive // 7-day-unverified auto-deactivation or 30-day dormancy
+  deleted // soft-delete; PII anonymized per GDPR (PRD §5.10 / §5.7)
+}
+
+model User {
+  id                String     @id @default(cuid())
+  email             String     @unique
+  name              String? // 🔒 PII
+  image             String? // Auth.js-standard (OAuth profile image). Field used by @auth/prisma-adapter.
+  // Auth.js-standard: null = unverified, set to a timestamp on verification (OAuth profile or
+  // credentials email_verifications flow). Replaces PRD email_verified(bool)+email_verified_at.
+  emailVerified     DateTime?
+  passwordHash      String?    @map("password_hash") // 🔒 SENSITIVE bcrypt(12); nullable for social-only accounts. Never log.
+  phone             String? // 🔒 PII
+  nationality       String? // 🔒 PII
+  passportName      String?    @map("passport_name") // 🔒 PII (used for receipts/booking)
+  preferredLanguage Locale?    @map("preferred_language")
+  status            UserStatus @default(active)
+  deletedAt         DateTime?  @map("deleted_at")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  accounts           Account[] // standard Auth.js adapter (OAuth linkage)
+  sessions           UserSession[] // PRD-custom (JWT strategy); NOT the adapter Session model
+  passwordResets     PasswordReset[]
+  emailVerifications EmailVerification[]
+  bookings           Booking[] // Stage 2 — bookings made while logged in (direct ownership)
+  bookingLinks       BookingUserLink[] // Stage 2 — retroactive guest→member linkage by email
+  // consents        Consent[]          // Stage 5
+  // referralCodes   ReferralCode[]     // Stage 6
+
+  @@index([status])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+// ---- Auth.js standard adapter models (STOCK — do not customize) -------------------------
+// @auth/prisma-adapter convention: PascalCase table names, standard field names (incl. the
+// snake_case OAuth token fields refresh_token/access_token/etc. — that IS the standard).
+// Replaces PRD §5.10 user_social_connections (correction noted in the RESOLVED block above).
+// We use the JWT session strategy, so the adapter's `Session` model is intentionally omitted.
+
+/// OAuth account linkage managed by Auth.js (Google·Apple). One row per linked provider.
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+/// Auth.js token store (OAuth email verification / future Email provider). Standard model —
+/// no surrogate id / timestamps by design (adapter spec).
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+/// Customer session (PRD §5.10): 30-day expiry, unlimited concurrent, Remember-Me default.
+model UserSession {
+  id                String    @id @default(cuid())
+  userId            String    @map("user_id")
+  tokenHash         String    @unique @map("token_hash") // 🔒 SENSITIVE session-token hash (store hash only)
+  deviceFingerprint String?   @map("device_fingerprint")
+  ip                String? // 🔒 PII (used for unfamiliar-location alerts)
+  country           String?
+  userAgent         String?   @map("user_agent")
+  expiresAt         DateTime? @map("expires_at")
+  lastActiveAt      DateTime? @map("last_active_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_sessions")
+}
+
+/// Re-signup cooldown ledger (PRD §5.10). Stores only SHA-256 hashes — no raw PII — so a
+/// deleted user can be matched for the 7-day cooldown without retaining their email/phone.
+model DeletedUserBlacklist {
+  id            String   @id @default(cuid())
+  emailHash     String   @map("email_hash") // SHA-256(email), not raw PII
+  phoneHash     String?  @map("phone_hash") // SHA-256(phone)
+  deletedAt     DateTime @map("deleted_at")
+  cooldownUntil DateTime @map("cooldown_until") // deletedAt + 7d
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([emailHash])
+  @@index([phoneHash])
+  @@map("deleted_users_blacklist")
+}
+
+/// Password-reset magic link (PRD §5.10): email link, 1-hour validity.
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  tokenHash String    @unique @map("token_hash") // 🔒 SENSITIVE reset-token hash
+  expiresAt DateTime  @map("expires_at") // +1h
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_resets")
+}
+
+/// Email-verification token for the CREDENTIALS (email+password) signup flow (PRD §5.10):
+/// must be clicked within 24h. Distinct from the adapter's `VerificationToken` (OAuth/Email
+/// provider) — the credentials lifecycle is not managed by @auth/prisma-adapter.
+model EmailVerification {
+  id         String    @id @default(cuid())
+  userId     String    @map("user_id")
+  tokenHash  String    @unique @map("token_hash") // 🔒 SENSITIVE verification-token hash
+  expiresAt  DateTime  @map("expires_at") // +24h
+  verifiedAt DateTime? @map("verified_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("email_verifications")
+}
+
+// ---- Admin (PRD §5.8) -------------------------------------------------------------------
+
+enum AdminStatus {
+  active
+  inactive // 30-day dormancy → Super Admin re-activation required
+  locked // 5 failed logins in 5 min → 30-min auto-lock
+}
+
+/// Sensitive admin actions requiring step-up re-auth (password + TOTP) — PRD §5.8 / §5.8-A,
+/// CLAUDE.md §3.8.
+enum ReauthActionType {
+  refund
+  role_change // grant/revoke roles
+  account_delete // delete or deactivate an account
+  bulk_export // ≥100 records
+  terms_publish // new ToS / privacy-policy version
+  retention_change // S3 Object Lock retention change
+  custom_script // SEO custom_script slot (§5.8-A ①)
+}
+
+/// Internal staff account (PRD §5.8). 7 roles via admin_user_roles (OR-combined). TOTP
+/// mandatory for all admins. Separate from customer `User` (different auth surface & policy).
+model AdminUser {
+  id               String      @id @default(cuid())
+  email            String      @unique
+  passwordHash     String      @map("password_hash") // 🔒 SENSITIVE bcrypt(12). Never log.
+  name             String
+  phone            String? // 🔒 PII
+  slackUserId      String?     @map("slack_user_id")
+  totpSecret       String?     @map("totp_secret") // 🔒 SENSITIVE encrypted TOTP secret. Never log.
+  totpEnabled      Boolean     @default(false) @map("totp_enabled")
+  status           AdminStatus @default(active)
+  lastLoginAt      DateTime?   @map("last_login_at")
+  lastLoginIp      String?     @map("last_login_ip") // 🔒 PII
+  lastLoginCountry String?     @map("last_login_country")
+  failedLoginCount Int         @default(0) @map("failed_login_count")
+  lockedUntil      DateTime?   @map("locked_until")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+
+  roles            AdminUserRole[]
+  sessions         AdminSession[]
+  reauthChallenges ReauthChallenge[]
+  // refunds                 Refund[]                 // Stage 3 (admin_user_id)
+  // notificationPreferences NotificationPreference[] // Stage 7
+  // auditLogs               AuditLog[]               // Stage 7 (actor)
+
+  @@index([status])
+  @@map("admin_users")
+}
+
+/// Role with a JSONB permission set (PRD §5.8). The 7 roles are seeded data, not an enum,
+/// because permissions are data-driven and OR-combined per user.
+model AdminRole {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  permissions Json // permission flags/scopes
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userRoles AdminUserRole[]
+
+  @@map("admin_roles")
+}
+
+/// Many-to-many join for admin role assignment (PRD §5.8 — multi-role / OR-combined).
+/// Composite PK per PRD (no surrogate id); assignedBy kept for audit trail.
+model AdminUserRole {
+  adminUserId String   @map("admin_user_id")
+  adminRoleId String   @map("admin_role_id")
+  assignedBy  String?  @map("assigned_by") // admin who granted (FK left loose to avoid self-cycle noise)
+  assignedAt  DateTime @default(now()) @map("assigned_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  adminRole AdminRole @relation(fields: [adminRoleId], references: [id], onDelete: Cascade)
+
+  @@id([adminUserId, adminRoleId])
+  @@index([adminRoleId])
+  @@map("admin_user_roles")
+}
+
+/// Admin session (PRD §5.8): 8h inactivity timeout, max 3 concurrent (oldest evicted).
+model AdminSession {
+  id                String    @id @default(cuid())
+  adminUserId       String    @map("admin_user_id")
+  tokenHash         String    @unique @map("token_hash") // 🔒 SENSITIVE
+  ip                String? // 🔒 PII
+  userAgent         String?   @map("user_agent")
+  deviceFingerprint String?   @map("device_fingerprint")
+  country           String?
+  expiresAt         DateTime? @map("expires_at")
+  lastActiveAt      DateTime? @map("last_active_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([expiresAt])
+  @@map("admin_sessions")
+}
+
+/// Step-up re-auth challenge log for sensitive actions (PRD §5.8 / CLAUDE.md §3.8).
+model ReauthChallenge {
+  id                 String           @id @default(cuid())
+  adminUserId        String           @map("admin_user_id")
+  actionType         ReauthActionType @map("action_type")
+  targetId           String?          @map("target_id") // id of the affected entity (e.g. refund/booking)
+  challengeAt        DateTime         @default(now()) @map("challenge_at")
+  verifiedAt         DateTime?        @map("verified_at") // null until passed
+  verificationMethod String?          @map("verification_method") // 'password' | 'totp' | 'password+totp'
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([actionType])
+  @@map("reauth_challenges")
+}
+
+// =========================================================================================
+// STAGE 2 — BOOKING · SLOTS
+// =========================================================================================
+//
+// ⚠ OPEN DECISION (packages table) — see Stage 2 review notes.
+//   No `packages` model exists in the 7-stage plan, yet bookings reference a package and
+//   CLAUDE.md §6 says prices are DB-managed in a `packages` table. Below, `Booking.packageId`
+//   is a LOGICAL reference (plain String, no Prisma relation) + `packageSnapshot` Json, so the
+//   schema validates and §3.2 price-snapshot holds regardless. Where the Package model lives
+//   is a decision for Aiden (options A/B/C in the review) — not guessed here.
+//
+// ⚠ OPEN DECISION (blackout time representation) — see Stage 2 review notes.
+//   Your instruction asked bookings & blackouts to share `date + start_time + end_time`.
+//   PRD §5.3 instead models blackouts as a date RANGE (date_start/date_end) with NULLABLE
+//   time (full-day) + RRULE (recurring), which is required for the 3 blackout modes
+//   (slot / full_day / recurring). Collapsing to a single date would break full_day(multi-day)
+//   and recurring. Below follows PRD faithfully; both bookings AND blackouts still expose
+//   (room_id + date + time interval) so the occupancy/overlap query works. Flagged for confirm.
+//
+// SLOT OCCUPANCY (§3.3 / §4 danger zone): availability SSOT is OUR DB. Overlap is computed at
+// runtime over (room_id, date, [start_time,end_time)) across BOTH bookings and blackouts — a
+// Premium(3h)/1Pro(3.5h) booking closes every shorter Gold/Diamond/1Hour slot it overlaps.
+// The DB does NOT enforce slot uniqueness (overlaps aren't equality); double-booking is
+// prevented by the Redis distributed lock `slot_lock:{room_id}:{date}:{start_time}` (§3.3)
+// + the overlap query. Indexed on (room_id, date) for the overlap scan.
+
+enum BookingSource {
+  website
+  klook
+  kkday
+  airbnb
+  manual // admin hand-entry
+  phone
+}
+
+/// PRD §5.3 exact status set. Refund states live on `payments` (Stage 3), not here.
+enum BookingStatus {
+  pending // slot held (Redis), awaiting payment
+  paid // payment captured
+  confirmed // confirmed → triggers booking_automations chain (§5.8-A②)
+  cancelled
+  completed // session finished
+}
+
+enum BlackoutScope {
+  slot // single slot on one date (uses date_start + time_start/time_end)
+  full_day // whole day(s) — date_start..date_end, time null
+  recurring // RRULE pattern (recurring_rule)
+}
+
+/// Mandatory blackout reason (PRD §5.3 — 사유 필수). Free-text detail in reasonNote.
+enum BlackoutReason {
+  internal_use
+  maintenance
+  holiday
+  external_channel // OTA/phone/DM booking registered → slot closed
+  other
+}
+
+/// Studio room (PRD §5.3). Multi-room from day one; STUDIO B launches inactive (admin toggle).
+/// `isActive=false` excludes the room from slot/availability calculation.
+model Room {
+  id           String   @id @default(cuid())
+  name         String   @unique // 'STUDIO A' | 'STUDIO B' (data, not enum — admin-managed)
+  isActive     Boolean  @default(true) @map("is_active")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  bookings         Booking[]
+  blackouts        Blackout[]
+  gcalPulledBlocks GcalPulledBlock[]
+
+  @@map("rooms")
+}
+
+/// A booking (PRD §5.3). Works for guests (userId null) and members (userId set). Time is KST
+/// fixed; (date, startTime, endTime, roomId) drive the occupancy/overlap query (see header).
+///
+/// 💰 PRICE/POLICY SNAPSHOT (§3.2 hard constraint): priceTotalKrw/unitPriceKrw/headcount +
+/// pricingSnapshot + refundPolicySnapshot + packageSnapshot freeze the charge and the policy
+/// AT PAYMENT TIME so later admin price/policy edits NEVER apply retroactively. C10 2-person
+/// rule (1-person list × 1.5) and C11 group (per-head × headcount) are captured in
+/// pricingSnapshot. Never recompute a past booking's total/refund from live data.
+model Booking {
+  id     String        @id @default(cuid())
+  source BookingSource @default(website)
+  status BookingStatus @default(pending)
+
+  // --- what / who runs it ---
+  packageId  String  @map("package_id") // LOGICAL FK to packages (Package model pending — OPEN DECISION)
+  roomId     String  @map("room_id")
+  engineerId String? @map("engineer_id") // logical ref to admin_users.id (Engineer role); relation left loose
+  userId     String? @map("user_id") // null = guest booking; set = member booked while logged in
+
+  // --- when (KST; occupancy/overlap key) ---
+  date      DateTime @db.Date
+  startTime DateTime @map("start_time") @db.Time(0)
+  endTime   DateTime @map("end_time") @db.Time(0) // auto-calculated from package slot duration at creation
+
+  // --- party ---
+  headcount Int     @default(1)
+  songId    String? @map("song_id") // nullable; logical ref to songs (Stage 4)
+
+  // --- customer contact snapshot (works for guests) ---
+  customerName         String? @map("customer_name") // 🔒 PII
+  customerEmail        String  @map("customer_email") // 🔒 PII (used for guest→member linkage)
+  customerPhone        String? @map("customer_phone") // 🔒 PII
+  customerNationality  String? @map("customer_nationality") // 🔒 PII
+  customerPassportName String? @map("customer_passport_name") // 🔒 PII (receipts/invoice)
+
+  // --- 💰 payment/policy snapshot (§3.2) ---
+  priceTotalKrw        Int  @map("price_total_krw") // final charged total (KRW integer)
+  unitPriceKrw         Int  @map("unit_price_krw") // per-person list price at time
+  pricingSnapshot      Json @map("pricing_snapshot") // {basis, unitPrice, headcount, multiplier(1.5 for 2p), discounts, computedTotal}
+  refundPolicySnapshot Json @map("refund_policy_snapshot") // 3-tier refund policy frozen at payment time
+  packageSnapshot      Json @map("package_snapshot") // {name, category, slotMinutes, durationLabel} at booking time
+
+  // --- provenance ---
+  externalRef String? @map("external_ref") // OTA/external channel booking id (KLOOK/KKday/Airbnb…)
+  createdBy   String? @map("created_by") // logical ref to admin_users.id for manual/phone entries
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  room       Room               @relation(fields: [roomId], references: [id])
+  user       User?              @relation(fields: [userId], references: [id])
+  userLink   BookingUserLink? // 1:1 retroactive guest→member link
+  automation BookingAutomation? // 1:1 confirmation-automation tracking
+  // payment/refund/checkin/deliverables/consents/review → later stages
+
+  @@index([roomId, date]) // occupancy/overlap scan
+  @@index([date])
+  @@index([status])
+  @@index([userId])
+  @@index([customerEmail])
+  @@index([packageId])
+  @@index([engineerId])
+  @@map("bookings")
+}
+
+/// Slot/day/recurring block (PRD §5.3 — 3 modes). Closes overlapping slots for availability.
+/// roomId null = all rooms. PRD-faithful date RANGE + nullable time + RRULE (see OPEN DECISION).
+model Blackout {
+  id            String         @id @default(cuid())
+  scope         BlackoutScope
+  dateStart     DateTime       @map("date_start") @db.Date
+  dateEnd       DateTime       @map("date_end") @db.Date // == dateStart for single-day; range for multi-day full_day
+  timeStart     DateTime?      @map("time_start") @db.Time(0) // null = full day
+  timeEnd       DateTime?      @map("time_end") @db.Time(0)
+  recurringRule String?        @map("recurring_rule") // RFC5545 RRULE (scope=recurring)
+  reason        BlackoutReason
+  reasonNote    String?        @map("reason_note") // free-text detail (PRD: 사유 필수 — note optional)
+  roomId        String?        @map("room_id") // null = all rooms
+  createdBy     String?        @map("created_by") // logical ref to admin_users.id (audit also in audit_logs, Stage 7)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  room            Room?            @relation(fields: [roomId], references: [id])
+  gcalPulledBlock GcalPulledBlock? // 1:1 if this blackout was created from a pulled gcal event
+
+  @@index([roomId])
+  @@index([dateStart, dateEnd])
+  @@index([scope])
+  @@map("blackouts")
+}
+
+/// Retroactively links a guest booking to a member account on signup via email match
+/// (PRD §5.10). One link per booking (bookingId unique).
+model BookingUserLink {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique @map("booking_id")
+  userId     String   @map("user_id")
+  guestEmail String   @map("guest_email") // 🔒 PII — the matched guest email
+  linkedAt   DateTime @default(now()) @map("linked_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("booking_user_links")
+}
+
+/// Confirmation-automation tracking, 1:1 with a booking (PRD §5.8-A②). PUSH direction only:
+/// bookings → Google Calendar (gcalAdminEventId). Pull direction is gcal_pulled_blocks — the
+/// two directions are kept in SEPARATE models so they never mix (SSOT protection, §4).
+model BookingAutomation {
+  id                  String    @id @default(cuid())
+  bookingId           String    @unique @map("booking_id")
+  gcalAdminEventId    String?   @map("gcal_admin_event_id") // PUSH: event id created in ops Google Calendar
+  gcalAdminSyncedAt   DateTime? @map("gcal_admin_synced_at")
+  icsGeneratedAt      DateTime? @map("ics_generated_at")
+  mailD7SentAt        DateTime? @map("mail_d7_sent_at")
+  mailD1SentAt        DateTime? @map("mail_d1_sent_at")
+  reviewRequestSentAt DateTime? @map("review_request_sent_at")
+  mrAccessEnabled     Boolean   @default(false) @map("mr_access_enabled") // ⚠ §4 license gate; only true when settings.mr_predelivery_enabled=true
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("booking_automations")
+}
+
+/// PULL direction (PRD §5.8-A②): ops blocks created directly in Google Calendar are pulled in
+/// and reflected as a `blackouts` row. ⚠ IDEMPOTENCY (§4): `gcalEventId` is UNIQUE so pulling
+/// the same google event twice cannot create a duplicate blackout. `blackoutId` tracks which
+/// blackout this pull produced. NEVER writes to bookings (pull ≠ push).
+model GcalPulledBlock {
+  id          String    @id @default(cuid())
+  gcalEventId String    @unique @map("gcal_event_id") // idempotency key
+  date        DateTime  @db.Date
+  timeStart   DateTime? @map("time_start") @db.Time(0)
+  timeEnd     DateTime? @map("time_end") @db.Time(0)
+  roomId      String?   @map("room_id") // null = all rooms
+  blackoutId  String?   @unique @map("blackout_id") // the blackout created from this pull (1:1)
+  syncedAt    DateTime  @map("synced_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  room     Room?     @relation(fields: [roomId], references: [id])
+  blackout Blackout? @relation(fields: [blackoutId], references: [id])
+
+  @@index([roomId])
+  @@map("gcal_pulled_blocks")
 }
