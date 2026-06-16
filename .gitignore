@@ -1,0 +1,34 @@
+# dependencies
+/node_modules
+.pnpm-store
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# environment variables — NEVER commit secrets (CLAUDE.md §3.7)
+.env
+.env*.local
+.env.development
+.env.production
+!.env.example
+
+# prisma
+/prisma/*.db
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+*.pem
+.vercel
+*.tsbuildinfo
+
+# logs
+npm-debug.log*
+pnpm-debug.log*
