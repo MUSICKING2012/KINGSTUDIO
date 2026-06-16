@@ -257,7 +257,7 @@ model AdminUser {
   roles            AdminUserRole[]
   sessions         AdminSession[]
   reauthChallenges ReauthChallenge[]
-  // refunds                 Refund[]                 // Stage 3 (admin_user_id)
+  refunds          Refund[] // Stage 3 (admin who processed the refund)
   // notificationPreferences NotificationPreference[] // Stage 7
   // auditLogs               AuditLog[]               // Stage 7 (actor)
 
@@ -340,20 +340,16 @@ model ReauthChallenge {
 // STAGE 2 — BOOKING · SLOTS
 // =========================================================================================
 //
-// ⚠ OPEN DECISION (packages table) — see Stage 2 review notes.
-//   No `packages` model exists in the 7-stage plan, yet bookings reference a package and
-//   CLAUDE.md §6 says prices are DB-managed in a `packages` table. Below, `Booking.packageId`
-//   is a LOGICAL reference (plain String, no Prisma relation) + `packageSnapshot` Json, so the
-//   schema validates and §3.2 price-snapshot holds regardless. Where the Package model lives
-//   is a decision for Aiden (options A/B/C in the review) — not guessed here.
+// ✅ RESOLVED A1 (packages table) — Aiden, Stage 2 review. A `Package` model is added below
+//   (config table like Room; CLAUDE.md §6 = DB-managed prices). `Booking.packageId` is now a
+//   REAL FK to Package. `packageSnapshot` Json is still kept on Booking so §3.2 price-snapshot
+//   survives admin price edits. NOTE: PRD has no packages data-model block — the Package fields
+//   below are designed from §5.2/§5/§6 (flagged in the review; catalog CMS may extend in M2).
 //
-// ⚠ OPEN DECISION (blackout time representation) — see Stage 2 review notes.
-//   Your instruction asked bookings & blackouts to share `date + start_time + end_time`.
-//   PRD §5.3 instead models blackouts as a date RANGE (date_start/date_end) with NULLABLE
-//   time (full-day) + RRULE (recurring), which is required for the 3 blackout modes
-//   (slot / full_day / recurring). Collapsing to a single date would break full_day(multi-day)
-//   and recurring. Below follows PRD faithfully; both bookings AND blackouts still expose
-//   (room_id + date + time interval) so the occupancy/overlap query works. Flagged for confirm.
+// ✅ RESOLVED B1 (blackout time representation) — Aiden, Stage 2 review. Keep PRD-faithful:
+//   blackouts are a date RANGE (date_start/date_end) + NULLABLE time (full-day) + RRULE
+//   (recurring), supporting all 3 modes (slot / full_day / recurring). Both bookings AND
+//   blackouts still expose (room_id + date + time interval) so the occupancy query works.
 //
 // SLOT OCCUPANCY (§3.3 / §4 danger zone): availability SSOT is OUR DB. Overlap is computed at
 // runtime over (room_id, date, [start_time,end_time)) across BOTH bookings and blackouts — a
@@ -412,6 +408,55 @@ model Room {
   @@map("rooms")
 }
 
+enum PackageCategory {
+  experience // Gold / Diamond / Premium (per-person list price; 2p = ×1.5, C10)
+  rental // 1Hour / 1Pro (Korean-only; flat per session)
+  group // Making Class / 꿈길 / 워크샵 (per-head × headcount, C11)
+}
+
+/// How the total is computed from basePriceKrw + headcount (PRD §5.2 / CLAUDE.md §6).
+enum PricingMode {
+  per_person_x1_5 // experience: 1p = base; 2p total = base × 1.5 (C10)
+  flat // rental: fixed per session
+  per_head // group: base × headcount (C11)
+}
+
+enum BookingFlow {
+  instant_payment // online checkout (experience, rental, Making Class)
+  b2b_quote // quote → invoice flow (꿈길 / 워크샵 — PRD §5.7 / §5.8-A③)
+}
+
+/// Bookable product (PRD §5.2 / CLAUDE.md §6 — prices are DB-managed, never hardcoded).
+/// ⚠ PRD has NO packages data-model block; these fields are designed from §5.2/§5/§6 and may
+/// be extended by the catalog CMS in M2. Display copy lives in next-intl messages (§5); `name`
+/// is the canonical/admin identifier. `Booking.packageSnapshot` freezes pricing per §3.2.
+model Package {
+  id                     String          @id @default(cuid())
+  slug                   String          @unique // URL slug, e.g. 'gold' (/packages/gold)
+  category               PackageCategory
+  name                   String // canonical name (e.g. 'Gold', 'Diamond')
+  basePriceKrw           Int             @map("base_price_krw") // per the pricingMode unit (per-person / flat / per-head)
+  pricingMode            PricingMode     @map("pricing_mode")
+  slotMinutes            Int             @map("slot_minutes") // session duration (Gold/Diamond 120, Premium 180, 1Hour 60, 1Pro 210)
+  headcountMin           Int             @default(1) @map("headcount_min")
+  headcountMax           Int             @map("headcount_max")
+  // Locale exposure filter (CLAUDE.md §5 languages_available). e.g. rental/꿈길/워크샵 = [ko] only.
+  languagesAvailable     Locale[]        @map("languages_available")
+  bookingFlow            BookingFlow     @default(instant_payment) @map("booking_flow")
+  friendReferralEligible Boolean         @default(false) @map("friend_referral_eligible") // Diamond/Premium/group only (CLAUDE.md §6)
+  isActive               Boolean         @default(true) @map("is_active")
+  displayOrder           Int             @default(0) @map("display_order")
+  createdAt              DateTime        @default(now()) @map("created_at")
+  updatedAt              DateTime        @updatedAt @map("updated_at")
+
+  bookings Booking[]
+  quotes   Quote[] // Stage 3 (B2B)
+
+  @@index([category])
+  @@index([isActive])
+  @@map("packages")
+}
+
 /// A booking (PRD §5.3). Works for guests (userId null) and members (userId set). Time is KST
 /// fixed; (date, startTime, endTime, roomId) drive the occupancy/overlap query (see header).
 ///
@@ -426,7 +471,7 @@ model Booking {
   status BookingStatus @default(pending)
 
   // --- what / who runs it ---
-  packageId  String  @map("package_id") // LOGICAL FK to packages (Package model pending — OPEN DECISION)
+  packageId  String  @map("package_id") // FK to packages (Package model — RESOLVED A1)
   roomId     String  @map("room_id")
   engineerId String? @map("engineer_id") // logical ref to admin_users.id (Engineer role); relation left loose
   userId     String? @map("user_id") // null = guest booking; set = member booked while logged in
@@ -461,11 +506,15 @@ model Booking {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  room       Room               @relation(fields: [roomId], references: [id])
-  user       User?              @relation(fields: [userId], references: [id])
-  userLink   BookingUserLink? // 1:1 retroactive guest→member link
-  automation BookingAutomation? // 1:1 confirmation-automation tracking
-  // payment/refund/checkin/deliverables/consents/review → later stages
+  package          Package            @relation(fields: [packageId], references: [id])
+  room             Room               @relation(fields: [roomId], references: [id])
+  user             User?              @relation(fields: [userId], references: [id])
+  userLink         BookingUserLink? // 1:1 retroactive guest→member link
+  automation       BookingAutomation? // 1:1 confirmation-automation tracking
+  payments         Payment[] // Stage 3
+  checkin          Checkin? // Stage 3 (1:1)
+  disputeEvidences DisputeEvidence[] // Stage 3
+  // deliverables/consents/review → later stages
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -478,7 +527,7 @@ model Booking {
 }
 
 /// Slot/day/recurring block (PRD §5.3 — 3 modes). Closes overlapping slots for availability.
-/// roomId null = all rooms. PRD-faithful date RANGE + nullable time + RRULE (see OPEN DECISION).
+/// roomId null = all rooms. PRD-faithful date RANGE + nullable time + RRULE (RESOLVED B1).
 model Blackout {
   id            String         @id @default(cuid())
   scope         BlackoutScope
@@ -563,4 +612,170 @@ model GcalPulledBlock {
 
   @@index([roomId])
   @@map("gcal_pulled_blocks")
+}
+
+// =========================================================================================
+// STAGE 3 — PAYMENT · REFUND
+// =========================================================================================
+//
+// §3.2 KRW single charge: amountKrw is the source of truth; display_* are reference-only
+//   ("approximate") foreign-currency values frozen at payment time (exchangeRateAtPayment).
+// §3.6 NO card/PII stored (MVP): only the PG's own transaction reference (pgTransactionId).
+//   Never store PAN/card data. Refund/payment amounts must never be recomputed from live
+//   policy — the policy is frozen on the Booking (§3.2, Stage 2).
+// ⚠ §4 danger zones touched here: payment webhooks (amount-tamper / dup-processing guards),
+//   PayPal Dispute Evidence Pack accuracy, and quote/invoice amount math (C11). The SCHEMA is
+//   set up for them; the webhook/refund/evidence LOGIC requires Aiden verification + tests.
+
+enum Pg {
+  inicis // KG이니시스 (domestic)
+  paypal // PayPal (overseas)
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  refunded
+  partial_refunded
+  failed
+}
+
+/// Refund reason buckets (PRD §5.3 3-tier policy + post-download cap). reason drives whether
+/// the PG fee is absorbed by us (business_fault/force_majeure) or deducted (customer change).
+enum RefundReasonCategory {
+  customer_change_of_mind
+  business_fault
+  force_majeure
+  post_download // download already occurred → max 50% (PRD §5.3)
+}
+
+enum QuoteStatus {
+  draft
+  sent
+  accepted
+  invoiced
+  paid
+  expired
+}
+
+/// A payment against a booking (PRD §5.5). A booking may have several rows (failed retries
+/// then a successful capture). KRW is the single billed currency (§3.2); display_* are
+/// approximate references frozen at payment time.
+model Payment {
+  id              String  @id @default(cuid())
+  bookingId       String  @map("booking_id")
+  pg              Pg
+  pgTransactionId String? @map("pg_transaction_id") // PG reference only — NOT card data (§3.6)
+  amountKrw       Int     @map("amount_krw") // billed amount (KRW, integer)
+  pgFeeKrw        Int     @default(0) @map("pg_fee_krw") // PG fee (~3.0% inicis / ~4.4%+₩560 paypal)
+
+  // approximate foreign-currency display, frozen at payment (§3.2 — reference only)
+  displayCurrency       String?  @map("display_currency")
+  displayAmount         Decimal? @map("display_amount") @db.Decimal(14, 2)
+  exchangeRateAtPayment Decimal? @map("exchange_rate_at_payment") @db.Decimal(18, 8)
+
+  status PaymentStatus @default(pending)
+  paidAt DateTime?     @map("paid_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  booking Booking  @relation(fields: [bookingId], references: [id])
+  refunds Refund[]
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([pgTransactionId])
+  @@map("payments")
+}
+
+/// A refund on a payment (PRD §5.5). Partial refunds allowed (status partial_refunded on the
+/// payment). ⚠ §4 danger zone — amount math + PG-fee absorption must be verified. adminUserId
+/// is null for system-triggered refunds (e.g. minor guardian-objection 24h auto-refund §5.7).
+model Refund {
+  id              String               @id @default(cuid())
+  paymentId       String               @map("payment_id")
+  reasonCategory  RefundReasonCategory @map("reason_category")
+  refundAmountKrw Int                  @map("refund_amount_krw")
+  pgFeeDeducted   Boolean              @default(false) @map("pg_fee_deducted") // false = business absorbs (business_fault/force_majeure)
+  adminUserId     String?              @map("admin_user_id") // null = system/auto refund
+  adminMemo       String?              @map("admin_memo")
+  refundedAt      DateTime?            @map("refunded_at")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+
+  payment   Payment    @relation(fields: [paymentId], references: [id])
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@index([paymentId])
+  @@index([reasonCategory])
+  @@index([adminUserId])
+  @@map("refunds")
+}
+
+/// Customer arrival check-in (PRD §5.5). 1:1 with a booking. checkedInBy = engineer/admin
+/// (logical ref to admin_users.id, left loose like engineerId). Feeds Dispute Evidence Pack.
+model Checkin {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique @map("booking_id")
+  checkedInAt DateTime @map("checked_in_at")
+  checkedInBy String?  @map("checked_in_by") // logical ref to admin_users.id
+  memo        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("checkins")
+}
+
+/// Generated PayPal Dispute Evidence Pack record (PRD §5.5). ⚠ §4 danger zone — the generated
+/// PDF's data accuracy must be verified. Stores the GCS object key (signed URL on demand, §3.5
+/// — C13: was pdf_url/S3). generatedBy = admin (logical ref).
+model DisputeEvidence {
+  id            String   @id @default(cuid())
+  bookingId     String   @map("booking_id")
+  generatedAt   DateTime @map("generated_at")
+  pdfStorageKey String?  @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_url)
+  generatedBy   String?  @map("generated_by") // logical ref to admin_users.id
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@index([bookingId])
+  @@map("dispute_evidences")
+}
+
+/// B2B group quote (PRD §5.8-A③). Group total = per-head × headcount (C11) + vat − discount.
+/// ⚠ §4 danger zone — amount math (C11/VAT/discount) must match the pricing model. Amounts are
+/// frozen at issue time (snapshot). inquiryId is a loose ref (no `inquiries` table in plan —
+/// see review note). group_type is represented by the linked Package (consolidated; review).
+model Quote {
+  id              String      @id @default(cuid())
+  inquiryId       String?     @map("inquiry_id") // loose ref to a group inquiry (no inquiries table — review)
+  packageId       String      @map("package_id")
+  headcount       Int
+  unitPriceKrw    Int         @map("unit_price") // per-head price snapshot (C11)
+  subtotalKrw     Int         @map("subtotal") // unitPrice × headcount
+  discountKrw     Int         @default(0) @map("discount")
+  vatKrw          Int         @default(0) @map("vat")
+  totalKrw        Int         @map("total_krw")
+  currencyDisplay String?     @map("currency_display") // approximate foreign currency for overseas groups
+  validUntil      DateTime?   @map("valid_until")
+  language        Locale
+  status          QuoteStatus @default(draft)
+  pdfStorageKey   String?     @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_s3_key)
+  issuedBy        String?     @map("issued_by") // logical ref to admin_users.id
+  issuedAt        DateTime?   @map("issued_at")
+  acceptedAt      DateTime?   @map("accepted_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  package Package @relation(fields: [packageId], references: [id])
+
+  @@index([packageId])
+  @@index([status])
+  @@index([inquiryId])
+  @@map("quotes")
 }
