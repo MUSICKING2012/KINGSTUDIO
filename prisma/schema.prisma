@@ -1,0 +1,13 @@
+// KING STUDIO — Prisma schema (CLAUDE.md §1: Prisma + Prisma Migrate, PostgreSQL 16).
+// Skeleton only. Domain models (users, bookings, consents, packages, rooms, blackouts …)
+// land in a later session per PRD §5.3 / §5.5 / §5.7 / §5.10. Migrations via Prisma Migrate
+// only — never edit production SQL directly (CLAUDE.md §7.3).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
