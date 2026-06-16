@@ -37,8 +37,8 @@ enum Locale {
   ko
   en
   ja
-  zh_Hans @map("zh-Hans")
-  zh_Hant @map("zh-Hant")
+  zh_TW @map("zh-TW") // Traditional, Taiwan (C14)
+  zh_HK @map("zh-HK") // Traditional, Hong Kong (C14)
 }
 
 // =========================================================================================
@@ -660,9 +660,7 @@ enum QuoteStatus {
 
 /// Reference-only display currency, fixed per locale page (§3.2 — "approximate"). KRW is
 /// ALWAYS the actually billed currency; this is the parenthetical converted value shown.
-///   ko → KRW · en → USD · ja → JPY · zh-Hant → TWD · zh-Hans → HKD
-/// ⚠ The two Chinese mappings need confirmation: our locales are zh-Hans(간체)/zh-Hant(번체),
-/// but the spec named them 중국어→TWD / 광동어→HKD. See review note.
+///   ko → KRW · en → USD · ja → JPY · zh-TW → TWD · zh-HK → HKD  (C14)
 enum DisplayCurrency {
   KRW
   USD
