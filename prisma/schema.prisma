@@ -658,6 +658,26 @@ enum QuoteStatus {
   expired
 }
 
+/// Reference-only display currency, fixed per locale page (§3.2 — "approximate"). KRW is
+/// ALWAYS the actually billed currency; this is the parenthetical converted value shown.
+///   ko → KRW · en → USD · ja → JPY · zh-Hant → TWD · zh-Hans → HKD
+/// ⚠ The two Chinese mappings need confirmation: our locales are zh-Hans(간체)/zh-Hant(번체),
+/// but the spec named them 중국어→TWD / 광동어→HKD. See review note.
+enum DisplayCurrency {
+  KRW
+  USD
+  JPY
+  TWD
+  HKD
+}
+
+/// B2B group package type for quotes (PRD §5.2 group category — explicit enum per Aiden).
+enum GroupType {
+  making_class // K-Pop Making Class
+  kkumgil // 꿈길
+  workshop // 워크샵
+}
+
 /// A payment against a booking (PRD §5.5). A booking may have several rows (failed retries
 /// then a successful capture). KRW is the single billed currency (§3.2); display_* are
 /// approximate references frozen at payment time.
@@ -670,9 +690,9 @@ model Payment {
   pgFeeKrw        Int     @default(0) @map("pg_fee_krw") // PG fee (~3.0% inicis / ~4.4%+₩560 paypal)
 
   // approximate foreign-currency display, frozen at payment (§3.2 — reference only)
-  displayCurrency       String?  @map("display_currency")
-  displayAmount         Decimal? @map("display_amount") @db.Decimal(14, 2)
-  exchangeRateAtPayment Decimal? @map("exchange_rate_at_payment") @db.Decimal(18, 8)
+  displayCurrency       DisplayCurrency? @map("display_currency") // locale-driven (ko=KRW…); reference only
+  displayAmount         Decimal?         @map("display_amount") @db.Decimal(14, 2)
+  exchangeRateAtPayment Decimal?         @map("exchange_rate_at_payment") @db.Decimal(18, 8)
 
   status PaymentStatus @default(pending)
   paidAt DateTime?     @map("paid_at")
@@ -752,25 +772,26 @@ model DisputeEvidence {
 /// frozen at issue time (snapshot). inquiryId is a loose ref (no `inquiries` table in plan —
 /// see review note). group_type is represented by the linked Package (consolidated; review).
 model Quote {
-  id              String      @id @default(cuid())
-  inquiryId       String?     @map("inquiry_id") // loose ref to a group inquiry (no inquiries table — review)
-  packageId       String      @map("package_id")
+  id              String           @id @default(cuid())
+  inquiryId       String?          @map("inquiry_id") // loose ref to a group inquiry (no inquiries table — held)
+  groupType       GroupType        @map("group_type") // PRD §5.8-A③ explicit enum
+  packageId       String           @map("package_id")
   headcount       Int
-  unitPriceKrw    Int         @map("unit_price") // per-head price snapshot (C11)
-  subtotalKrw     Int         @map("subtotal") // unitPrice × headcount
-  discountKrw     Int         @default(0) @map("discount")
-  vatKrw          Int         @default(0) @map("vat")
-  totalKrw        Int         @map("total_krw")
-  currencyDisplay String?     @map("currency_display") // approximate foreign currency for overseas groups
-  validUntil      DateTime?   @map("valid_until")
+  unitPriceKrw    Int              @map("unit_price") // per-head price snapshot (C11)
+  subtotalKrw     Int              @map("subtotal") // unitPrice × headcount
+  discountKrw     Int              @default(0) @map("discount")
+  vatKrw          Int              @default(0) @map("vat")
+  totalKrw        Int              @map("total_krw")
+  currencyDisplay DisplayCurrency? @map("currency_display") // approximate foreign currency for overseas groups
+  validUntil      DateTime?        @map("valid_until")
   language        Locale
-  status          QuoteStatus @default(draft)
-  pdfStorageKey   String?     @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_s3_key)
-  issuedBy        String?     @map("issued_by") // logical ref to admin_users.id
-  issuedAt        DateTime?   @map("issued_at")
-  acceptedAt      DateTime?   @map("accepted_at")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
+  status          QuoteStatus      @default(draft)
+  pdfStorageKey   String?          @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_s3_key)
+  issuedBy        String?          @map("issued_by") // logical ref to admin_users.id
+  issuedAt        DateTime?        @map("issued_at")
+  acceptedAt      DateTime?        @map("accepted_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
 
   package Package @relation(fields: [packageId], references: [id])
 
