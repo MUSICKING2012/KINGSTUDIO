@@ -22,6 +22,8 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 
 ## 1. 기술 스택 — 잠금 (변경 금지)
 
+> **인프라 = 단일 GCP (C13, v0.2 전환).** 호스팅 Cloud Run, DB Cloud SQL, 파일 Cloud Storage, CDN Cloud CDN, 트랜스코딩 Cloud Run Jobs, 시크릿 Secret Manager, 리전 asia-northeast3(Seoul). Redis만 Upstash 유지(저트래픽 비용), Cloudflare Free 유지(DNS·보안). PRD 원안 AWS+Vercel은 폐기. 자세한 매핑은 PRD §7.3·7.4·7.7.
+
 아래는 PRD 7장에서 확정된 스택이다. **임의로 다른 라이브러리로 대체하지 말 것.**
 대체가 필요하다고 판단되면 먼저 사용자에게 이유를 설명하고 승인을 받는다.
 
@@ -33,7 +35,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | 상태 | Zustand (클라이언트) + TanStack Query (서버 상태) |
 | 다국어 | next-intl (서브경로 /ko /en /ja /zh-Hans /zh-Hant) |
 | ORM | **Prisma** + Prisma Migrate (Drizzle 아님) |
-| DB | PostgreSQL 16 (AWS RDS Multi-AZ) |
+| DB | PostgreSQL 16 (GCP Cloud SQL, HA) |
 | 캐시·락 | Upstash Redis (Serverless) |
 | 인증 | Auth.js v5 + Prisma Adapter |
 | 큐·cron | Inngest |
@@ -41,9 +43,9 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | 이메일 | Resend (트랜잭션) — 발신 join@kingstudio.co.kr, 표시명 "KING STUDIO" |
 | SMS·알림톡 | 솔라피(Coolsms) (NHN Toast 아님) |
 | 해외 SMS | Twilio |
-| 트랜스코딩 | AWS Lambda FFmpeg(음원) + Sharp(사진) (MediaConvert 아님) |
-| 파일 | AWS S3(Seoul) + CloudFront Signed URL |
-| 호스팅 | Vercel Pro + Cloudflare Free (DNS·CDN) |
+| 트랜스코딩 | GCP Cloud Run Jobs FFmpeg(음원) + Sharp(사진) |
+| 파일 | GCP Cloud Storage(Seoul) + Cloud CDN Signed URL |
+| 호스팅 | GCP Cloud Run + Cloud Build(배포) + Cloudflare Free(DNS·보안) |
 | 모니터링 | Sentry + BetterStack + Axiom + PostHog + GA4 |
 | CS | Channel Talk |
 | 캘린더 연동 | Google Calendar API (어드민 운영 캘린더 제한적 양방향) + FullCalendar(어드민 UI) |
@@ -91,7 +93,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 4. **미성년자(만 16세 미만) 보호자 동의 없이는 결제 차단.** 우회 경로 만들지 말 것.
 5. **매직링크·다운로드는 서명 URL(CloudFront Signed URL, TTL 10분)로만.** S3 직접 노출 금지.
 6. **PII·비밀번호·결제정보를 로그·에러 메시지에 남기지 말 것.** 비밀번호 bcrypt(12), 결제정보 MVP 미저장.
-7. **환경변수는 Vercel Environment Variables로만.** Git에 커밋 금지. `.env`는 `.gitignore`.
+7. **환경변수는 GCP Secret Manager로만(Cloud Run 런타임 주입).** Git에 커밋 금지. `.env`는 `.gitignore`.
 8. **어드민 민감 액션은 재인증(비번+TOTP) 강제.** 환불·권한변경·대량export·약관발행·계정삭제.
 9. **색상만으로 정보 전달 금지(WCAG AA).** 슬롯 가능/마감은 색+텍스트+아이콘 병기.
 10. **악성·우회 코드 작성 금지.** 친구초대 어뷰즈 차단(IP·디바이스·BIN), 재가입 쿨다운 등 PRD 방어 로직을 무력화하지 말 것.
@@ -152,6 +154,17 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 6. **PR마다 CodeRabbit 리뷰를 거친다.** 1인 개발의 리뷰어 공백을 메우는 1차 안전망.
 7. **막히거나 PRD에 없는 결정이 필요하면 추측하지 말고 묻는다.** 임의 결정으로 진행 후 되돌리는 것이 가장 비싸다.
 8. **MVP 범위를 벗어나는 기능 제안 금지.** PRD 9.2 MVP 범위 밖이면 "v1.1 백로그" 라고만 메모. 지금 만들지 말 것.
+
+## 7-A. Stage 워크플로우 (Claude Code 작업 사이클)
+
+마일스톤(M1~M11)보다 작은 **Stage 단위**로 작업한다. Stage 1(Prisma 스키마)에서 검증된 사이클을 모든 작업에 적용한다.
+
+1. **작업 단위 = Stage.** 마일스톤을 한 번에 처리하지 않고, Aiden이 한 번에 검토 가능한 크기의 Stage로 쪼갠다. (예: Stage 1 스키마를 7개 도메인 그룹으로 분할.) 큰 작업일수록 더 잘게.
+2. **Stage 시작 전 컨텍스트 로드.** CLAUDE.md + 관련 PRD 절을 먼저 읽고 시작한다. 추측 금지. 무엇을 읽었는지 밝힌다.
+3. **막히면 OPEN DECISION으로 멈춤.** PRD에 없거나·모호하거나·충돌하는 결정이 나오면 추측하지 않는다. `OPEN DECISION`으로 명시하고, 선택지(A/B/C)와 각 트레이드오프·추천을 제시한 뒤 Aiden 확인을 기다린다. (Auth.js 어댑터·PK 타입·enum 결정이 이 패턴으로 처리됨.)
+4. **Stage 종료 시 PRD 대조 요약.** ① 무엇을 했는지 ② PRD와 대조해 누락·모호점 ③ 다음 Stage가 무엇인지를 요약하고 멈춘다. 확인 전 다음 Stage로 넘어가지 않는다.
+5. **파괴적 작업은 검토 후.** `prisma migrate dev`, 프로덕션 변경 등 되돌리기 비싼 작업은 Aiden 검토 전까지 실행 금지. validate까지만 자동.
+6. **문서 정합 동기화.** 스키마·구현이 PRD와 갈리는 결정을 하면(예: user_social_connections → 표준 Account), 즉시 PRD·CLAUDE.md를 정정해 **세 문서(PRD·CLAUDE·코드)가 어긋나지 않게** 한다. 정정을 미루지 않는다 — 미룬 정정은 다음 Stage에서 혼란을 만든다.
 
 ---
 
