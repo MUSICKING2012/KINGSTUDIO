@@ -99,6 +99,7 @@ model User {
   bookingLinks       BookingUserLink[] // Stage 2 — retroactive guest→member linkage by email
   consents           Consent[] // Stage 5
   referralCodes      ReferralCode[] // Stage 6 (codes this user issued as inviter)
+  coupons            Coupon[] // Stage 6 (personal issued coupons)
 
   @@index([status])
   @@index([deletedAt])
@@ -524,6 +525,7 @@ model Booking {
   review            Review? // Stage 6 (1:1)
   npsResponse       NpsResponse? // Stage 6 (1:1)
   referralAsInvitee Referral? // Stage 6 — this booking as a referral's invitee booking (1:1)
+  couponUsed        Coupon? // Stage 6 — coupon redeemed on this booking (1:1)
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -1211,11 +1213,10 @@ model BookingParticipant {
 // STAGE 6 — MARKETING
 // =========================================================================================
 //
-// ⚠ OPEN DECISION (promotion_codes / coupons) — see Stage 6 review.
-//   §5.9 has admin promotion codes AND a referral reward coupon (referrals.inviter_coupon_id),
-//   but neither a `promotion_codes` nor `coupons` table is in the 7-stage plan. Below,
-//   `Referral.inviterCouponId` is a LOGICAL ref (plain String, no relation). Where these live
-//   is a decision for Aiden — not guessed here.
+// ✅ RESOLVED (A, Aiden): add PromotionCode + Coupon (SEPARATE models — different ownership &
+//   lifecycle). PromotionCode = admin-defined SHARED code (many redemptions, rules). Coupon =
+//   personal ISSUED discount to one user (referral reward / anniversary / compensation), single
+//   owner, single-use. `Referral.inviterCouponId` is now a real FK → Coupon (1:1).
 // ⚠ §3.10 anti-abuse: referral self-invite blocking (IP / device fingerprint / card BIN) +
 //   re-signup cooldown is RUNTIME logic; the schema records the outcome (status=rejected,
 //   rejection_reason). Eligibility is Diamond/Premium/group only (Package.friendReferralEligible).
@@ -1354,7 +1355,7 @@ model Referral {
   inviteePaymentId   String?        @unique @map("invitee_payment_id")
   status             ReferralStatus @default(pending)
   inviteeDiscountKrw Int?           @map("invitee_discount_krw") // 10%, capped ₩50,000
-  inviterCouponId    String?        @map("inviter_coupon_id") // LOGICAL ref — coupon/promo table TBD (OPEN DECISION)
+  inviterCouponId    String?        @unique @map("inviter_coupon_id") // FK → coupons (reward, 1:1)
   rejectionReason    String?        @map("rejection_reason") // abuse/ineligible detail (§3.10)
   createdAt          DateTime       @default(now()) @map("created_at")
   qualifiedAt        DateTime?      @map("qualified_at")
@@ -1363,8 +1364,101 @@ model Referral {
   referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
   inviteeBooking Booking?     @relation(fields: [inviteeBookingId], references: [id], onDelete: SetNull)
   inviteePayment Payment?     @relation(fields: [inviteePaymentId], references: [id], onDelete: SetNull)
+  inviterCoupon  Coupon?      @relation(fields: [inviterCouponId], references: [id], onDelete: SetNull)
 
   @@index([referralCodeId])
   @@index([status])
   @@map("referrals")
+}
+
+// ---- Discount codes (PRD §5.9; RESOLVED A — promotion vs coupon SEPARATED) ---------------
+
+/// Shared by PromotionCode & Coupon. 정률(percentage, value=1..50) / 정액(fixed, value=KRW).
+enum DiscountType {
+  percentage
+  fixed
+}
+
+/// How a promotion code may be redeemed (PRD §5.9).
+enum PromotionUsageMode {
+  single_use // one redemption total
+  multi_use // unlimited until total_limit / expiry
+  once_per_user
+}
+
+enum PromotionCodeStatus {
+  active
+  paused
+  expired
+  exhausted // hit total_limit
+}
+
+/// Why a personal coupon was issued (PRD §5.9 / §5.5 compensation / D+365 anniversary).
+enum CouponSource {
+  referral_reward
+  anniversary
+  compensation // business-fault goodwill (§5.3 B)
+  manual
+}
+
+enum CouponStatus {
+  active
+  used
+  expired
+  revoked
+}
+
+/// Admin-defined promotion code (PRD §5.9). Shared code, many redemptions. >15% issuance needs
+/// Manager/Super Admin approval (§3.8 re-auth — runtime). channel_tag mandatory for measurement.
+/// Cannot be combined with a referral coupon (runtime check). Per-user/total caps app-enforced.
+model PromotionCode {
+  id                 String              @id @default(cuid())
+  code               String              @unique
+  type               DiscountType
+  value              Int // percentage 1..50, or fixed KRW
+  usageMode          PromotionUsageMode  @map("usage_mode")
+  status             PromotionCodeStatus @default(active)
+  expiresAt          DateTime            @map("expires_at") // 만료 필수
+  minOrderKrw        Int?                @map("min_order_krw")
+  totalLimit         Int?                @map("total_limit")
+  usageCount         Int                 @default(0) @map("usage_count")
+  applicablePackages Json?               @map("applicable_packages") // package ids/categories toggle
+  applicableLocales  Locale[]            @map("applicable_locales") // language toggle
+  channelTag         String              @map("channel_tag") // 발급 채널 태그 필수
+  approvedBy         String?             @map("approved_by") // logical ref to admin_users.id (>15% approval)
+  createdBy          String?             @map("created_by") // logical ref to admin_users.id
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+
+  coupons Coupon[] // coupons derived from this promo (optional)
+
+  @@index([status])
+  @@map("promotion_codes")
+}
+
+/// Personal issued coupon (PRD §5.9). Owned by one user (referral coupon requires membership);
+/// single-use. Referral reward: 10% capped ₩50,000, +6mo expiry. Redeemed on one booking.
+model Coupon {
+  id              String       @id @default(cuid())
+  code            String?      @unique // some coupons have a code; referral/anniversary may auto-apply
+  userId          String?      @map("user_id") // owner
+  type            DiscountType
+  value           Int // percentage or KRW
+  capKrw          Int?         @map("cap_krw") // discount cap (referral ₩50,000)
+  source          CouponSource
+  status          CouponStatus @default(active)
+  expiresAt       DateTime     @map("expires_at")
+  usedBookingId   String?      @unique @map("used_booking_id") // where redeemed (1:1)
+  promotionCodeId String?      @map("promotion_code_id") // if derived from a promo
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  usedBooking   Booking?       @relation(fields: [usedBookingId], references: [id], onDelete: SetNull)
+  promotionCode PromotionCode? @relation(fields: [promotionCodeId], references: [id], onDelete: SetNull)
+  referral      Referral? // back-relation: referrals.inviter_coupon_id (reward)
+
+  @@index([userId])
+  @@index([status])
+  @@map("coupons")
 }
