@@ -808,14 +808,15 @@ model Quote {
 // =========================================================================================
 //
 // ⚠ §4 danger zones touched here (schema only; logic + tests need Aiden verification):
-//   - Magic-link token: expiry / reissue / signed-URL tamper. Token is a 60-day bearer in the
-//     /download/[token] URL. NOTE: stored as a raw UUID here per PRD; §4 review may switch to a
-//     hash (like Stage 1 tokens) so a DB leak can't expose live links. Flagged.
+//   - Magic-link token (RESOLVED): the 60-day URL token is a crypto-random secret stored ONLY
+//     as a SHA-256 hash (magic_links.token_hash), never raw — consistent with Stage 1 tokens.
+//     PK is cuid(); download_logs FK by that cuid. (PRD §5.6 "raw UUID PK" → correction pending.)
 //   - Signed URL only (§3.5): files are served via GCS/Cloud CDN signed URLs (TTL 10min,
 //     C13 rename of S3/CloudFront). storage_key columns hold the OBJECT KEY, never a public URL.
-//   - MR practice-track license gate (§4): a song's MR/lyrics must NOT be delivered unless
-//     license is verified (Song.licenseVerified) AND the global settings.mr_predelivery_enabled
-//     gate is on (Stage 5 settings; tracked per booking on BookingAutomation.mrAccessEnabled).
+//   - MR practice-track license gate (§4 / R2): a song's MR/lyrics deliver ONLY when the
+//     matching SongLicense (type=mr_distribution) is verified AND global
+//     settings.mr_predelivery_enabled is on (Stage 5; per-booking BookingAutomation.mrAccessEnabled).
+//     License is per-TYPE (recording / mr_distribution / lyrics) so partial clearance is expressible.
 //   - Deliverable versioning: supersedes self-relation; only the latest is downloadable, admin
 //     keeps all (PRD §5.6).
 // 💾 file sizes use BigInt (audio/video may exceed Int 2.1GB ceiling).
@@ -841,8 +842,12 @@ enum DeliverableStatus {
   archived
 }
 
-/// Magic-link status (PRD §5.6 — values designed; PRD lists "status" only). Reissue creates a
-/// new row; admin can revoke.
+/// Magic-link status (PRD §5.6 — values designed; PRD lists "status" only). Reusable within
+/// expiry, so no "used" state. Transitions:
+///   active  → usable until expiresAt
+///   expired → past expiresAt (set by cron/lazy check)
+///   revoked → admin revoke, OR superseded by a REISSUE (reissue revokes the old link and
+///             mints a new magic_links row with a fresh token).
 enum MagicLinkStatus {
   active
   expired
@@ -859,30 +864,75 @@ enum MvDeliveryStatus {
   sent_to_customer
 }
 
-/// Song catalog (PRD §5.7 + §7.2 FTS, 200–500 songs). ⚠ PRD details only the license fields
-/// ("…"); other fields designed from §5.2 (Gold beginner curation) — may extend in M2 CMS.
-/// 🔒 MR license gate (§4 / R2): MR/lyrics deliver only when licenseVerified=true (+ global
-/// settings.mr_predelivery_enabled, Stage 5). 1Hour/1Pro customers bring their own MR.
-model Song {
-  id                        String    @id @default(cuid())
-  title                     String
-  artist                    String
-  beginnerCuration          Boolean   @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
-  isActive                  Boolean   @default(true) @map("is_active")
-  // --- MR license (PRD §5.7) ---
-  licenseVerified           Boolean   @default(false) @map("license_verified") // gate: MR/lyrics predelivery
-  licenseEvidenceStorageKey String?   @map("license_evidence_storage_key") // GCS object key (C13 rename of s3_key)
-  licenseNotes              String?   @map("license_notes")
-  licenseVerifiedAt         DateTime? @map("license_verified_at")
-  createdAt                 DateTime  @default(now()) @map("created_at")
-  updatedAt                 DateTime  @updatedAt @map("updated_at")
+/// Per-type MR license dimension (PRD §5.7 / R2). A song can be cleared for recording but NOT
+/// for MR distribution — tracked independently so partial clearance is expressible.
+enum LicenseType {
+  recording // 녹음(복제)
+  mr_distribution // MR 배포(전송) — gates practice-track predelivery
+  lyrics // 가사
+}
 
-  bookings Booking[]
+/// Song catalog (PRD §5.7 + §7.2 FTS, 200–500 songs). ⚠ PRD details only the license fields;
+/// structural fields designed from §5.2 (Gold beginner curation) — may extend in M2 CMS.
+/// title/artist are i18n via SongTranslation (translation-table pattern); MR license is per-type
+/// via SongLicense (R2). 1Hour/1Pro customers bring their own MR (booking.songId null).
+model Song {
+  id               String   @id @default(cuid())
+  beginnerCuration Boolean  @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  translations SongTranslation[]
+  licenses     SongLicense[]
+  bookings     Booking[]
 
   @@index([isActive])
-  @@index([licenseVerified])
   @@index([beginnerCuration])
   @@map("songs")
+}
+
+/// Per-locale song title/artist (PRD §7.2 catalog FTS). DB content-i18n via a translation table
+/// — the pattern for dynamic catalog content (mirrors page_seo per-locale rows in Stage 7);
+/// `en` is the fallback locale (§5). Per-locale rows enable per-language full-text search.
+model SongTranslation {
+  id        String   @id @default(cuid())
+  songId    String   @map("song_id")
+  locale    Locale
+  title     String
+  artist    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@unique([songId, locale])
+  @@index([songId])
+  @@map("song_translations")
+}
+
+/// Per-type MR license verification (PRD §5.7 / R2). Split from a single boolean so a song can
+/// be e.g. recording-OK but MR-distribution-NG. Evidence stored under Bucket Lock (C13; §5.7).
+/// MR practice-track predelivery requires (type=mr_distribution, verified=true) + the global
+/// settings.mr_predelivery_enabled gate (Stage 5). License-display toggle shows verified types.
+model SongLicense {
+  id                 String      @id @default(cuid())
+  songId             String      @map("song_id")
+  type               LicenseType
+  verified           Boolean     @default(false)
+  evidenceStorageKey String?     @map("evidence_storage_key") // GCS object key under Bucket Lock (C13 rename of s3_key)
+  notes              String?
+  verifiedAt         DateTime?   @map("verified_at")
+  verifiedBy         String?     @map("verified_by") // logical ref to admin_users.id
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@unique([songId, type])
+  @@index([songId])
+  @@index([type, verified])
+  @@map("song_licenses")
 }
 
 /// A deliverable file for a booking (PRD §5.6). Versioned via supersedes (self 1:1); only the
@@ -915,9 +965,12 @@ model Deliverable {
 }
 
 /// Content-download magic link (PRD §5.6): 60-day token, separate from auth tokens (Stage 1).
-/// One booking may have several (1차/2차/재발급). 🔒 `token` is a bearer secret (see §4 note).
+/// One booking may have several (1차/2차/재발급). The raw token is crypto-random, sent only in
+/// the email/URL and NEVER stored; the DB keeps a SHA-256 hash (token_hash) — Stage 1-consistent.
+/// PK is cuid(). (PRD §5.6 says "raw UUID PK" → correction pending.)
 model MagicLink {
-  token          String          @id @default(uuid()) // 🔒 SENSITIVE 60-day bearer; PK = the URL token
+  id             String          @id @default(cuid())
+  tokenHash      String          @unique @map("token_hash") // 🔒 SENSITIVE SHA-256 of the URL token; raw token never stored
   bookingId      String          @map("booking_id")
   generatedAt    DateTime        @default(now()) @map("generated_at")
   expiresAt      DateTime        @map("expires_at") // +60 days
@@ -938,22 +991,25 @@ model MagicLink {
 
 /// Download audit log (PRD §5.6). Feeds abnormal-frequency detection (50/5min → auto-block)
 /// and the Dispute Evidence Pack — so it must survive deliverable deletion (deliverableId
-/// nullable, SetNull). References the magic-link token (PRD column magic_link_token).
+/// nullable + SetNull). FK to magic_links by cuid id. Identity snapshot (file name + type) is
+/// frozen here so the dispute record stays complete even after the deliverable is removed.
 model DownloadLog {
-  id               String   @id @default(cuid())
-  magicLinkToken   String   @map("magic_link_token")
-  deliverableId    String?  @map("deliverable_id")
-  downloadedAt     DateTime @default(now()) @map("downloaded_at")
-  ip               String? // 🔒 PII (abnormal-frequency / dispute evidence)
-  userAgent        String?  @map("user_agent")
-  bytesTransferred BigInt?  @map("bytes_transferred")
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id                      String           @id @default(cuid())
+  magicLinkId             String           @map("magic_link_id")
+  deliverableId           String?          @map("deliverable_id")
+  deliverableTypeSnapshot DeliverableType? @map("deliverable_type_snapshot") // frozen — survives SetNull (dispute)
+  fileNameSnapshot        String?          @map("file_name_snapshot") // frozen file name at download time
+  downloadedAt            DateTime         @default(now()) @map("downloaded_at")
+  ip                      String? // 🔒 PII (abnormal-frequency / dispute evidence)
+  userAgent               String?          @map("user_agent")
+  bytesTransferred        BigInt?          @map("bytes_transferred")
+  createdAt               DateTime         @default(now()) @map("created_at")
+  updatedAt               DateTime         @updatedAt @map("updated_at")
 
-  magicLink   MagicLink    @relation(fields: [magicLinkToken], references: [token])
+  magicLink   MagicLink    @relation(fields: [magicLinkId], references: [id])
   deliverable Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: SetNull)
 
-  @@index([magicLinkToken])
+  @@index([magicLinkId])
   @@index([deliverableId])
   @@index([ip])
   @@map("download_logs")
