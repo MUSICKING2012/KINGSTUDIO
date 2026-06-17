@@ -512,8 +512,8 @@ model Booking {
 
   package           Package                @relation(fields: [packageId], references: [id])
   room              Room                   @relation(fields: [roomId], references: [id])
-  user              User?                  @relation(fields: [userId], references: [id])
-  song              Song?                  @relation(fields: [songId], references: [id]) // Stage 4
+  user              User?                  @relation(fields: [userId], references: [id], onDelete: SetNull) // explicit: GDPR member delete de-links, booking retained (§4)
+  song              Song?                  @relation(fields: [songId], references: [id], onDelete: SetNull) // Stage 4
   userLink          BookingUserLink? // 1:1 retroactive guest→member link
   automation        BookingAutomation? // 1:1 confirmation-automation tracking
   payments          Payment[] // Stage 3
@@ -811,6 +811,7 @@ model Quote {
   @@index([packageId])
   @@index([status])
   @@index([inquiryId])
+  @@index([status, validUntil]) // B2B quote-expiry sweep (§5.8-A③)
   @@map("quotes")
 }
 
@@ -1153,6 +1154,7 @@ model Consent {
   @@index([userId])
   @@index([consentType])
   @@index([consentGroupId])
+  @@index([consentVersion]) // recall "who consented to version X" on terms_publish (§5.7)
   @@map("consents")
 }
 
@@ -1365,8 +1367,8 @@ model Referral {
   updatedAt          DateTime       @updatedAt @map("updated_at")
 
   referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
-  inviteeBooking Booking?     @relation(fields: [inviteeBookingId], references: [id], onDelete: SetNull)
-  inviteePayment Payment?     @relation(fields: [inviteePaymentId], references: [id], onDelete: SetNull)
+  inviteeBooking Booking?     @relation(fields: [inviteeBookingId], references: [id], onDelete: Restrict) // preserve reward money-trail (§5.9/§3.10)
+  inviteePayment Payment?     @relation(fields: [inviteePaymentId], references: [id], onDelete: Restrict)
   inviterCoupon  Coupon?      @relation(fields: [inviterCouponId], references: [id], onDelete: SetNull)
 
   @@index([referralCodeId])
@@ -1457,7 +1459,7 @@ model Coupon {
   updatedAt       DateTime     @updatedAt @map("updated_at")
 
   user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
-  usedBooking   Booking?       @relation(fields: [usedBookingId], references: [id], onDelete: SetNull)
+  usedBooking   Booking?       @relation(fields: [usedBookingId], references: [id], onDelete: Restrict) // preserve redemption money-trail (§5.9)
   promotionCode PromotionCode? @relation(fields: [promotionCodeId], references: [id], onDelete: SetNull)
   referral      Referral? // back-relation: referrals.inviter_coupon_id (reward)
 
