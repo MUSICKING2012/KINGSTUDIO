@@ -98,7 +98,7 @@ model User {
   bookings           Booking[] // Stage 2 — bookings made while logged in (direct ownership)
   bookingLinks       BookingUserLink[] // Stage 2 — retroactive guest→member linkage by email
   consents           Consent[] // Stage 5
-  // referralCodes   ReferralCode[]     // Stage 6
+  referralCodes      ReferralCode[] // Stage 6 (codes this user issued as inviter)
 
   @@index([status])
   @@index([deletedAt])
@@ -507,21 +507,23 @@ model Booking {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  package          Package              @relation(fields: [packageId], references: [id])
-  room             Room                 @relation(fields: [roomId], references: [id])
-  user             User?                @relation(fields: [userId], references: [id])
-  song             Song?                @relation(fields: [songId], references: [id]) // Stage 4
-  userLink         BookingUserLink? // 1:1 retroactive guest→member link
-  automation       BookingAutomation? // 1:1 confirmation-automation tracking
-  payments         Payment[] // Stage 3
-  checkin          Checkin? // Stage 3 (1:1)
-  disputeEvidences DisputeEvidence[] // Stage 3
-  deliverables     Deliverable[] // Stage 4
-  magicLinks       MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
-  mvDelivery       MvDelivery? // Stage 4 (1:1, Premium only)
-  consents         Consent[] // Stage 5
-  participants     BookingParticipant[] // Stage 5 (§3.4 minor flow; Stage 2 retro-add per §7-A.6)
-  // review → later stages
+  package           Package              @relation(fields: [packageId], references: [id])
+  room              Room                 @relation(fields: [roomId], references: [id])
+  user              User?                @relation(fields: [userId], references: [id])
+  song              Song?                @relation(fields: [songId], references: [id]) // Stage 4
+  userLink          BookingUserLink? // 1:1 retroactive guest→member link
+  automation        BookingAutomation? // 1:1 confirmation-automation tracking
+  payments          Payment[] // Stage 3
+  checkin           Checkin? // Stage 3 (1:1)
+  disputeEvidences  DisputeEvidence[] // Stage 3
+  deliverables      Deliverable[] // Stage 4
+  magicLinks        MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
+  mvDelivery        MvDelivery? // Stage 4 (1:1, Premium only)
+  consents          Consent[] // Stage 5
+  participants      BookingParticipant[] // Stage 5 (§3.4 minor flow; Stage 2 retro-add per §7-A.6)
+  review            Review? // Stage 6 (1:1)
+  npsResponse       NpsResponse? // Stage 6 (1:1)
+  referralAsInvitee Referral? // Stage 6 — this booking as a referral's invitee booking (1:1)
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -705,8 +707,9 @@ model Payment {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  booking Booking  @relation(fields: [bookingId], references: [id])
-  refunds Refund[]
+  booking           Booking   @relation(fields: [bookingId], references: [id])
+  refunds           Refund[]
+  referralAsInvitee Referral? // Stage 6 — this payment as a referral's invitee payment (1:1)
 
   @@index([bookingId])
   @@index([status])
@@ -1202,4 +1205,166 @@ model BookingParticipant {
   @@index([bookingId])
   @@index([guardianConsentId])
   @@map("booking_participants")
+}
+
+// =========================================================================================
+// STAGE 6 — MARKETING
+// =========================================================================================
+//
+// ⚠ OPEN DECISION (promotion_codes / coupons) — see Stage 6 review.
+//   §5.9 has admin promotion codes AND a referral reward coupon (referrals.inviter_coupon_id),
+//   but neither a `promotion_codes` nor `coupons` table is in the 7-stage plan. Below,
+//   `Referral.inviterCouponId` is a LOGICAL ref (plain String, no relation). Where these live
+//   is a decision for Aiden — not guessed here.
+// ⚠ §3.10 anti-abuse: referral self-invite blocking (IP / device fingerprint / card BIN) +
+//   re-signup cooldown is RUNTIME logic; the schema records the outcome (status=rejected,
+//   rejection_reason). Eligibility is Diamond/Premium/group only (Package.friendReferralEligible).
+//   §5.9 caps (10% / ₩50,000 / 10 invites / ₩500,000) are app-enforced.
+// NOTE: review moderation is post-hoc — negative reviews CANNOT be removed (KR 표시광고법);
+//   only 욕설/PII/spam/명백한 허위 → status=removed. Rating ≤2 fires Slack/Kakao alerts (§5.9).
+
+/// Review "what was good" tags (PRD §5.9, fixed set of 7).
+enum ReviewTag {
+  vocal_directing // 보컬 디렉팅
+  audio_quality // 결과물 음원 품질
+  photo_video // 사진/영상
+  facility // 시설
+  staff_friendliness // 직원 친절도
+  value_for_money // 가성비
+  song_variety // 곡 다양성
+}
+
+/// Review status (PRD §5.9 — designed; 즉시 노출 + 사후 모더레이션, so no pending state).
+enum ReviewStatus {
+  published // immediately visible on submit
+  removed // moderated out (욕설/PII/spam/허위 only; negatives cannot be removed)
+}
+
+enum NpsCategory {
+  detractor // 0–6
+  passive // 7–8
+  promoter // 9–10
+}
+
+/// Referral-code lifecycle (PRD §5.9 — designed; PRD lists "status" only).
+enum ReferralCodeStatus {
+  active
+  expired // past expires_at (+6 months)
+  disabled // admin-disabled (abuse)
+}
+
+/// Referral redemption outcome (PRD §5.9 exact). qualified = invitee paid + session done;
+/// rewarded = inviter coupon issued; rejected = abuse/ineligible (§3.10).
+enum ReferralStatus {
+  pending
+  qualified
+  rewarded
+  rejected
+}
+
+/// Customer review (PRD §5.9). Written inline on the download page; one per booking (editable
+/// via My Page). Immediately visible (status=published) + post-hoc moderation. author_display is
+/// masked (e.g. initials); author_name_snapshot keeps the full name for admin/dispute.
+model Review {
+  id                 String       @id @default(cuid())
+  bookingId          String       @unique @map("booking_id")
+  rating             Int // 1–5 (required)
+  tags               ReviewTag[]
+  body               String? // free text ≤500 (app-enforced)
+  authorDisplay      String       @map("author_display") // masked display name
+  authorNameSnapshot String?      @map("author_name_snapshot") // 🔒 PII — full name snapshot
+  packageSnapshot    Json         @map("package_snapshot") // service/package shown with the review
+  language           Locale
+  status             ReviewStatus @default(published)
+  moderationReason   String?      @map("moderation_reason")
+  moderatedBy        String?      @map("moderated_by") // logical ref to admin_users.id
+  moderatedAt        DateTime?    @map("moderated_at")
+  ip                 String? // 🔒 PII
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  booking Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  replies ReviewReply[]
+
+  @@index([status])
+  @@index([rating])
+  @@map("reviews")
+}
+
+/// Admin official reply to a review (PRD §5.9). repliedBy = admin (logical ref).
+model ReviewReply {
+  id        String   @id @default(cuid())
+  reviewId  String   @map("review_id")
+  body      String
+  repliedBy String?  @map("replied_by") // logical ref to admin_users.id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@map("review_replies")
+}
+
+/// NPS response (PRD §5.9), 1:1 with a booking. Tied to the D+3 review-request campaign.
+model NpsResponse {
+  id          String      @id @default(cuid())
+  bookingId   String      @unique @map("booking_id")
+  score       Int // 0–10
+  category    NpsCategory
+  respondedAt DateTime    @default(now()) @map("responded_at")
+  language    Locale
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@map("nps_responses")
+}
+
+/// Friend-invite code (PRD §5.9). Issued by a member (inviterUserId) or guest (inviterEmail
+/// only). Coupon usable only after the invitee qualifies AND the inviter converts to membership.
+model ReferralCode {
+  id            String             @id @default(cuid())
+  code          String             @unique
+  inviterUserId String?            @map("inviter_user_id") // null for guest issuers
+  inviterEmail  String             @map("inviter_email") // 🔒 PII
+  expiresAt     DateTime           @map("expires_at") // +6 months
+  usageCount    Int                @default(0) @map("usage_count")
+  maxUsage      Int                @default(10) @map("max_usage") // §5.9 cap: 10 invites
+  status        ReferralCodeStatus @default(active)
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  inviter   User?      @relation(fields: [inviterUserId], references: [id], onDelete: SetNull)
+  referrals Referral[]
+
+  @@index([inviterUserId])
+  @@index([status])
+  @@map("referral_codes")
+}
+
+/// A single invite redemption (PRD §5.9). Reward (inviter coupon) issues only at status=rewarded
+/// (invitee paid + session done). status=rejected on abuse/ineligibility (§3.10, reason stored).
+model Referral {
+  id                 String         @id @default(cuid())
+  referralCodeId     String         @map("referral_code_id")
+  inviteeBookingId   String?        @unique @map("invitee_booking_id")
+  inviteePaymentId   String?        @unique @map("invitee_payment_id")
+  status             ReferralStatus @default(pending)
+  inviteeDiscountKrw Int?           @map("invitee_discount_krw") // 10%, capped ₩50,000
+  inviterCouponId    String?        @map("inviter_coupon_id") // LOGICAL ref — coupon/promo table TBD (OPEN DECISION)
+  rejectionReason    String?        @map("rejection_reason") // abuse/ineligible detail (§3.10)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  qualifiedAt        DateTime?      @map("qualified_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+  inviteeBooking Booking?     @relation(fields: [inviteeBookingId], references: [id], onDelete: SetNull)
+  inviteePayment Payment?     @relation(fields: [inviteePaymentId], references: [id], onDelete: SetNull)
+
+  @@index([referralCodeId])
+  @@index([status])
+  @@map("referrals")
 }
