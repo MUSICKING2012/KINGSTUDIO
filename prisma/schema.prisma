@@ -97,7 +97,7 @@ model User {
   emailVerifications EmailVerification[]
   bookings           Booking[] // Stage 2 — bookings made while logged in (direct ownership)
   bookingLinks       BookingUserLink[] // Stage 2 — retroactive guest→member linkage by email
-  // consents        Consent[]          // Stage 5
+  consents           Consent[] // Stage 5
   // referralCodes   ReferralCode[]     // Stage 6
 
   @@index([status])
@@ -519,7 +519,8 @@ model Booking {
   deliverables     Deliverable[] // Stage 4
   magicLinks       MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
   mvDelivery       MvDelivery? // Stage 4 (1:1, Premium only)
-  // consents/review → later stages
+  consents         Consent[] // Stage 5
+  // review → later stages
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -1061,4 +1062,112 @@ model MvDelivery {
   @@index([mvTeamId])
   @@index([status])
   @@map("mv_deliveries")
+}
+
+// =========================================================================================
+// STAGE 5 — CONSENT · LEGAL
+// =========================================================================================
+//
+// ⚠ §3.1 HARD CONSTRAINT — consents is APPEND-ONLY. Prisma cannot enforce this; a raw-SQL
+//   migration MUST add a trigger that blocks UPDATE and DELETE (the model has NO updatedAt by
+//   design). Withdrawal = INSERT a new row of the same type with consented=false — never an
+//   UPDATE. Trigger (add in a `migrate dev --create-only` migration, then verify it actually
+//   rejects UPDATE/DELETE — §4 danger zone, needs a test):
+//     CREATE FUNCTION consents_block_mutation() RETURNS trigger LANGUAGE plpgsql AS $$
+//       BEGIN RAISE EXCEPTION 'consents is append-only: % blocked', TG_OP; END $$;
+//     CREATE TRIGGER consents_no_update BEFORE UPDATE ON consents
+//       FOR EACH ROW EXECUTE FUNCTION consents_block_mutation();
+//     CREATE TRIGGER consents_no_delete BEFORE DELETE ON consents
+//       FOR EACH ROW EXECUTE FUNCTION consents_block_mutation();
+//   booking/user FKs use onDelete: Restrict so deleting a parent can't UPDATE/orphan a consent
+//   (which the trigger would block anyway). PK is UUID per PRD §5.7.
+// ⚠ §3.8: publishing a new consent_document version is a re-auth-gated sensitive action.
+// ⚠ §4 gates live in settings: mr_predelivery_enabled (default false) & license_display_enabled.
+
+/// PRD §5.7 exact 13-value consent set. Item-by-item (no bundled consent).
+enum ConsentType {
+  tos
+  privacy
+  payment
+  usage_scope
+  korean_only // 1Hour/1Pro Korean-communication confirmation
+  guardian // minor (<16) guardian consent — extra_data holds guardian info (§3.4)
+  marketing_basic
+  marketing_ads
+  marketing_outdoor
+  marketing_broadcast
+  marketing_email
+  marketing_sms
+  license_self_brought // 1Hour/1Pro: customer-brought MR liability
+}
+
+/// Versioned legal-document types (PRD §5.7 — designed; PRD lists "type" only). These are the
+/// docs that get versioned + hashed + legally translated (CLAUDE.md §5 법률 트랙).
+enum LegalDocType {
+  tos
+  privacy
+  payment
+  refund
+  usage_scope
+}
+
+/// Append-only consent record (PRD §5.7 / CLAUDE.md §3.1). NO updatedAt — rows are immutable
+/// (DB trigger blocks UPDATE/DELETE, see section header). Withdrawal = new row, consented=false.
+model Consent {
+  id               String      @id @default(uuid()) @db.Uuid
+  bookingId        String?     @map("booking_id")
+  userId           String?     @map("user_id")
+  consentType      ConsentType @map("consent_type")
+  consentVersion   String?     @map("consent_version") // links consent_documents.version (doc-backed types)
+  consented        Boolean // true = agree; a withdrawal row carries false
+  consentedAt      DateTime    @default(now()) @map("consented_at")
+  ip               String? // 🔒 PII — consent evidence (timestamp + IP + UA per §5.5)
+  userAgent        String?     @map("user_agent")
+  language         Locale
+  extraData        Json?       @map("extra_data") // e.g. type=guardian → {name, relation, contact, email}
+  revokedAt        DateTime?   @map("revoked_at") // set ON a withdrawal row at insert (NOT a later update)
+  revocationReason String?     @map("revocation_reason")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@index([userId])
+  @@index([consentType])
+  @@map("consents")
+}
+
+/// Versioned legal document (PRD §5.7). A (type, version, language) is immutable once published;
+/// consents store the version + content_hash at consent time, proving WHAT was agreed to.
+/// Publishing a new version is §3.8 re-auth-gated. content/PDF kept under Bucket Lock (C13).
+model ConsentDocument {
+  id            String       @id @default(cuid())
+  type          LegalDocType
+  version       String
+  language      Locale
+  contentMd     String       @map("content_md") // markdown source
+  contentHash   String       @map("content_hash") // SHA-256 of contentMd, frozen at publish
+  effectiveFrom DateTime     @map("effective_from")
+  publishedBy   String?      @map("published_by") // logical ref to admin_users.id (§3.8)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  @@unique([type, version, language])
+  @@index([type, language])
+  @@map("consent_documents")
+}
+
+/// Global key-value settings (PRD §5.7 / §5.8-A). Houses the §4 danger-zone gates —
+/// `mr_predelivery_enabled` (default false, license gate §5.8-A②) and `license_display_enabled`
+/// (§5.7) — plus room/STUDIO B toggle, business hours, etc. value is Json (bool/string/object).
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g. 'mr_predelivery_enabled', 'license_display_enabled', 'studio_b_active'
+  value     Json
+  updatedBy String?  @map("updated_by") // logical ref to admin_users.id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
 }
