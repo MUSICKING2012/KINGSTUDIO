@@ -507,10 +507,10 @@ model Booking {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  package          Package            @relation(fields: [packageId], references: [id])
-  room             Room               @relation(fields: [roomId], references: [id])
-  user             User?              @relation(fields: [userId], references: [id])
-  song             Song?              @relation(fields: [songId], references: [id]) // Stage 4
+  package          Package              @relation(fields: [packageId], references: [id])
+  room             Room                 @relation(fields: [roomId], references: [id])
+  user             User?                @relation(fields: [userId], references: [id])
+  song             Song?                @relation(fields: [songId], references: [id]) // Stage 4
   userLink         BookingUserLink? // 1:1 retroactive guest→member link
   automation       BookingAutomation? // 1:1 confirmation-automation tracking
   payments         Payment[] // Stage 3
@@ -520,6 +520,7 @@ model Booking {
   magicLinks       MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
   mvDelivery       MvDelivery? // Stage 4 (1:1, Premium only)
   consents         Consent[] // Stage 5
+  participants     BookingParticipant[] // Stage 5 (§3.4 minor flow; Stage 2 retro-add per §7-A.6)
   // review → later stages
 
   @@index([roomId, date]) // occupancy/overlap scan
@@ -1103,6 +1104,9 @@ enum ConsentType {
 
 /// Versioned legal-document types (PRD §5.7 — designed; PRD lists "type" only). These are the
 /// docs that get versioned + hashed + legally translated (CLAUDE.md §5 법률 트랙).
+/// BOUNDARY: document-backed consents only. `guardian`, `korean_only`, `marketing_*`,
+/// `license_self_brought` are consent ACTIONS (checkbox/data capture) with NO versioned legal
+/// document — they live only in ConsentType, never here. So guardian is intentionally NOT added.
 enum LegalDocType {
   tos
   privacy
@@ -1118,6 +1122,10 @@ model Consent {
   bookingId        String?     @map("booking_id")
   userId           String?     @map("user_id")
   consentType      ConsentType @map("consent_type")
+  // Lineage of one logical consent decision: the first grant starts a group; each withdrawal
+  // (consented=false) / re-grant reuses the same consentGroupId. Lets us track WHAT a withdrawal
+  // revokes and find the current state (latest consentedAt in the group) — without UPDATE.
+  consentGroupId   String      @map("consent_group_id") @db.Uuid
   consentVersion   String?     @map("consent_version") // links consent_documents.version (doc-backed types)
   consented        Boolean // true = agree; a withdrawal row carries false
   consentedAt      DateTime    @default(now()) @map("consented_at")
@@ -1129,12 +1137,14 @@ model Consent {
   revocationReason String?     @map("revocation_reason")
   createdAt        DateTime    @default(now()) @map("created_at")
 
-  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: Restrict)
-  user    User?    @relation(fields: [userId], references: [id], onDelete: Restrict)
+  booking             Booking?             @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  user                User?                @relation(fields: [userId], references: [id], onDelete: Restrict)
+  guardedParticipants BookingParticipant[] // minors linked to this (guardian) consent
 
   @@index([bookingId])
   @@index([userId])
   @@index([consentType])
+  @@index([consentGroupId])
   @@map("consents")
 }
 
@@ -1170,4 +1180,26 @@ model Setting {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("settings")
+}
+
+/// Booking participant for the minor-protection flow (PRD §5.7 / §3.4 danger zone). Birthdate
+/// is captured per participant at Step 3; if anyone is <16 the guardian-consent branch triggers
+/// and payment is blocked until complete. AGE IS DETERMINED AT BOOKING TIME (Step 3, pre-payment
+/// — PRD §5.7), so isMinor is a snapshot of that determination. dateOfBirth is an isolated PII
+/// column for clean GDPR anonymization/deletion (§3.4), not buried in a Json blob.
+model BookingParticipant {
+  id                String   @id @default(cuid())
+  bookingId         String   @map("booking_id")
+  dateOfBirth       DateTime @map("date_of_birth") @db.Date // 🔒 PII
+  isMinor           Boolean  @map("is_minor") // snapshot of the <16 determination at booking time
+  guardianConsentId String?  @map("guardian_consent_id") @db.Uuid // FK → consents (guardian); null if not a minor
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  guardianConsent Consent? @relation(fields: [guardianConsentId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@index([guardianConsentId])
+  @@map("booking_participants")
 }
