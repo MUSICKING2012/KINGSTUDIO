@@ -37,8 +37,8 @@ enum Locale {
   ko
   en
   ja
-  zh_Hans @map("zh-Hans")
-  zh_Hant @map("zh-Hant")
+  zh_TW @map("zh-TW") // Traditional, Taiwan (C14)
+  zh_HK @map("zh-HK") // Traditional, Hong Kong (C14)
 }
 
 // =========================================================================================
@@ -69,7 +69,8 @@ enum Locale {
 enum UserStatus {
   active
   inactive // 7-day-unverified auto-deactivation or 30-day dormancy
-  deleted // soft-delete; PII anonymized per GDPR (PRD §5.10 / §5.7)
+  // C18: NO `deleted` value — deletion is determined SOLELY by `deletedAt IS NOT NULL`
+  // (single source of truth; avoids dual-encoding). PII anonymized per GDPR (§5.10 / §5.7).
 }
 
 model User {
@@ -96,8 +97,9 @@ model User {
   emailVerifications EmailVerification[]
   bookings           Booking[] // Stage 2 — bookings made while logged in (direct ownership)
   bookingLinks       BookingUserLink[] // Stage 2 — retroactive guest→member linkage by email
-  // consents        Consent[]          // Stage 5
-  // referralCodes   ReferralCode[]     // Stage 6
+  consents           Consent[] // Stage 5
+  referralCodes      ReferralCode[] // Stage 6 (codes this user issued as inviter)
+  coupons            Coupon[] // Stage 6 (personal issued coupons)
 
   @@index([status])
   @@index([deletedAt])
@@ -254,12 +256,14 @@ model AdminUser {
   createdAt        DateTime    @default(now()) @map("created_at")
   updatedAt        DateTime    @updatedAt @map("updated_at")
 
-  roles            AdminUserRole[]
-  sessions         AdminSession[]
-  reauthChallenges ReauthChallenge[]
-  // refunds                 Refund[]                 // Stage 3 (admin_user_id)
-  // notificationPreferences NotificationPreference[] // Stage 7
-  // auditLogs               AuditLog[]               // Stage 7 (actor)
+  roles                   AdminUserRole[]
+  sessions                AdminSession[]
+  reauthChallenges        ReauthChallenge[]
+  refunds                 Refund[] // Stage 3 (admin who processed the refund)
+  notificationPreferences NotificationPreference[] // Stage 7
+  notificationsReceived   AdminNotificationLog[] // Stage 7 (recipient)
+  // audit_logs.actorAdminUserId is a LOOSE String ref (no FK): audit_logs is append-only, so an
+  // FK SetNull/Cascade would mutate/delete immutable rows. See Stage 7.
 
   @@index([status])
   @@map("admin_users")
@@ -340,20 +344,16 @@ model ReauthChallenge {
 // STAGE 2 — BOOKING · SLOTS
 // =========================================================================================
 //
-// ⚠ OPEN DECISION (packages table) — see Stage 2 review notes.
-//   No `packages` model exists in the 7-stage plan, yet bookings reference a package and
-//   CLAUDE.md §6 says prices are DB-managed in a `packages` table. Below, `Booking.packageId`
-//   is a LOGICAL reference (plain String, no Prisma relation) + `packageSnapshot` Json, so the
-//   schema validates and §3.2 price-snapshot holds regardless. Where the Package model lives
-//   is a decision for Aiden (options A/B/C in the review) — not guessed here.
+// ✅ RESOLVED A1 (packages table) — Aiden, Stage 2 review. A `Package` model is added below
+//   (config table like Room; CLAUDE.md §6 = DB-managed prices). `Booking.packageId` is now a
+//   REAL FK to Package. `packageSnapshot` Json is still kept on Booking so §3.2 price-snapshot
+//   survives admin price edits. NOTE: PRD has no packages data-model block — the Package fields
+//   below are designed from §5.2/§5/§6 (flagged in the review; catalog CMS may extend in M2).
 //
-// ⚠ OPEN DECISION (blackout time representation) — see Stage 2 review notes.
-//   Your instruction asked bookings & blackouts to share `date + start_time + end_time`.
-//   PRD §5.3 instead models blackouts as a date RANGE (date_start/date_end) with NULLABLE
-//   time (full-day) + RRULE (recurring), which is required for the 3 blackout modes
-//   (slot / full_day / recurring). Collapsing to a single date would break full_day(multi-day)
-//   and recurring. Below follows PRD faithfully; both bookings AND blackouts still expose
-//   (room_id + date + time interval) so the occupancy/overlap query works. Flagged for confirm.
+// ✅ RESOLVED B1 (blackout time representation) — Aiden, Stage 2 review. Keep PRD-faithful:
+//   blackouts are a date RANGE (date_start/date_end) + NULLABLE time (full-day) + RRULE
+//   (recurring), supporting all 3 modes (slot / full_day / recurring). Both bookings AND
+//   blackouts still expose (room_id + date + time interval) so the occupancy query works.
 //
 // SLOT OCCUPANCY (§3.3 / §4 danger zone): availability SSOT is OUR DB. Overlap is computed at
 // runtime over (room_id, date, [start_time,end_time)) across BOTH bookings and blackouts — a
@@ -412,6 +412,55 @@ model Room {
   @@map("rooms")
 }
 
+enum PackageCategory {
+  experience // Gold / Diamond / Premium (per-person list price; 2p = ×1.5, C10)
+  rental // 1Hour / 1Pro (Korean-only; flat per session)
+  group // Making Class / 꿈길 / 워크샵 (per-head × headcount, C11)
+}
+
+/// How the total is computed from basePriceKrw + headcount (PRD §5.2 / CLAUDE.md §6).
+enum PricingMode {
+  per_person_x1_5 // experience: 1p = base; 2p total = base × 1.5 (C10)
+  flat // rental: fixed per session
+  per_head // group: base × headcount (C11)
+}
+
+enum BookingFlow {
+  instant_payment // online checkout (experience, rental, Making Class)
+  b2b_quote // quote → invoice flow (꿈길 / 워크샵 — PRD §5.7 / §5.8-A③)
+}
+
+/// Bookable product (PRD §5.2 / CLAUDE.md §6 — prices are DB-managed, never hardcoded).
+/// ⚠ PRD has NO packages data-model block; these fields are designed from §5.2/§5/§6 and may
+/// be extended by the catalog CMS in M2. Display copy lives in next-intl messages (§5); `name`
+/// is the canonical/admin identifier. `Booking.packageSnapshot` freezes pricing per §3.2.
+model Package {
+  id                     String          @id @default(cuid())
+  slug                   String          @unique // URL slug, e.g. 'gold' (/packages/gold)
+  category               PackageCategory
+  name                   String // canonical name (e.g. 'Gold', 'Diamond')
+  basePriceKrw           Int             @map("base_price_krw") // per the pricingMode unit (per-person / flat / per-head)
+  pricingMode            PricingMode     @map("pricing_mode")
+  slotMinutes            Int             @map("slot_minutes") // session duration (Gold/Diamond 120, Premium 180, 1Hour 60, 1Pro 210)
+  headcountMin           Int             @default(1) @map("headcount_min")
+  headcountMax           Int             @map("headcount_max")
+  // Locale exposure filter (CLAUDE.md §5 languages_available). e.g. rental/꿈길/워크샵 = [ko] only.
+  languagesAvailable     Locale[]        @map("languages_available")
+  bookingFlow            BookingFlow     @default(instant_payment) @map("booking_flow")
+  friendReferralEligible Boolean         @default(false) @map("friend_referral_eligible") // Diamond/Premium/group only (CLAUDE.md §6)
+  isActive               Boolean         @default(true) @map("is_active")
+  displayOrder           Int             @default(0) @map("display_order")
+  createdAt              DateTime        @default(now()) @map("created_at")
+  updatedAt              DateTime        @updatedAt @map("updated_at")
+
+  bookings Booking[]
+  quotes   Quote[] // Stage 3 (B2B)
+
+  @@index([category])
+  @@index([isActive])
+  @@map("packages")
+}
+
 /// A booking (PRD §5.3). Works for guests (userId null) and members (userId set). Time is KST
 /// fixed; (date, startTime, endTime, roomId) drive the occupancy/overlap query (see header).
 ///
@@ -426,7 +475,7 @@ model Booking {
   status BookingStatus @default(pending)
 
   // --- what / who runs it ---
-  packageId  String  @map("package_id") // LOGICAL FK to packages (Package model pending — OPEN DECISION)
+  packageId  String  @map("package_id") // FK to packages (Package model — RESOLVED A1)
   roomId     String  @map("room_id")
   engineerId String? @map("engineer_id") // logical ref to admin_users.id (Engineer role); relation left loose
   userId     String? @map("user_id") // null = guest booking; set = member booked while logged in
@@ -438,7 +487,7 @@ model Booking {
 
   // --- party ---
   headcount Int     @default(1)
-  songId    String? @map("song_id") // nullable; logical ref to songs (Stage 4)
+  songId    String? @map("song_id") // nullable; FK to songs (Stage 4). 1Hour/1Pro bring own MR → null.
 
   // --- customer contact snapshot (works for guests) ---
   customerName         String? @map("customer_name") // 🔒 PII
@@ -461,11 +510,25 @@ model Booking {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  room       Room               @relation(fields: [roomId], references: [id])
-  user       User?              @relation(fields: [userId], references: [id])
-  userLink   BookingUserLink? // 1:1 retroactive guest→member link
-  automation BookingAutomation? // 1:1 confirmation-automation tracking
-  // payment/refund/checkin/deliverables/consents/review → later stages
+  package           Package                @relation(fields: [packageId], references: [id])
+  room              Room                   @relation(fields: [roomId], references: [id])
+  user              User?                  @relation(fields: [userId], references: [id], onDelete: SetNull) // explicit: GDPR member delete de-links, booking retained (§4)
+  song              Song?                  @relation(fields: [songId], references: [id], onDelete: SetNull) // Stage 4
+  userLink          BookingUserLink? // 1:1 retroactive guest→member link
+  automation        BookingAutomation? // 1:1 confirmation-automation tracking
+  payments          Payment[] // Stage 3
+  checkin           Checkin? // Stage 3 (1:1)
+  disputeEvidences  DisputeEvidence[] // Stage 3
+  deliverables      Deliverable[] // Stage 4
+  magicLinks        MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
+  mvDelivery        MvDelivery? // Stage 4 (1:1, Premium only)
+  consents          Consent[] // Stage 5
+  participants      BookingParticipant[] // Stage 5 (§3.4 minor flow; Stage 2 retro-add per §7-A.6)
+  review            Review? // Stage 6 (1:1)
+  npsResponse       NpsResponse? // Stage 6 (1:1)
+  referralAsInvitee Referral? // Stage 6 — this booking as a referral's invitee booking (1:1)
+  couponUsed        Coupon? // Stage 6 — coupon redeemed on this booking (1:1)
+  notifications     CustomerNotification[] // Stage 7 (customer email/SMS log)
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -478,7 +541,7 @@ model Booking {
 }
 
 /// Slot/day/recurring block (PRD §5.3 — 3 modes). Closes overlapping slots for availability.
-/// roomId null = all rooms. PRD-faithful date RANGE + nullable time + RRULE (see OPEN DECISION).
+/// roomId null = all rooms. PRD-faithful date RANGE + nullable time + RRULE (RESOLVED B1).
 model Blackout {
   id            String         @id @default(cuid())
   scope         BlackoutScope
@@ -563,4 +626,1149 @@ model GcalPulledBlock {
 
   @@index([roomId])
   @@map("gcal_pulled_blocks")
+}
+
+// =========================================================================================
+// STAGE 3 — PAYMENT · REFUND
+// =========================================================================================
+//
+// §3.2 KRW single charge: amountKrw is the source of truth; display_* are reference-only
+//   ("approximate") foreign-currency values frozen at payment time (exchangeRateAtPayment).
+// §3.6 NO card/PII stored (MVP): only the PG's own transaction reference (pgTransactionId).
+//   Never store PAN/card data. Refund/payment amounts must never be recomputed from live
+//   policy — the policy is frozen on the Booking (§3.2, Stage 2).
+// ⚠ §4 danger zones touched here: payment webhooks (amount-tamper / dup-processing guards),
+//   PayPal Dispute Evidence Pack accuracy, and quote/invoice amount math (C11). The SCHEMA is
+//   set up for them; the webhook/refund/evidence LOGIC requires Aiden verification + tests.
+
+enum Pg {
+  inicis // KG이니시스 (domestic)
+  paypal // PayPal (overseas)
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  refunded
+  partial_refunded
+  failed
+}
+
+/// Refund reason buckets (PRD §5.3 3-tier policy + post-download cap). reason drives whether
+/// the PG fee is absorbed by us (business_fault/force_majeure) or deducted (customer change).
+enum RefundReasonCategory {
+  customer_change_of_mind
+  business_fault
+  force_majeure
+  post_download // download already occurred → max 50% (PRD §5.3)
+}
+
+enum QuoteStatus {
+  draft
+  sent
+  accepted
+  invoiced
+  paid
+  expired
+}
+
+/// Reference-only display currency, fixed per locale page (§3.2 — "approximate"). KRW is
+/// ALWAYS the actually billed currency; this is the parenthetical converted value shown.
+///   ko → KRW · en → USD · ja → JPY · zh-TW → TWD · zh-HK → HKD  (C14)
+enum DisplayCurrency {
+  KRW
+  USD
+  JPY
+  TWD
+  HKD
+}
+
+/// B2B group package type for quotes (PRD §5.2 group category — explicit enum per Aiden).
+enum GroupType {
+  making_class // K-Pop Making Class
+  kkumgil // 꿈길
+  workshop // 워크샵
+}
+
+/// A payment against a booking (PRD §5.5). A booking may have several rows (failed retries
+/// then a successful capture). KRW is the single billed currency (§3.2); display_* are
+/// approximate references frozen at payment time.
+model Payment {
+  id              String  @id @default(cuid())
+  bookingId       String  @map("booking_id")
+  pg              Pg
+  pgTransactionId String? @map("pg_transaction_id") // PG reference only — NOT card data (§3.6)
+  amountKrw       Int     @map("amount_krw") // billed amount (KRW, integer)
+  pgFeeKrw        Int     @default(0) @map("pg_fee_krw") // PG fee (~3.0% inicis / ~4.4%+₩560 paypal)
+
+  // approximate foreign-currency display, frozen at payment (§3.2 — reference only)
+  displayCurrency       DisplayCurrency? @map("display_currency") // locale-driven (ko=KRW…); reference only
+  displayAmount         Decimal?         @map("display_amount") @db.Decimal(14, 2)
+  exchangeRateAtPayment Decimal?         @map("exchange_rate_at_payment") @db.Decimal(18, 8)
+
+  status PaymentStatus @default(pending)
+  paidAt DateTime?     @map("paid_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  booking           Booking   @relation(fields: [bookingId], references: [id])
+  refunds           Refund[]
+  referralAsInvitee Referral? // Stage 6 — this payment as a referral's invitee payment (1:1)
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([pgTransactionId])
+  @@map("payments")
+}
+
+/// A refund on a payment (PRD §5.5). Partial refunds allowed (status partial_refunded on the
+/// payment). ⚠ §4 danger zone — amount math + PG-fee absorption must be verified. adminUserId
+/// is null for system-triggered refunds (e.g. minor guardian-objection 24h auto-refund §5.7).
+model Refund {
+  id              String               @id @default(cuid())
+  paymentId       String               @map("payment_id")
+  reasonCategory  RefundReasonCategory @map("reason_category")
+  refundAmountKrw Int                  @map("refund_amount_krw")
+  pgFeeDeducted   Boolean              @default(false) @map("pg_fee_deducted") // false = business absorbs (business_fault/force_majeure)
+  adminUserId     String?              @map("admin_user_id") // null = system/auto refund
+  adminMemo       String?              @map("admin_memo")
+  refundedAt      DateTime?            @map("refunded_at")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+
+  payment   Payment    @relation(fields: [paymentId], references: [id])
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@index([paymentId])
+  @@index([reasonCategory])
+  @@index([adminUserId])
+  @@map("refunds")
+}
+
+/// Customer arrival check-in (PRD §5.5). 1:1 with a booking. checkedInBy = engineer/admin
+/// (logical ref to admin_users.id, left loose like engineerId). Feeds Dispute Evidence Pack.
+model Checkin {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique @map("booking_id")
+  checkedInAt DateTime @map("checked_in_at")
+  checkedInBy String?  @map("checked_in_by") // logical ref to admin_users.id
+  memo        String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("checkins")
+}
+
+/// Generated PayPal Dispute Evidence Pack record (PRD §5.5). ⚠ §4 danger zone — the generated
+/// PDF's data accuracy must be verified. Stores the GCS object key (signed URL on demand, §3.5
+/// — C13: was pdf_url/S3). generatedBy = admin (logical ref).
+model DisputeEvidence {
+  id            String   @id @default(cuid())
+  bookingId     String   @map("booking_id")
+  generatedAt   DateTime @map("generated_at")
+  pdfStorageKey String?  @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_url)
+  generatedBy   String?  @map("generated_by") // logical ref to admin_users.id
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@index([bookingId])
+  @@map("dispute_evidences")
+}
+
+/// B2B group quote (PRD §5.8-A③). Group total = per-head × headcount (C11) + vat − discount.
+/// ⚠ §4 danger zone — amount math (C11/VAT/discount) must match the pricing model. Amounts are
+/// frozen at issue time (snapshot). inquiryId is a loose ref (no `inquiries` table in plan —
+/// see review note). group_type is represented by the linked Package (consolidated; review).
+model Quote {
+  id              String           @id @default(cuid())
+  inquiryId       String?          @map("inquiry_id") // loose ref to a group inquiry (no inquiries table — held)
+  groupType       GroupType        @map("group_type") // PRD §5.8-A③ explicit enum
+  packageId       String           @map("package_id")
+  headcount       Int
+  unitPriceKrw    Int              @map("unit_price") // per-head price snapshot (C11)
+  subtotalKrw     Int              @map("subtotal") // unitPrice × headcount
+  discountKrw     Int              @default(0) @map("discount")
+  vatKrw          Int              @default(0) @map("vat")
+  totalKrw        Int              @map("total_krw")
+  currencyDisplay DisplayCurrency? @map("currency_display") // approximate foreign currency for overseas groups
+  validUntil      DateTime?        @map("valid_until")
+  language        Locale
+  status          QuoteStatus      @default(draft)
+  pdfStorageKey   String?          @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_s3_key)
+  issuedBy        String?          @map("issued_by") // logical ref to admin_users.id
+  issuedAt        DateTime?        @map("issued_at")
+  acceptedAt      DateTime?        @map("accepted_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  package Package @relation(fields: [packageId], references: [id])
+
+  @@index([packageId])
+  @@index([status])
+  @@index([inquiryId])
+  @@index([status, validUntil]) // B2B quote-expiry sweep (§5.8-A③)
+  @@map("quotes")
+}
+
+// =========================================================================================
+// STAGE 4 — CONTENT · DELIVERY
+// =========================================================================================
+//
+// ⚠ §4 danger zones touched here (schema only; logic + tests need Aiden verification):
+//   - Magic-link token (RESOLVED): the 60-day URL token is a crypto-random secret stored ONLY
+//     as a SHA-256 hash (magic_links.token_hash), never raw — consistent with Stage 1 tokens.
+//     PK is cuid(); download_logs FK by that cuid. (PRD §5.6 "raw UUID PK" → correction pending.)
+//   - Signed URL only (§3.5): files are served via GCS/Cloud CDN signed URLs (TTL 10min,
+//     C13 rename of S3/CloudFront). storage_key columns hold the OBJECT KEY, never a public URL.
+//   - MR practice-track license gate (§4 / R2): a song's MR/lyrics deliver ONLY when the
+//     matching SongLicense (type=mr_distribution) is verified AND global
+//     settings.mr_predelivery_enabled is on (Stage 5; per-booking BookingAutomation.mrAccessEnabled).
+//     License is per-TYPE (recording / mr_distribution / lyrics) so partial clearance is expressible.
+//   - Deliverable versioning: supersedes self-relation; only the latest is downloadable, admin
+//     keeps all (PRD §5.6).
+// 💾 file sizes use BigInt (audio/video may exceed Int 2.1GB ceiling).
+
+// PRD §5.6 exact deliverable types & statuses.
+enum DeliverableType {
+  raw_wav
+  raw_mp3
+  master_wav
+  master_mp3
+  photos
+  mv_horizontal
+  highlight_vertical
+}
+
+enum DeliverableStatus {
+  pending
+  uploading
+  transcoding
+  ready
+  delivered
+  superseded // replaced by a newer version
+  archived
+}
+
+/// Magic-link status (PRD §5.6 — values designed; PRD lists "status" only). Reusable within
+/// expiry, so no "used" state. Transitions:
+///   active  → usable until expiresAt
+///   expired → past expiresAt (set by cron/lazy check)
+///   revoked → admin revoke, OR superseded by a REISSUE (reissue revokes the old link and
+///             mints a new magic_links row with a fresh token).
+enum MagicLinkStatus {
+  active
+  expired
+  revoked
+}
+
+/// External MV delivery status (PRD §5.6/§5.8 — values designed; PRD lists "status" only).
+enum MvDeliveryStatus {
+  pending // awaiting external team
+  in_production
+  submitted // external team delivered; content manager uploaded
+  spec_failed // ffprobe spec check failed → rejected / re-delivery
+  spec_passed // passed spec, ready
+  sent_to_customer
+}
+
+/// Per-type MR license dimension (PRD §5.7 / R2). A song can be cleared for recording but NOT
+/// for MR distribution — tracked independently so partial clearance is expressible.
+enum LicenseType {
+  recording // 녹음(복제)
+  mr_distribution // MR 배포(전송) — gates practice-track predelivery
+  lyrics // 가사
+}
+
+/// Song catalog (PRD §5.7 + §7.2 FTS, 200–500 songs). ⚠ PRD details only the license fields;
+/// structural fields designed from §5.2 (Gold beginner curation) — may extend in M2 CMS.
+/// title/artist are i18n via SongTranslation (translation-table pattern); MR license is per-type
+/// via SongLicense (R2). 1Hour/1Pro customers bring their own MR (booking.songId null).
+model Song {
+  id               String   @id @default(cuid())
+  beginnerCuration Boolean  @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  translations SongTranslation[]
+  licenses     SongLicense[]
+  bookings     Booking[]
+
+  @@index([isActive])
+  @@index([beginnerCuration])
+  @@map("songs")
+}
+
+/// Per-locale song title/artist (PRD §7.2 catalog FTS). DB content-i18n via a translation table
+/// — the pattern for dynamic catalog content (mirrors page_seo per-locale rows in Stage 7);
+/// `en` is the fallback locale (§5). Per-locale rows enable per-language full-text search.
+model SongTranslation {
+  id        String   @id @default(cuid())
+  songId    String   @map("song_id")
+  locale    Locale
+  title     String
+  artist    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@unique([songId, locale])
+  @@index([songId])
+  @@map("song_translations")
+}
+
+/// Per-type MR license verification (PRD §5.7 / R2). Split from a single boolean so a song can
+/// be e.g. recording-OK but MR-distribution-NG. Evidence stored under Bucket Lock (C13; §5.7).
+/// MR practice-track predelivery requires (type=mr_distribution, verified=true) + the global
+/// settings.mr_predelivery_enabled gate (Stage 5). License-display toggle shows verified types.
+model SongLicense {
+  id                 String      @id @default(cuid())
+  songId             String      @map("song_id")
+  type               LicenseType
+  verified           Boolean     @default(false)
+  evidenceStorageKey String?     @map("evidence_storage_key") // GCS object key under Bucket Lock (C13 rename of s3_key)
+  notes              String?
+  verifiedAt         DateTime?   @map("verified_at")
+  verifiedBy         String?     @map("verified_by") // logical ref to admin_users.id
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@unique([songId, type])
+  @@index([songId])
+  @@index([type, verified])
+  @@map("song_licenses")
+}
+
+/// A deliverable file for a booking (PRD §5.6). Versioned via supersedes (self 1:1); only the
+/// latest is downloadable, admin keeps all. storage_key = GCS object key (signed URL on demand).
+model Deliverable {
+  id             String            @id @default(cuid())
+  bookingId      String            @map("booking_id")
+  type           DeliverableType
+  version        Int               @default(1)
+  status         DeliverableStatus @default(pending)
+  storageKey     String?           @map("storage_key") // GCS object key (C13 rename of s3_key); null until uploaded
+  fileSizeBytes  BigInt?           @map("file_size_bytes")
+  uploadedBy     String?           @map("uploaded_by") // logical ref to admin_users.id (engineer/content manager)
+  uploadedAt     DateTime?         @map("uploaded_at")
+  releasedAt     DateTime?         @map("released_at") // when delivered to customer
+  supersedesId   String?           @unique @map("supersedes_id") // the version this one replaces (self 1:1)
+  retentionUntil DateTime?         @map("retention_until") // guest 3mo / member 12mo (PRD §5.6)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  booking      Booking       @relation(fields: [bookingId], references: [id])
+  supersedes   Deliverable?  @relation("DeliverableVersion", fields: [supersedesId], references: [id])
+  supersededBy Deliverable?  @relation("DeliverableVersion")
+  downloadLogs DownloadLog[]
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([type])
+  @@map("deliverables")
+}
+
+/// Content-download magic link (PRD §5.6): 60-day token, separate from auth tokens (Stage 1).
+/// One booking may have several (1차/2차/재발급). The raw token is crypto-random, sent only in
+/// the email/URL and NEVER stored; the DB keeps a SHA-256 hash (token_hash) — Stage 1-consistent.
+/// PK is cuid(). (PRD §5.6 says "raw UUID PK" → correction pending.)
+model MagicLink {
+  id             String          @id @default(cuid())
+  tokenHash      String          @unique @map("token_hash") // 🔒 SENSITIVE SHA-256 of the URL token; raw token never stored
+  bookingId      String          @map("booking_id")
+  generatedAt    DateTime        @default(now()) @map("generated_at")
+  expiresAt      DateTime        @map("expires_at") // +60 days
+  lastAccessedAt DateTime?       @map("last_accessed_at")
+  accessCount    Int             @default(0) @map("access_count")
+  status         MagicLinkStatus @default(active)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  booking      Booking       @relation(fields: [bookingId], references: [id])
+  downloadLogs DownloadLog[]
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("magic_links")
+}
+
+/// Download audit log (PRD §5.6). Feeds abnormal-frequency detection (50/5min → auto-block)
+/// and the Dispute Evidence Pack — so it must survive deliverable deletion (deliverableId
+/// nullable + SetNull). FK to magic_links by cuid id. Identity snapshot (file name + type) is
+/// frozen here so the dispute record stays complete even after the deliverable is removed.
+model DownloadLog {
+  id                      String           @id @default(cuid())
+  magicLinkId             String           @map("magic_link_id")
+  deliverableId           String?          @map("deliverable_id")
+  deliverableTypeSnapshot DeliverableType? @map("deliverable_type_snapshot") // frozen — survives SetNull (dispute)
+  fileNameSnapshot        String?          @map("file_name_snapshot") // frozen file name at download time
+  downloadedAt            DateTime         @default(now()) @map("downloaded_at")
+  ip                      String? // 🔒 PII (abnormal-frequency / dispute evidence)
+  userAgent               String?          @map("user_agent")
+  bytesTransferred        BigInt?          @map("bytes_transferred")
+  createdAt               DateTime         @default(now()) @map("created_at")
+  updatedAt               DateTime         @updatedAt @map("updated_at")
+
+  magicLink   MagicLink    @relation(fields: [magicLinkId], references: [id])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: SetNull)
+
+  @@index([magicLinkId])
+  @@index([deliverableId])
+  @@index([ip])
+  @@map("download_logs")
+}
+
+/// External MV production team (PRD §5.8). No admin account issued; content manager uploads
+/// their deliveries. 🔒 contact_* are vendor PII.
+model MvTeam {
+  id           String   @id @default(cuid())
+  name         String
+  contactEmail String?  @map("contact_email") // 🔒 PII
+  contactPhone String?  @map("contact_phone") // 🔒 PII
+  isActive     Boolean  @default(true) @map("is_active")
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  deliveries MvDelivery[]
+
+  @@map("mv_teams")
+}
+
+/// Premium MV delivery tracking, 1:1 with a booking (PRD §5.6/§5.8). ffprobe spec check on
+/// upload (spec_check_result/spec_passed); on fail → reject + Slack #content. storage keys are
+/// GCS object keys (C13 rename of main/short_file_s3_key).
+model MvDelivery {
+  id                   String           @id @default(cuid())
+  bookingId            String           @unique @map("booking_id")
+  mvTeamId             String?          @map("mv_team_id")
+  status               MvDeliveryStatus @default(pending)
+  expectedDeliveryDate DateTime?        @map("expected_delivery_date") @db.Date // session + 24d
+  actualDeliveryDate   DateTime?        @map("actual_delivery_date") @db.Date
+  specCheckResult      Json?            @map("spec_check_result") // ffprobe metadata (resolution/codec/duration/bitrate)
+  specPassed           Boolean?         @map("spec_passed")
+  rejectionCount       Int              @default(0) @map("rejection_count")
+  rejectionReasons     Json?            @map("rejection_reasons") // list of reasons across re-deliveries
+  mainFileStorageKey   String?          @map("main_file_storage_key") // GCS key (C13 rename of main_file_s3_key)
+  shortFileStorageKey  String?          @map("short_file_storage_key") // GCS key (C13 rename of short_file_s3_key)
+  uploadedBy           String?          @map("uploaded_by") // logical ref to admin_users.id (content manager)
+  uploadedAt           DateTime?        @map("uploaded_at")
+  sentToCustomerAt     DateTime?        @map("sent_to_customer_at") // session + 28d
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+  mvTeam  MvTeam? @relation(fields: [mvTeamId], references: [id])
+
+  @@index([mvTeamId])
+  @@index([status])
+  @@map("mv_deliveries")
+}
+
+// =========================================================================================
+// STAGE 5 — CONSENT · LEGAL
+// =========================================================================================
+//
+// ⚠ §3.1 HARD CONSTRAINT — consents is APPEND-ONLY. Prisma cannot enforce this; a raw-SQL
+//   migration MUST add a trigger that blocks UPDATE and DELETE (the model has NO updatedAt by
+//   design). Withdrawal = INSERT a new row of the same type with consented=false — never an
+//   UPDATE. Trigger (add in a `migrate dev --create-only` migration, then verify it actually
+//   rejects UPDATE/DELETE — §4 danger zone, needs a test):
+//     CREATE FUNCTION consents_block_mutation() RETURNS trigger LANGUAGE plpgsql AS $$
+//       BEGIN RAISE EXCEPTION 'consents is append-only: % blocked', TG_OP; END $$;
+//     CREATE TRIGGER consents_no_update BEFORE UPDATE ON consents
+//       FOR EACH ROW EXECUTE FUNCTION consents_block_mutation();
+//     CREATE TRIGGER consents_no_delete BEFORE DELETE ON consents
+//       FOR EACH ROW EXECUTE FUNCTION consents_block_mutation();
+//   booking/user FKs use onDelete: Restrict so deleting a parent can't UPDATE/orphan a consent
+//   (which the trigger would block anyway). PK is UUID per PRD §5.7.
+// ⚠ §3.8: publishing a new consent_document version is a re-auth-gated sensitive action.
+// ⚠ §4 gates live in settings: mr_predelivery_enabled (default false) & license_display_enabled.
+
+/// PRD §5.7 exact 13-value consent set. Item-by-item (no bundled consent).
+enum ConsentType {
+  tos
+  privacy
+  payment
+  usage_scope
+  korean_only // 1Hour/1Pro Korean-communication confirmation
+  guardian // minor (<16) guardian consent — extra_data holds guardian info (§3.4)
+  marketing_basic
+  marketing_ads
+  marketing_outdoor
+  marketing_broadcast
+  marketing_email
+  marketing_sms
+  license_self_brought // 1Hour/1Pro: customer-brought MR liability
+}
+
+/// Versioned legal-document types (PRD §5.7 — designed; PRD lists "type" only). These are the
+/// docs that get versioned + hashed + legally translated (CLAUDE.md §5 법률 트랙).
+/// BOUNDARY: document-backed consents only. `guardian`, `korean_only`, `marketing_*`,
+/// `license_self_brought` are consent ACTIONS (checkbox/data capture) with NO versioned legal
+/// document — they live only in ConsentType, never here. So guardian is intentionally NOT added.
+enum LegalDocType {
+  tos
+  privacy
+  payment
+  refund
+  usage_scope
+}
+
+/// Append-only consent record (PRD §5.7 / CLAUDE.md §3.1). NO updatedAt — rows are immutable
+/// (DB trigger blocks UPDATE/DELETE, see section header). Withdrawal = new row, consented=false.
+model Consent {
+  id               String      @id @default(uuid()) @db.Uuid
+  bookingId        String?     @map("booking_id")
+  userId           String?     @map("user_id")
+  consentType      ConsentType @map("consent_type")
+  // Lineage of one logical consent decision: the first grant starts a group; each withdrawal
+  // (consented=false) / re-grant reuses the same consentGroupId. Lets us track WHAT a withdrawal
+  // revokes and find the current state (latest consentedAt in the group) — without UPDATE.
+  consentGroupId   String      @map("consent_group_id") @db.Uuid
+  consentVersion   String?     @map("consent_version") // links consent_documents.version (doc-backed types)
+  consented        Boolean // true = agree; a withdrawal row carries false
+  consentedAt      DateTime    @default(now()) @map("consented_at")
+  ip               String? // 🔒 PII — consent evidence (timestamp + IP + UA per §5.5)
+  userAgent        String?     @map("user_agent")
+  language         Locale
+  extraData        Json?       @map("extra_data") // e.g. type=guardian → {name, relation, contact, email}
+  revokedAt        DateTime?   @map("revoked_at") // set ON a withdrawal row at insert (NOT a later update)
+  revocationReason String?     @map("revocation_reason")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  booking             Booking?             @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  user                User?                @relation(fields: [userId], references: [id], onDelete: Restrict)
+  guardedParticipants BookingParticipant[] // minors linked to this (guardian) consent
+
+  @@index([bookingId])
+  @@index([userId])
+  @@index([consentType])
+  @@index([consentGroupId])
+  @@index([consentVersion]) // recall "who consented to version X" on terms_publish (§5.7)
+  @@map("consents")
+}
+
+/// Versioned legal document (PRD §5.7). A (type, version, language) is immutable once published;
+/// consents store the version + content_hash at consent time, proving WHAT was agreed to.
+/// Publishing a new version is §3.8 re-auth-gated. content/PDF kept under Bucket Lock (C13).
+model ConsentDocument {
+  id            String       @id @default(cuid())
+  type          LegalDocType
+  version       String
+  language      Locale
+  contentMd     String       @map("content_md") // markdown source
+  contentHash   String       @map("content_hash") // SHA-256 of contentMd, frozen at publish
+  effectiveFrom DateTime     @map("effective_from")
+  publishedBy   String?      @map("published_by") // logical ref to admin_users.id (§3.8)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  @@unique([type, version, language])
+  @@index([type, language])
+  @@map("consent_documents")
+}
+
+/// Global key-value settings (PRD §5.7 / §5.8-A). Houses the §4 danger-zone gates —
+/// `mr_predelivery_enabled` (default false, license gate §5.8-A②) and `license_display_enabled`
+/// (§5.7) — plus room/STUDIO B toggle, business hours, etc. value is Json (bool/string/object).
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g. 'mr_predelivery_enabled', 'license_display_enabled', 'studio_b_active'
+  value     Json
+  updatedBy String?  @map("updated_by") // logical ref to admin_users.id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+/// Booking participant for the minor-protection flow (PRD §5.7 / §3.4 danger zone). Birthdate
+/// is captured per participant at Step 3; if anyone is <16 the guardian-consent branch triggers
+/// and payment is blocked until complete. AGE IS DETERMINED AT BOOKING TIME (Step 3, pre-payment
+/// — PRD §5.7), so isMinor is a snapshot of that determination. dateOfBirth is an isolated PII
+/// column for clean GDPR anonymization/deletion (§3.4), not buried in a Json blob.
+model BookingParticipant {
+  id                String   @id @default(cuid())
+  bookingId         String   @map("booking_id")
+  dateOfBirth       DateTime @map("date_of_birth") @db.Date // 🔒 PII
+  isMinor           Boolean  @map("is_minor") // snapshot of the <16 determination at booking time
+  guardianConsentId String?  @map("guardian_consent_id") @db.Uuid // FK → consents (guardian); null if not a minor
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  guardianConsent Consent? @relation(fields: [guardianConsentId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@index([guardianConsentId])
+  @@map("booking_participants")
+}
+
+// =========================================================================================
+// STAGE 6 — MARKETING
+// =========================================================================================
+//
+// ✅ RESOLVED (A, Aiden): add PromotionCode + Coupon (SEPARATE models — different ownership &
+//   lifecycle). PromotionCode = admin-defined SHARED code (many redemptions, rules). Coupon =
+//   personal ISSUED discount to one user (referral reward / anniversary / compensation), single
+//   owner, single-use. `Referral.inviterCouponId` is now a real FK → Coupon (1:1).
+// ⚠ §3.10 anti-abuse: referral self-invite blocking (IP / device fingerprint / card BIN) +
+//   re-signup cooldown is RUNTIME logic; the schema records the outcome (status=rejected,
+//   rejection_reason). Eligibility is Diamond/Premium/group only (Package.friendReferralEligible).
+//   §5.9 caps (10% / ₩50,000 / 10 invites / ₩500,000) are app-enforced.
+// NOTE: review moderation is post-hoc — negative reviews CANNOT be removed (KR 표시광고법);
+//   only 욕설/PII/spam/명백한 허위 → status=removed. Rating ≤2 fires Slack/Kakao alerts (§5.9).
+
+/// Review "what was good" tags (PRD §5.9, fixed set of 7).
+enum ReviewTag {
+  vocal_directing // 보컬 디렉팅
+  audio_quality // 결과물 음원 품질
+  photo_video // 사진/영상
+  facility // 시설
+  staff_friendliness // 직원 친절도
+  value_for_money // 가성비
+  song_variety // 곡 다양성
+}
+
+/// Review status (PRD §5.9 — designed; 즉시 노출 + 사후 모더레이션, so no pending state).
+enum ReviewStatus {
+  published // immediately visible on submit
+  removed // moderated out (욕설/PII/spam/허위 only; negatives cannot be removed)
+}
+
+enum NpsCategory {
+  detractor // 0–6
+  passive // 7–8
+  promoter // 9–10
+}
+
+/// Referral-code lifecycle (PRD §5.9 — designed; PRD lists "status" only).
+enum ReferralCodeStatus {
+  active
+  expired // past expires_at (+6 months)
+  disabled // admin-disabled (abuse)
+}
+
+/// Referral redemption outcome (PRD §5.9 exact). qualified = invitee paid + session done;
+/// rewarded = inviter coupon issued; rejected = abuse/ineligible (§3.10).
+enum ReferralStatus {
+  pending
+  qualified
+  rewarded
+  rejected
+}
+
+/// Customer review (PRD §5.9). Written inline on the download page; one per booking (editable
+/// via My Page). Immediately visible (status=published) + post-hoc moderation. author_display is
+/// masked (e.g. initials); author_name_snapshot keeps the full name for admin/dispute.
+model Review {
+  id                 String       @id @default(cuid())
+  bookingId          String       @unique @map("booking_id")
+  rating             Int // 1–5 (required)
+  tags               ReviewTag[]
+  body               String? // free text ≤500 (app-enforced)
+  authorDisplay      String       @map("author_display") // masked display name
+  authorNameSnapshot String?      @map("author_name_snapshot") // 🔒 PII — full name snapshot
+  packageSnapshot    Json         @map("package_snapshot") // service/package shown with the review
+  language           Locale
+  status             ReviewStatus @default(published)
+  moderationReason   String?      @map("moderation_reason")
+  moderatedBy        String?      @map("moderated_by") // logical ref to admin_users.id
+  moderatedAt        DateTime?    @map("moderated_at")
+  ip                 String? // 🔒 PII
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  booking Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  replies ReviewReply[]
+
+  @@index([status])
+  @@index([rating])
+  @@map("reviews")
+}
+
+/// Admin official reply to a review (PRD §5.9). repliedBy = admin (logical ref).
+model ReviewReply {
+  id        String   @id @default(cuid())
+  reviewId  String   @map("review_id")
+  body      String
+  repliedBy String?  @map("replied_by") // logical ref to admin_users.id
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@map("review_replies")
+}
+
+/// NPS response (PRD §5.9), 1:1 with a booking. Tied to the D+3 review-request campaign.
+model NpsResponse {
+  id          String      @id @default(cuid())
+  bookingId   String      @unique @map("booking_id")
+  score       Int // 0–10
+  category    NpsCategory
+  respondedAt DateTime    @default(now()) @map("responded_at")
+  language    Locale
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@map("nps_responses")
+}
+
+/// Friend-invite code (PRD §5.9). Issued by a member (inviterUserId) or guest (inviterEmail
+/// only). Coupon usable only after the invitee qualifies AND the inviter converts to membership.
+model ReferralCode {
+  id            String             @id @default(cuid())
+  code          String             @unique
+  inviterUserId String?            @map("inviter_user_id") // null for guest issuers
+  inviterEmail  String             @map("inviter_email") // 🔒 PII
+  expiresAt     DateTime           @map("expires_at") // +6 months
+  usageCount    Int                @default(0) @map("usage_count")
+  maxUsage      Int                @default(10) @map("max_usage") // §5.9 cap: 10 invites
+  status        ReferralCodeStatus @default(active)
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  inviter   User?      @relation(fields: [inviterUserId], references: [id], onDelete: SetNull)
+  referrals Referral[]
+
+  @@index([inviterUserId])
+  @@index([status])
+  @@map("referral_codes")
+}
+
+/// A single invite redemption (PRD §5.9). Reward (inviter coupon) issues only at status=rewarded
+/// (invitee paid + session done). status=rejected on abuse/ineligibility (§3.10, reason stored).
+model Referral {
+  id                 String         @id @default(cuid())
+  referralCodeId     String         @map("referral_code_id")
+  inviteeBookingId   String?        @unique @map("invitee_booking_id")
+  inviteePaymentId   String?        @unique @map("invitee_payment_id")
+  status             ReferralStatus @default(pending)
+  inviteeDiscountKrw Int?           @map("invitee_discount_krw") // 10%, capped ₩50,000
+  inviterCouponId    String?        @unique @map("inviter_coupon_id") // FK → coupons (reward, 1:1)
+  rejectionReason    String?        @map("rejection_reason") // abuse/ineligible detail (§3.10)
+  createdAt          DateTime       @default(now()) @map("created_at")
+  qualifiedAt        DateTime?      @map("qualified_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+
+  referralCode   ReferralCode @relation(fields: [referralCodeId], references: [id])
+  inviteeBooking Booking?     @relation(fields: [inviteeBookingId], references: [id], onDelete: Restrict) // preserve reward money-trail (§5.9/§3.10)
+  inviteePayment Payment?     @relation(fields: [inviteePaymentId], references: [id], onDelete: Restrict)
+  inviterCoupon  Coupon?      @relation(fields: [inviterCouponId], references: [id], onDelete: SetNull)
+
+  @@index([referralCodeId])
+  @@index([status])
+  @@map("referrals")
+}
+
+// ---- Discount codes (PRD §5.9; RESOLVED A — promotion vs coupon SEPARATED) ---------------
+
+/// Shared by PromotionCode & Coupon. 정률(percentage, value=1..50) / 정액(fixed, value=KRW).
+enum DiscountType {
+  percentage
+  fixed
+}
+
+/// How a promotion code may be redeemed (PRD §5.9).
+enum PromotionUsageMode {
+  single_use // one redemption total
+  multi_use // unlimited until total_limit / expiry
+  once_per_user
+}
+
+enum PromotionCodeStatus {
+  active
+  paused
+  expired
+  exhausted // hit total_limit
+}
+
+/// Why a personal coupon was issued (PRD §5.9 / §5.5 compensation / D+365 anniversary).
+enum CouponSource {
+  referral_reward
+  anniversary
+  compensation // business-fault goodwill (§5.3 B)
+  manual
+}
+
+enum CouponStatus {
+  active
+  used
+  expired
+  revoked
+}
+
+/// Admin-defined promotion code (PRD §5.9). Shared code, many redemptions. >15% issuance needs
+/// Manager/Super Admin approval (§3.8 re-auth — runtime). channel_tag mandatory for measurement.
+/// Cannot be combined with a referral coupon (runtime check). Per-user/total caps app-enforced.
+model PromotionCode {
+  id                 String              @id @default(cuid())
+  code               String              @unique
+  type               DiscountType
+  value              Int // percentage 1..50, or fixed KRW
+  usageMode          PromotionUsageMode  @map("usage_mode")
+  status             PromotionCodeStatus @default(active)
+  expiresAt          DateTime            @map("expires_at") // 만료 필수
+  minOrderKrw        Int?                @map("min_order_krw")
+  totalLimit         Int?                @map("total_limit")
+  usageCount         Int                 @default(0) @map("usage_count")
+  applicablePackages Json?               @map("applicable_packages") // package ids/categories toggle
+  applicableLocales  Locale[]            @map("applicable_locales") // language toggle
+  channelTag         String              @map("channel_tag") // 발급 채널 태그 필수
+  approvedBy         String?             @map("approved_by") // logical ref to admin_users.id (>15% approval)
+  createdBy          String?             @map("created_by") // logical ref to admin_users.id
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+
+  coupons Coupon[] // coupons derived from this promo (optional)
+
+  @@index([status])
+  @@map("promotion_codes")
+}
+
+/// Personal issued coupon (PRD §5.9). Owned by one user (referral coupon requires membership);
+/// single-use. Referral reward: 10% capped ₩50,000, +6mo expiry. Redeemed on one booking.
+model Coupon {
+  id              String       @id @default(cuid())
+  code            String?      @unique // some coupons have a code; referral/anniversary may auto-apply
+  userId          String?      @map("user_id") // owner
+  type            DiscountType
+  value           Int // percentage or KRW
+  capKrw          Int?         @map("cap_krw") // discount cap (referral ₩50,000)
+  source          CouponSource
+  status          CouponStatus @default(active)
+  expiresAt       DateTime     @map("expires_at")
+  usedBookingId   String?      @unique @map("used_booking_id") // where redeemed (1:1)
+  promotionCodeId String?      @map("promotion_code_id") // if derived from a promo
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  usedBooking   Booking?       @relation(fields: [usedBookingId], references: [id], onDelete: Restrict) // preserve redemption money-trail (§5.9)
+  promotionCode PromotionCode? @relation(fields: [promotionCodeId], references: [id], onDelete: SetNull)
+  referral      Referral? // back-relation: referrals.inviter_coupon_id (reward)
+
+  @@index([userId])
+  @@index([status])
+  @@map("coupons")
+}
+
+// =========================================================================================
+// STAGE 7 — NOTIFICATIONS · AUDIT · SEO
+// =========================================================================================
+//
+// ⚠ §5.8 audit_logs is APPEND-ONLY (like consents §3.1): a raw-SQL migration MUST add a trigger
+//   blocking UPDATE/DELETE (model has NO updatedAt). actor is a LOOSE String ref (no FK) so a
+//   parent delete can't mutate immutable rows. Monthly PARTITIONING + GCS archive (Bucket Lock)
+//   are added via raw SQL (not expressible in Prisma) — note for the migration. Super Admin
+//   read-only. Same trigger pattern as consents (see Stage 5 header for the SQL).
+// ⚠ §4 / §5.8-A① seo_code_slots is a WHITELIST: only ga4/gtm/verify_* slots for normal admins;
+//   custom_script requires Super Admin + re-auth + audit log (requiresReauth=true). No free HTML/JS.
+// NOTE: two distinct notification logs — `notifications_log` (CUSTOMER email/SMS, §5.6) vs
+//   `notification_logs` (ADMIN internal Slack/Kakao, §5.8). Kept as separate models.
+// page_seo / page_schemas are per-locale (zh-TW/zh-HK included, C14).
+
+// ---- enums ----
+enum NotificationChannel {
+  slack
+  kakao
+  email
+  sms
+}
+
+/// Admin internal notification types (PRD §5.8 alert table).
+enum AdminNotificationType {
+  new_booking
+  payment_failed
+  cs_inquiry
+  magic_link_sla_imminent
+  magic_link_sla_exceeded
+  refund_overdue
+  paypal_dispute
+  dsr_request
+  system_down
+  security_alert
+  unfamiliar_login
+  gold_kpi_gate
+}
+
+/// Auditable actions (PRD §5.8 — designed from the §5.8 audit target list).
+enum AuditAction {
+  login
+  logout
+  login_failed
+  refund
+  role_change
+  consent_view
+  consent_export
+  pii_view
+  booking_modify
+  booking_delete
+  content_upload
+  content_download
+  data_export
+  magic_link_reissue
+  blackout_create
+  price_change
+  terms_publish
+  reauth
+}
+
+enum KeywordType {
+  seo
+  aeo
+  geo
+}
+
+/// 7 structured-data types (PRD §6.3). schema.org names.
+enum SchemaType {
+  Organization
+  LocalBusiness
+  Product
+  AggregateRating
+  Review
+  FAQPage
+  BreadcrumbList
+}
+
+/// SEO code-injection whitelist slots (PRD §5.8-A① / §4). custom_script is the only free-form
+/// one and is Super-Admin + re-auth gated.
+enum SeoCodeSlotType {
+  ga4
+  gtm
+  verify_google
+  verify_naver
+  verify_bing
+  custom_script
+}
+
+// ---- notifications ----
+
+/// Customer-facing notification log (PRD §5.6) — email/SMS for booking/magic-link/SLA/refund.
+/// `type` is a free string key (many types, not enumerated in PRD). channel: email|sms only.
+model CustomerNotification {
+  id                String              @id @default(cuid())
+  bookingId         String              @map("booking_id")
+  type              String // notification key, e.g. 'booking_confirmation', 'magic_link_1st'
+  channel           NotificationChannel // email | sms (customer only)
+  sentAt            DateTime?           @map("sent_at")
+  delivered         Boolean             @default(false)
+  providerMessageId String?             @map("provider_message_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@index([bookingId])
+  @@index([type])
+  @@map("notifications_log")
+}
+
+/// Per-admin notification preferences (PRD §5.8): channel + quiet hours per notification type.
+model NotificationPreference {
+  id                     String                @id @default(cuid())
+  adminUserId            String                @map("admin_user_id")
+  notificationType       AdminNotificationType @map("notification_type")
+  channel                NotificationChannel
+  enabled                Boolean               @default(true)
+  quietHoursStart        DateTime?             @map("quiet_hours_start") @db.Time(0) // e.g. 22:00
+  quietHoursEnd          DateTime?             @map("quiet_hours_end") @db.Time(0) // e.g. 08:00
+  overrideQuietForUrgent Boolean               @default(true) @map("override_quiet_for_urgent") // system_down/security exempt
+  createdAt              DateTime              @default(now()) @map("created_at")
+  updatedAt              DateTime              @updatedAt @map("updated_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@unique([adminUserId, notificationType, channel])
+  @@index([adminUserId])
+  @@map("notification_preferences")
+}
+
+/// Global notification policy per type (PRD §5.8): default recipient role + channels, Super-Admin
+/// managed. One row per notification type.
+model NotificationGlobalPolicy {
+  id                    String                @id @default(cuid())
+  notificationType      AdminNotificationType @unique @map("notification_type")
+  defaultRecipientsRole String?               @map("default_recipients_role") // admin_roles.name (loose)
+  defaultChannels       NotificationChannel[] @map("default_channels")
+  enabled               Boolean               @default(true)
+  disabledAt            DateTime?             @map("disabled_at")
+  disabledBy            String?               @map("disabled_by") // logical ref to admin_users.id
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+
+  @@map("notification_global_policy")
+}
+
+/// Admin internal notification log (PRD §5.8) — Slack/Kakao/email/SMS sent to staff.
+model AdminNotificationLog {
+  id                   String                @id @default(cuid())
+  notificationType     AdminNotificationType @map("notification_type")
+  recipientAdminUserId String?               @map("recipient_admin_user_id")
+  channel              NotificationChannel
+  payload              Json?
+  sentAt               DateTime?             @map("sent_at")
+  delivered            Boolean               @default(false)
+  providerMessageId    String?               @map("provider_message_id")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+
+  recipient AdminUser? @relation(fields: [recipientAdminUserId], references: [id], onDelete: SetNull)
+
+  @@index([notificationType])
+  @@index([recipientAdminUserId])
+  @@map("notification_logs")
+}
+
+// ---- audit ----
+
+/// Append-only audit log (PRD §5.8 / CLAUDE.md §3 audit). NO updatedAt — immutable. DB trigger
+/// blocks UPDATE/DELETE (see section header). actor is a LOOSE String ref (no FK). To be
+/// monthly-partitioned + GCS-archived via raw SQL. ⚠ §4 — verify trigger + retention.
+model AuditLog {
+  id               String      @id @default(cuid())
+  actorAdminUserId String?     @map("actor_admin_user_id") // loose ref; null = system
+  action           AuditAction
+  targetType       String?     @map("target_type") // e.g. 'booking', 'refund', 'user'
+  targetId         String?     @map("target_id")
+  metadata         Json? // action context (no raw PII/secrets — §3.6)
+  ip               String? // 🔒 PII
+  userAgent        String?     @map("user_agent")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  @@index([actorAdminUserId])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ---- SEO / AEO / GEO ----
+
+/// Per-page, per-locale SEO meta (PRD §6.3 + §5.8-A① excerpt). Editable via the Ghost-style UI.
+model PageSeo {
+  id           String   @id @default(cuid())
+  pagePath     String   @map("page_path")
+  language     Locale
+  title        String? // meta title (50–60); H1 fallback at render
+  description  String? // meta description (120–158); excerpt fallback
+  h1           String?
+  excerpt      String? // §5.8-A①
+  canonicalUrl String?  @map("canonical_url") // self-URL fallback
+  ogImageUrl   String?  @map("og_image_url")
+  noindex      Boolean  @default(false)
+  nofollow     Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([pagePath, language])
+  @@index([pagePath])
+  @@map("page_seo")
+}
+
+/// JSON-LD structured data applied to a page (PRD §6.3). Template-based; custom_json validated
+/// against Google Rich Results before save (validated flag). 7 MVP templates auto-applied.
+model PageSchema {
+  id               String     @id @default(cuid())
+  pagePath         String     @map("page_path")
+  schemaType       SchemaType @map("schema_type")
+  schemaTemplateId String?    @map("schema_template_id")
+  customJson       Json?      @map("custom_json")
+  validated        Boolean    @default(false)
+  validatedAt      DateTime?  @map("validated_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  template SchemaTemplate? @relation(fields: [schemaTemplateId], references: [id])
+
+  @@index([pagePath])
+  @@index([schemaType])
+  @@map("page_schemas")
+}
+
+/// Reusable JSON-LD template (PRD §6.3). 7 MVP types; required_fields drives validation.
+model SchemaTemplate {
+  id             String     @id @default(cuid())
+  type           SchemaType
+  name           String
+  jsonTemplate   Json       @map("json_template")
+  requiredFields Json       @map("required_fields")
+  version        String
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  pageSchemas PageSchema[]
+
+  @@map("schema_templates")
+}
+
+/// SEO/AEO/GEO target keyword (PRD §6.3). AEO/GEO tabs are v1.1+; SEO is MVP.
+model Keyword {
+  id           String      @id @default(cuid())
+  type         KeywordType
+  keyword      String
+  language     Locale
+  priority     Int         @default(0)
+  targetPageId String?     @map("target_page_id") // loose ref to page_seo
+  searchVolume Int?        @map("search_volume")
+  currentRank  Int?        @map("current_rank")
+  targetRank   Int?        @map("target_rank")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  geoTestResults GeoTestResult[]
+
+  @@index([type])
+  @@index([language])
+  @@map("keywords")
+}
+
+/// GEO citation test result (PRD §6.3 — v1.2 cron). Did an AI engine cite us for a keyword?
+model GeoTestResult {
+  id              String   @id @default(cuid())
+  keywordId       String   @map("keyword_id")
+  engine          String // 'openai' | 'perplexity' | 'anthropic' (v1.2)
+  testedAt        DateTime @map("tested_at")
+  mentioned       Boolean  @default(false)
+  rankPosition    Int?     @map("rank_position")
+  citationSources Json?    @map("citation_sources")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  keyword Keyword @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+
+  @@index([keywordId])
+  @@map("geo_test_results")
+}
+
+/// SEO code-injection slot (PRD §5.8-A① / §4 whitelist). pagePath null = global. custom_script
+/// is Super-Admin + re-auth gated (requiresReauth) and every change is audit-logged. No free HTML.
+model SeoCodeSlot {
+  id             String          @id @default(cuid())
+  pagePath       String?         @map("page_path") // null = global
+  slotType       SeoCodeSlotType @map("slot_type")
+  value          String
+  enabled        Boolean         @default(false)
+  requiresReauth Boolean         @default(false) @map("requires_reauth") // true for custom_script
+  createdBy      String?         @map("created_by") // logical ref to admin_users.id
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@index([slotType])
+  @@map("seo_code_slots")
 }
