@@ -69,7 +69,8 @@ enum Locale {
 enum UserStatus {
   active
   inactive // 7-day-unverified auto-deactivation or 30-day dormancy
-  deleted // soft-delete; PII anonymized per GDPR (PRD §5.10 / §5.7)
+  // C18: NO `deleted` value — deletion is determined SOLELY by `deletedAt IS NOT NULL`
+  // (single source of truth; avoids dual-encoding). PII anonymized per GDPR (§5.10 / §5.7).
 }
 
 model User {
