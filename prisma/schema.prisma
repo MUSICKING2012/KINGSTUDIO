@@ -483,7 +483,7 @@ model Booking {
 
   // --- party ---
   headcount Int     @default(1)
-  songId    String? @map("song_id") // nullable; logical ref to songs (Stage 4)
+  songId    String? @map("song_id") // nullable; FK to songs (Stage 4). 1Hour/1Pro bring own MR → null.
 
   // --- customer contact snapshot (works for guests) ---
   customerName         String? @map("customer_name") // 🔒 PII
@@ -509,12 +509,16 @@ model Booking {
   package          Package            @relation(fields: [packageId], references: [id])
   room             Room               @relation(fields: [roomId], references: [id])
   user             User?              @relation(fields: [userId], references: [id])
+  song             Song?              @relation(fields: [songId], references: [id]) // Stage 4
   userLink         BookingUserLink? // 1:1 retroactive guest→member link
   automation       BookingAutomation? // 1:1 confirmation-automation tracking
   payments         Payment[] // Stage 3
   checkin          Checkin? // Stage 3 (1:1)
   disputeEvidences DisputeEvidence[] // Stage 3
-  // deliverables/consents/review → later stages
+  deliverables     Deliverable[] // Stage 4
+  magicLinks       MagicLink[] // Stage 4 (1차/2차/재발급 → 여러 개)
+  mvDelivery       MvDelivery? // Stage 4 (1:1, Premium only)
+  // consents/review → later stages
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -797,4 +801,207 @@ model Quote {
   @@index([status])
   @@index([inquiryId])
   @@map("quotes")
+}
+
+// =========================================================================================
+// STAGE 4 — CONTENT · DELIVERY
+// =========================================================================================
+//
+// ⚠ §4 danger zones touched here (schema only; logic + tests need Aiden verification):
+//   - Magic-link token: expiry / reissue / signed-URL tamper. Token is a 60-day bearer in the
+//     /download/[token] URL. NOTE: stored as a raw UUID here per PRD; §4 review may switch to a
+//     hash (like Stage 1 tokens) so a DB leak can't expose live links. Flagged.
+//   - Signed URL only (§3.5): files are served via GCS/Cloud CDN signed URLs (TTL 10min,
+//     C13 rename of S3/CloudFront). storage_key columns hold the OBJECT KEY, never a public URL.
+//   - MR practice-track license gate (§4): a song's MR/lyrics must NOT be delivered unless
+//     license is verified (Song.licenseVerified) AND the global settings.mr_predelivery_enabled
+//     gate is on (Stage 5 settings; tracked per booking on BookingAutomation.mrAccessEnabled).
+//   - Deliverable versioning: supersedes self-relation; only the latest is downloadable, admin
+//     keeps all (PRD §5.6).
+// 💾 file sizes use BigInt (audio/video may exceed Int 2.1GB ceiling).
+
+// PRD §5.6 exact deliverable types & statuses.
+enum DeliverableType {
+  raw_wav
+  raw_mp3
+  master_wav
+  master_mp3
+  photos
+  mv_horizontal
+  highlight_vertical
+}
+
+enum DeliverableStatus {
+  pending
+  uploading
+  transcoding
+  ready
+  delivered
+  superseded // replaced by a newer version
+  archived
+}
+
+/// Magic-link status (PRD §5.6 — values designed; PRD lists "status" only). Reissue creates a
+/// new row; admin can revoke.
+enum MagicLinkStatus {
+  active
+  expired
+  revoked
+}
+
+/// External MV delivery status (PRD §5.6/§5.8 — values designed; PRD lists "status" only).
+enum MvDeliveryStatus {
+  pending // awaiting external team
+  in_production
+  submitted // external team delivered; content manager uploaded
+  spec_failed // ffprobe spec check failed → rejected / re-delivery
+  spec_passed // passed spec, ready
+  sent_to_customer
+}
+
+/// Song catalog (PRD §5.7 + §7.2 FTS, 200–500 songs). ⚠ PRD details only the license fields
+/// ("…"); other fields designed from §5.2 (Gold beginner curation) — may extend in M2 CMS.
+/// 🔒 MR license gate (§4 / R2): MR/lyrics deliver only when licenseVerified=true (+ global
+/// settings.mr_predelivery_enabled, Stage 5). 1Hour/1Pro customers bring their own MR.
+model Song {
+  id                        String    @id @default(cuid())
+  title                     String
+  artist                    String
+  beginnerCuration          Boolean   @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
+  isActive                  Boolean   @default(true) @map("is_active")
+  // --- MR license (PRD §5.7) ---
+  licenseVerified           Boolean   @default(false) @map("license_verified") // gate: MR/lyrics predelivery
+  licenseEvidenceStorageKey String?   @map("license_evidence_storage_key") // GCS object key (C13 rename of s3_key)
+  licenseNotes              String?   @map("license_notes")
+  licenseVerifiedAt         DateTime? @map("license_verified_at")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  bookings Booking[]
+
+  @@index([isActive])
+  @@index([licenseVerified])
+  @@index([beginnerCuration])
+  @@map("songs")
+}
+
+/// A deliverable file for a booking (PRD §5.6). Versioned via supersedes (self 1:1); only the
+/// latest is downloadable, admin keeps all. storage_key = GCS object key (signed URL on demand).
+model Deliverable {
+  id             String            @id @default(cuid())
+  bookingId      String            @map("booking_id")
+  type           DeliverableType
+  version        Int               @default(1)
+  status         DeliverableStatus @default(pending)
+  storageKey     String?           @map("storage_key") // GCS object key (C13 rename of s3_key); null until uploaded
+  fileSizeBytes  BigInt?           @map("file_size_bytes")
+  uploadedBy     String?           @map("uploaded_by") // logical ref to admin_users.id (engineer/content manager)
+  uploadedAt     DateTime?         @map("uploaded_at")
+  releasedAt     DateTime?         @map("released_at") // when delivered to customer
+  supersedesId   String?           @unique @map("supersedes_id") // the version this one replaces (self 1:1)
+  retentionUntil DateTime?         @map("retention_until") // guest 3mo / member 12mo (PRD §5.6)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  booking      Booking       @relation(fields: [bookingId], references: [id])
+  supersedes   Deliverable?  @relation("DeliverableVersion", fields: [supersedesId], references: [id])
+  supersededBy Deliverable?  @relation("DeliverableVersion")
+  downloadLogs DownloadLog[]
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([type])
+  @@map("deliverables")
+}
+
+/// Content-download magic link (PRD §5.6): 60-day token, separate from auth tokens (Stage 1).
+/// One booking may have several (1차/2차/재발급). 🔒 `token` is a bearer secret (see §4 note).
+model MagicLink {
+  token          String          @id @default(uuid()) // 🔒 SENSITIVE 60-day bearer; PK = the URL token
+  bookingId      String          @map("booking_id")
+  generatedAt    DateTime        @default(now()) @map("generated_at")
+  expiresAt      DateTime        @map("expires_at") // +60 days
+  lastAccessedAt DateTime?       @map("last_accessed_at")
+  accessCount    Int             @default(0) @map("access_count")
+  status         MagicLinkStatus @default(active)
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  booking      Booking       @relation(fields: [bookingId], references: [id])
+  downloadLogs DownloadLog[]
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("magic_links")
+}
+
+/// Download audit log (PRD §5.6). Feeds abnormal-frequency detection (50/5min → auto-block)
+/// and the Dispute Evidence Pack — so it must survive deliverable deletion (deliverableId
+/// nullable, SetNull). References the magic-link token (PRD column magic_link_token).
+model DownloadLog {
+  id               String   @id @default(cuid())
+  magicLinkToken   String   @map("magic_link_token")
+  deliverableId    String?  @map("deliverable_id")
+  downloadedAt     DateTime @default(now()) @map("downloaded_at")
+  ip               String? // 🔒 PII (abnormal-frequency / dispute evidence)
+  userAgent        String?  @map("user_agent")
+  bytesTransferred BigInt?  @map("bytes_transferred")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  magicLink   MagicLink    @relation(fields: [magicLinkToken], references: [token])
+  deliverable Deliverable? @relation(fields: [deliverableId], references: [id], onDelete: SetNull)
+
+  @@index([magicLinkToken])
+  @@index([deliverableId])
+  @@index([ip])
+  @@map("download_logs")
+}
+
+/// External MV production team (PRD §5.8). No admin account issued; content manager uploads
+/// their deliveries. 🔒 contact_* are vendor PII.
+model MvTeam {
+  id           String   @id @default(cuid())
+  name         String
+  contactEmail String?  @map("contact_email") // 🔒 PII
+  contactPhone String?  @map("contact_phone") // 🔒 PII
+  isActive     Boolean  @default(true) @map("is_active")
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  deliveries MvDelivery[]
+
+  @@map("mv_teams")
+}
+
+/// Premium MV delivery tracking, 1:1 with a booking (PRD §5.6/§5.8). ffprobe spec check on
+/// upload (spec_check_result/spec_passed); on fail → reject + Slack #content. storage keys are
+/// GCS object keys (C13 rename of main/short_file_s3_key).
+model MvDelivery {
+  id                   String           @id @default(cuid())
+  bookingId            String           @unique @map("booking_id")
+  mvTeamId             String?          @map("mv_team_id")
+  status               MvDeliveryStatus @default(pending)
+  expectedDeliveryDate DateTime?        @map("expected_delivery_date") @db.Date // session + 24d
+  actualDeliveryDate   DateTime?        @map("actual_delivery_date") @db.Date
+  specCheckResult      Json?            @map("spec_check_result") // ffprobe metadata (resolution/codec/duration/bitrate)
+  specPassed           Boolean?         @map("spec_passed")
+  rejectionCount       Int              @default(0) @map("rejection_count")
+  rejectionReasons     Json?            @map("rejection_reasons") // list of reasons across re-deliveries
+  mainFileStorageKey   String?          @map("main_file_storage_key") // GCS key (C13 rename of main_file_s3_key)
+  shortFileStorageKey  String?          @map("short_file_storage_key") // GCS key (C13 rename of short_file_s3_key)
+  uploadedBy           String?          @map("uploaded_by") // logical ref to admin_users.id (content manager)
+  uploadedAt           DateTime?        @map("uploaded_at")
+  sentToCustomerAt     DateTime?        @map("sent_to_customer_at") // session + 28d
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+  mvTeam  MvTeam? @relation(fields: [mvTeamId], references: [id])
+
+  @@index([mvTeamId])
+  @@index([status])
+  @@map("mv_deliveries")
 }
