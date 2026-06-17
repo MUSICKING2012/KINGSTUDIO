@@ -256,12 +256,14 @@ model AdminUser {
   createdAt        DateTime    @default(now()) @map("created_at")
   updatedAt        DateTime    @updatedAt @map("updated_at")
 
-  roles            AdminUserRole[]
-  sessions         AdminSession[]
-  reauthChallenges ReauthChallenge[]
-  refunds          Refund[] // Stage 3 (admin who processed the refund)
-  // notificationPreferences NotificationPreference[] // Stage 7
-  // auditLogs               AuditLog[]               // Stage 7 (actor)
+  roles                   AdminUserRole[]
+  sessions                AdminSession[]
+  reauthChallenges        ReauthChallenge[]
+  refunds                 Refund[] // Stage 3 (admin who processed the refund)
+  notificationPreferences NotificationPreference[] // Stage 7
+  notificationsReceived   AdminNotificationLog[] // Stage 7 (recipient)
+  // audit_logs.actorAdminUserId is a LOOSE String ref (no FK): audit_logs is append-only, so an
+  // FK SetNull/Cascade would mutate/delete immutable rows. See Stage 7.
 
   @@index([status])
   @@map("admin_users")
@@ -508,10 +510,10 @@ model Booking {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  package           Package              @relation(fields: [packageId], references: [id])
-  room              Room                 @relation(fields: [roomId], references: [id])
-  user              User?                @relation(fields: [userId], references: [id])
-  song              Song?                @relation(fields: [songId], references: [id]) // Stage 4
+  package           Package                @relation(fields: [packageId], references: [id])
+  room              Room                   @relation(fields: [roomId], references: [id])
+  user              User?                  @relation(fields: [userId], references: [id])
+  song              Song?                  @relation(fields: [songId], references: [id]) // Stage 4
   userLink          BookingUserLink? // 1:1 retroactive guest→member link
   automation        BookingAutomation? // 1:1 confirmation-automation tracking
   payments          Payment[] // Stage 3
@@ -526,6 +528,7 @@ model Booking {
   npsResponse       NpsResponse? // Stage 6 (1:1)
   referralAsInvitee Referral? // Stage 6 — this booking as a referral's invitee booking (1:1)
   couponUsed        Coupon? // Stage 6 — coupon redeemed on this booking (1:1)
+  notifications     CustomerNotification[] // Stage 7 (customer email/SMS log)
 
   @@index([roomId, date]) // occupancy/overlap scan
   @@index([date])
@@ -1461,4 +1464,309 @@ model Coupon {
   @@index([userId])
   @@index([status])
   @@map("coupons")
+}
+
+// =========================================================================================
+// STAGE 7 — NOTIFICATIONS · AUDIT · SEO
+// =========================================================================================
+//
+// ⚠ §5.8 audit_logs is APPEND-ONLY (like consents §3.1): a raw-SQL migration MUST add a trigger
+//   blocking UPDATE/DELETE (model has NO updatedAt). actor is a LOOSE String ref (no FK) so a
+//   parent delete can't mutate immutable rows. Monthly PARTITIONING + GCS archive (Bucket Lock)
+//   are added via raw SQL (not expressible in Prisma) — note for the migration. Super Admin
+//   read-only. Same trigger pattern as consents (see Stage 5 header for the SQL).
+// ⚠ §4 / §5.8-A① seo_code_slots is a WHITELIST: only ga4/gtm/verify_* slots for normal admins;
+//   custom_script requires Super Admin + re-auth + audit log (requiresReauth=true). No free HTML/JS.
+// NOTE: two distinct notification logs — `notifications_log` (CUSTOMER email/SMS, §5.6) vs
+//   `notification_logs` (ADMIN internal Slack/Kakao, §5.8). Kept as separate models.
+// page_seo / page_schemas are per-locale (zh-TW/zh-HK included, C14).
+
+// ---- enums ----
+enum NotificationChannel {
+  slack
+  kakao
+  email
+  sms
+}
+
+/// Admin internal notification types (PRD §5.8 alert table).
+enum AdminNotificationType {
+  new_booking
+  payment_failed
+  cs_inquiry
+  magic_link_sla_imminent
+  magic_link_sla_exceeded
+  refund_overdue
+  paypal_dispute
+  dsr_request
+  system_down
+  security_alert
+  unfamiliar_login
+  gold_kpi_gate
+}
+
+/// Auditable actions (PRD §5.8 — designed from the §5.8 audit target list).
+enum AuditAction {
+  login
+  logout
+  login_failed
+  refund
+  role_change
+  consent_view
+  consent_export
+  pii_view
+  booking_modify
+  booking_delete
+  content_upload
+  content_download
+  data_export
+  magic_link_reissue
+  blackout_create
+  price_change
+  terms_publish
+  reauth
+}
+
+enum KeywordType {
+  seo
+  aeo
+  geo
+}
+
+/// 7 structured-data types (PRD §6.3). schema.org names.
+enum SchemaType {
+  Organization
+  LocalBusiness
+  Product
+  AggregateRating
+  Review
+  FAQPage
+  BreadcrumbList
+}
+
+/// SEO code-injection whitelist slots (PRD §5.8-A① / §4). custom_script is the only free-form
+/// one and is Super-Admin + re-auth gated.
+enum SeoCodeSlotType {
+  ga4
+  gtm
+  verify_google
+  verify_naver
+  verify_bing
+  custom_script
+}
+
+// ---- notifications ----
+
+/// Customer-facing notification log (PRD §5.6) — email/SMS for booking/magic-link/SLA/refund.
+/// `type` is a free string key (many types, not enumerated in PRD). channel: email|sms only.
+model CustomerNotification {
+  id                String              @id @default(cuid())
+  bookingId         String              @map("booking_id")
+  type              String // notification key, e.g. 'booking_confirmation', 'magic_link_1st'
+  channel           NotificationChannel // email | sms (customer only)
+  sentAt            DateTime?           @map("sent_at")
+  delivered         Boolean             @default(false)
+  providerMessageId String?             @map("provider_message_id")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+
+  @@index([bookingId])
+  @@index([type])
+  @@map("notifications_log")
+}
+
+/// Per-admin notification preferences (PRD §5.8): channel + quiet hours per notification type.
+model NotificationPreference {
+  id                     String                @id @default(cuid())
+  adminUserId            String                @map("admin_user_id")
+  notificationType       AdminNotificationType @map("notification_type")
+  channel                NotificationChannel
+  enabled                Boolean               @default(true)
+  quietHoursStart        DateTime?             @map("quiet_hours_start") @db.Time(0) // e.g. 22:00
+  quietHoursEnd          DateTime?             @map("quiet_hours_end") @db.Time(0) // e.g. 08:00
+  overrideQuietForUrgent Boolean               @default(true) @map("override_quiet_for_urgent") // system_down/security exempt
+  createdAt              DateTime              @default(now()) @map("created_at")
+  updatedAt              DateTime              @updatedAt @map("updated_at")
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@unique([adminUserId, notificationType, channel])
+  @@index([adminUserId])
+  @@map("notification_preferences")
+}
+
+/// Global notification policy per type (PRD §5.8): default recipient role + channels, Super-Admin
+/// managed. One row per notification type.
+model NotificationGlobalPolicy {
+  id                    String                @id @default(cuid())
+  notificationType      AdminNotificationType @unique @map("notification_type")
+  defaultRecipientsRole String?               @map("default_recipients_role") // admin_roles.name (loose)
+  defaultChannels       NotificationChannel[] @map("default_channels")
+  enabled               Boolean               @default(true)
+  disabledAt            DateTime?             @map("disabled_at")
+  disabledBy            String?               @map("disabled_by") // logical ref to admin_users.id
+  createdAt             DateTime              @default(now()) @map("created_at")
+  updatedAt             DateTime              @updatedAt @map("updated_at")
+
+  @@map("notification_global_policy")
+}
+
+/// Admin internal notification log (PRD §5.8) — Slack/Kakao/email/SMS sent to staff.
+model AdminNotificationLog {
+  id                   String                @id @default(cuid())
+  notificationType     AdminNotificationType @map("notification_type")
+  recipientAdminUserId String?               @map("recipient_admin_user_id")
+  channel              NotificationChannel
+  payload              Json?
+  sentAt               DateTime?             @map("sent_at")
+  delivered            Boolean               @default(false)
+  providerMessageId    String?               @map("provider_message_id")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+
+  recipient AdminUser? @relation(fields: [recipientAdminUserId], references: [id], onDelete: SetNull)
+
+  @@index([notificationType])
+  @@index([recipientAdminUserId])
+  @@map("notification_logs")
+}
+
+// ---- audit ----
+
+/// Append-only audit log (PRD §5.8 / CLAUDE.md §3 audit). NO updatedAt — immutable. DB trigger
+/// blocks UPDATE/DELETE (see section header). actor is a LOOSE String ref (no FK). To be
+/// monthly-partitioned + GCS-archived via raw SQL. ⚠ §4 — verify trigger + retention.
+model AuditLog {
+  id               String      @id @default(cuid())
+  actorAdminUserId String?     @map("actor_admin_user_id") // loose ref; null = system
+  action           AuditAction
+  targetType       String?     @map("target_type") // e.g. 'booking', 'refund', 'user'
+  targetId         String?     @map("target_id")
+  metadata         Json? // action context (no raw PII/secrets — §3.6)
+  ip               String? // 🔒 PII
+  userAgent        String?     @map("user_agent")
+  createdAt        DateTime    @default(now()) @map("created_at")
+
+  @@index([actorAdminUserId])
+  @@index([action])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ---- SEO / AEO / GEO ----
+
+/// Per-page, per-locale SEO meta (PRD §6.3 + §5.8-A① excerpt). Editable via the Ghost-style UI.
+model PageSeo {
+  id           String   @id @default(cuid())
+  pagePath     String   @map("page_path")
+  language     Locale
+  title        String? // meta title (50–60); H1 fallback at render
+  description  String? // meta description (120–158); excerpt fallback
+  h1           String?
+  excerpt      String? // §5.8-A①
+  canonicalUrl String?  @map("canonical_url") // self-URL fallback
+  ogImageUrl   String?  @map("og_image_url")
+  noindex      Boolean  @default(false)
+  nofollow     Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([pagePath, language])
+  @@index([pagePath])
+  @@map("page_seo")
+}
+
+/// JSON-LD structured data applied to a page (PRD §6.3). Template-based; custom_json validated
+/// against Google Rich Results before save (validated flag). 7 MVP templates auto-applied.
+model PageSchema {
+  id               String     @id @default(cuid())
+  pagePath         String     @map("page_path")
+  schemaType       SchemaType @map("schema_type")
+  schemaTemplateId String?    @map("schema_template_id")
+  customJson       Json?      @map("custom_json")
+  validated        Boolean    @default(false)
+  validatedAt      DateTime?  @map("validated_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  template SchemaTemplate? @relation(fields: [schemaTemplateId], references: [id])
+
+  @@index([pagePath])
+  @@index([schemaType])
+  @@map("page_schemas")
+}
+
+/// Reusable JSON-LD template (PRD §6.3). 7 MVP types; required_fields drives validation.
+model SchemaTemplate {
+  id             String     @id @default(cuid())
+  type           SchemaType
+  name           String
+  jsonTemplate   Json       @map("json_template")
+  requiredFields Json       @map("required_fields")
+  version        String
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  pageSchemas PageSchema[]
+
+  @@map("schema_templates")
+}
+
+/// SEO/AEO/GEO target keyword (PRD §6.3). AEO/GEO tabs are v1.1+; SEO is MVP.
+model Keyword {
+  id           String      @id @default(cuid())
+  type         KeywordType
+  keyword      String
+  language     Locale
+  priority     Int         @default(0)
+  targetPageId String?     @map("target_page_id") // loose ref to page_seo
+  searchVolume Int?        @map("search_volume")
+  currentRank  Int?        @map("current_rank")
+  targetRank   Int?        @map("target_rank")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  geoTestResults GeoTestResult[]
+
+  @@index([type])
+  @@index([language])
+  @@map("keywords")
+}
+
+/// GEO citation test result (PRD §6.3 — v1.2 cron). Did an AI engine cite us for a keyword?
+model GeoTestResult {
+  id              String   @id @default(cuid())
+  keywordId       String   @map("keyword_id")
+  engine          String // 'openai' | 'perplexity' | 'anthropic' (v1.2)
+  testedAt        DateTime @map("tested_at")
+  mentioned       Boolean  @default(false)
+  rankPosition    Int?     @map("rank_position")
+  citationSources Json?    @map("citation_sources")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  keyword Keyword @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+
+  @@index([keywordId])
+  @@map("geo_test_results")
+}
+
+/// SEO code-injection slot (PRD §5.8-A① / §4 whitelist). pagePath null = global. custom_script
+/// is Super-Admin + re-auth gated (requiresReauth) and every change is audit-logged. No free HTML.
+model SeoCodeSlot {
+  id             String          @id @default(cuid())
+  pagePath       String?         @map("page_path") // null = global
+  slotType       SeoCodeSlotType @map("slot_type")
+  value          String
+  enabled        Boolean         @default(false)
+  requiresReauth Boolean         @default(false) @map("requires_reauth") // true for custom_script
+  createdBy      String?         @map("created_by") // logical ref to admin_users.id
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@index([slotType])
+  @@map("seo_code_slots")
 }
