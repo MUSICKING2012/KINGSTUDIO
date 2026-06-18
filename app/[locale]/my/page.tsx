@@ -1,9 +1,9 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { auth } from '@/auth';
-import { prisma } from '@/lib/db/prisma';
-import { logoutAction } from '@/lib/auth/actions';
 import { VerifyBanner } from '@/components/auth/verify-banner';
 import { Button } from '@/components/ui/button';
+import { logoutAction } from '@/lib/auth/actions';
+import { prisma } from '@/lib/db/prisma';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export default async function MyPage({ params }: { params: { locale: string } }) {
   setRequestLocale(params.locale);
@@ -17,11 +17,25 @@ export default async function MyPage({ params }: { params: { locale: string } })
       <main className="container mx-auto flex min-h-screen max-w-md flex-col justify-center gap-4">
         <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">{user?.email}</p>
-        <form action={async () => { 'use server'; await logoutAction('one', params.locale); }}>
-          <Button type="submit" variant="outline" className="w-full">{t('logout')}</Button>
+        <form
+          action={async () => {
+            'use server';
+            await logoutAction('one', params.locale);
+          }}
+        >
+          <Button type="submit" variant="outline" className="w-full">
+            {t('logout')}
+          </Button>
         </form>
-        <form action={async () => { 'use server'; await logoutAction('all', params.locale); }}>
-          <Button type="submit" variant="destructive" className="w-full">{t('logoutAll')}</Button>
+        <form
+          action={async () => {
+            'use server';
+            await logoutAction('all', params.locale);
+          }}
+        >
+          <Button type="submit" variant="destructive" className="w-full">
+            {t('logoutAll')}
+          </Button>
         </form>
       </main>
     </>

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const email = () => `e2e_${Date.now()}@test.local`;
 const PW = 'xK9!mq2vRt7wZ';

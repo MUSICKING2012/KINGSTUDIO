@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { hashPassword, verifyPassword, isStrong, isPwned } from './password';
+import { hashPassword, isPwned, isStrong, verifyPassword } from './password';
 
 describe('hash/verify', () => {
   it('round-trips a password', async () => {
@@ -17,11 +17,22 @@ describe('isStrong (zxcvbn)', () => {
 
 describe('isPwned (HIBP, fail-open)', () => {
   it('returns a boolean when the API responds', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, text: async () => 'AAAA:3\n0018A45C4D1DEF81644B54AB7F969B88D65:2' })));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        text: async () => 'AAAA:3\n0018A45C4D1DEF81644B54AB7F969B88D65:2',
+      })),
+    );
     expect(typeof (await isPwned('whatever'))).toBe('boolean');
   });
   it('fails open on fetch error (returns false)', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('down'); }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('down');
+      }),
+    );
     expect(await isPwned('whatever')).toBe(false);
   });
 });

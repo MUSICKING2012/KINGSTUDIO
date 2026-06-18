@@ -1,14 +1,14 @@
+import { prisma } from '@/lib/db/prisma';
+import { sendEmail } from '@/lib/email/send';
+import { loginSchema } from '@/lib/validations/auth';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import { headers } from 'next/headers';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@/lib/db/prisma';
-import { loginSchema } from '@/lib/validations/auth';
-import { verifyPassword } from './password';
 import { metaFromHeaders } from './device';
-import { createSession, validateSession, isKnownCountry } from './session';
-import { sendEmail } from '@/lib/email/send';
+import { verifyPassword } from './password';
+import { createSession, isKnownCountry, validateSession } from './session';
 
 const providers = [
   Credentials({
@@ -23,7 +23,13 @@ const providers = [
     },
   }),
   ...(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET
-    ? [Google({ clientId: process.env.AUTH_GOOGLE_ID, clientSecret: process.env.AUTH_GOOGLE_SECRET, allowDangerousEmailAccountLinking: true })]
+    ? [
+        Google({
+          clientId: process.env.AUTH_GOOGLE_ID,
+          clientSecret: process.env.AUTH_GOOGLE_SECRET,
+          allowDangerousEmailAccountLinking: true,
+        }),
+      ]
     : []),
 ];
 
@@ -36,9 +42,9 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user }) {
       if (user?.id) {
         const meta = metaFromHeaders(await headers());
-        if (!(await isKnownCountry(user.id, meta.country))) {
+        if (user.email && !(await isKnownCountry(user.id, meta.country))) {
           await sendEmail({
-            to: user.email!,
+            to: user.email,
             subject: 'KING STUDIO – New sign-in location',
             text: `A new sign-in from ${meta.country ?? 'unknown'} (${meta.ip ?? 'n/a'}).`,
           });
@@ -48,7 +54,10 @@ export const authConfig: NextAuthConfig = {
         token.sessionId = sessionId;
       } else if (token.sessionId) {
         const ok = await validateSession(token.sessionId as string);
-        if (!ok) { token.userId = undefined; token.sessionId = undefined; }
+        if (!ok) {
+          token.userId = undefined;
+          token.sessionId = undefined;
+        }
       }
       return token;
     },

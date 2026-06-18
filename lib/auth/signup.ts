@@ -1,22 +1,26 @@
 'use server';
-import { randomBytes, createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { prisma } from '@/lib/db/prisma';
+import { sendEmail } from '@/lib/email/send';
 import { signupSchema } from '@/lib/validations/auth';
 import { hashPassword, isPwned, isStrong } from './password';
-import { sendEmail } from '@/lib/email/send';
 
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
 type Result = { ok: true; userId: string } | { ok: false; error: string };
 
 // `_pwnedForTest` lets tests force the HIBP branch without network.
-export async function registerUser(
-  input: { email: string; password: string; name: string; _pwnedForTest?: boolean },
-): Promise<Result> {
+export async function registerUser(input: {
+  email: string;
+  password: string;
+  name: string;
+  _pwnedForTest?: boolean;
+}): Promise<Result> {
   const parsed = signupSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? 'invalid' };
   const { email, password, name } = parsed.data;
 
-  if (input._pwnedForTest || (await isPwned(password))) return { ok: false, error: 'password.pwned' };
+  if (input._pwnedForTest || (await isPwned(password)))
+    return { ok: false, error: 'password.pwned' };
   if (!isStrong(password).ok) return { ok: false, error: 'password.weak' };
 
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -35,7 +39,11 @@ export async function registerUser(
     },
   });
   const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/en/verify/${rawToken}`;
-  await sendEmail({ to: email, subject: 'KING STUDIO – Verify your email', text: `Verify: ${url}` });
+  await sendEmail({
+    to: email,
+    subject: 'KING STUDIO – Verify your email',
+    text: `Verify: ${url}`,
+  });
 
   return { ok: true, userId: user.id };
 }

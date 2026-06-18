@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
 import { createHash } from 'node:crypto';
+import bcrypt from 'bcryptjs';
 import zxcvbn from 'zxcvbn';
 
 // 🔒 bcrypt cost 12 (security §3.6).

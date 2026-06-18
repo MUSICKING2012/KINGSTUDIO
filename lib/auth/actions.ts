@@ -1,7 +1,7 @@
 'use server';
 import { auth, signIn, signOut } from '@/auth';
-import { registerUser } from './signup';
 import { revokeAllSessions } from './session';
+import { registerUser } from './signup';
 
 export async function signupAction(input: { email: string; password: string; name: string }) {
   const r = await registerUser(input);

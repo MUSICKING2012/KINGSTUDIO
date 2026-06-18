@@ -8,13 +8,19 @@ export const passwordSchema = z
   .regex(/[0-9]/, 'password.digit');
 
 export const signupSchema = z.object({
-  email: z.string().email('email.invalid').transform((s) => s.toLowerCase().trim()),
+  email: z
+    .string()
+    .email('email.invalid')
+    .transform((s) => s.toLowerCase().trim()),
   password: passwordSchema,
   name: z.string().min(1, 'name.required').max(100),
 });
 
 export const loginSchema = z.object({
-  email: z.string().email().transform((s) => s.toLowerCase().trim()),
+  email: z
+    .string()
+    .email()
+    .transform((s) => s.toLowerCase().trim()),
   password: z.string().min(1),
 });
 
