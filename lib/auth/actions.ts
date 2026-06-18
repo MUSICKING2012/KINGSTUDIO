@@ -19,11 +19,11 @@ export async function loginAction(input: { email: string; password: string }) {
   }
 }
 
-export async function logoutAction(scope: 'one' | 'all') {
+export async function logoutAction(scope: 'one' | 'all', locale = 'en') {
   if (scope === 'all') {
     const session = await auth();
     const userId = (session?.user as { id?: string } | undefined)?.id;
     if (userId) await revokeAllSessions(userId);
   }
-  await signOut({ redirectTo: '/login' });
+  await signOut({ redirectTo: `/${locale}/login` });
 }

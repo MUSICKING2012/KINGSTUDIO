@@ -26,9 +26,9 @@
       "toLogin": "I already have an account",
       "strength": "Strength",
       "errors": {
-        "email.taken": "That email is already registered.",
-        "password.weak": "Choose a stronger password.",
-        "password.pwned": "This password appeared in a data breach. Choose another."
+        "email_taken": "That email is already registered.",
+        "password_weak": "Choose a stronger password.",
+        "password_pwned": "This password appeared in a data breach. Choose another."
       }
     },
     "verify": {

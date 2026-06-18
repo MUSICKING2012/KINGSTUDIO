@@ -24,11 +24,11 @@ export function SignupForm() {
     const r = await signupAction(values);
     if (!r.ok) {
       const map: Record<string, string> = {
-        'email.taken': t('errors.email.taken'),
-        'password.weak': t('errors.password.weak'),
-        'password.pwned': t('errors.password.pwned'),
+        'email.taken': t('errors.email_taken'),
+        'password.weak': t('errors.password_weak'),
+        'password.pwned': t('errors.password_pwned'),
       };
-      setServerError(map[r.error] ?? t('errors.password.weak'));
+      setServerError(map[r.error] ?? t('errors.password_weak'));
       return;
     }
     router.push('/my');

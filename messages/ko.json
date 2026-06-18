@@ -26,9 +26,9 @@
       "toLogin": "이미 계정이 있어요",
       "strength": "강도",
       "errors": {
-        "email.taken": "이미 등록된 이메일입니다.",
-        "password.weak": "더 강력한 비밀번호를 사용하세요.",
-        "password.pwned": "유출된 비밀번호입니다. 다른 비밀번호를 사용하세요."
+        "email_taken": "이미 등록된 이메일입니다.",
+        "password_weak": "더 강력한 비밀번호를 사용하세요.",
+        "password_pwned": "유출된 비밀번호입니다. 다른 비밀번호를 사용하세요."
       }
     },
     "verify": {

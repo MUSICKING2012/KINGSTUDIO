@@ -26,9 +26,9 @@
       "toLogin": "我已有帳號",
       "strength": "強度",
       "errors": {
-        "email.taken": "此電子郵件已被註冊。",
-        "password.weak": "請選擇更強的密碼。",
-        "password.pwned": "此密碼曾出現於資料外洩事件，請更換其他密碼。"
+        "email_taken": "此電子郵件已被註冊。",
+        "password_weak": "請選擇更強的密碼。",
+        "password_pwned": "此密碼曾出現於資料外洩事件，請更換其他密碼。"
       }
     },
     "verify": {

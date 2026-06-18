@@ -17,10 +17,10 @@ export default async function MyPage({ params }: { params: { locale: string } })
       <main className="container mx-auto flex min-h-screen max-w-md flex-col justify-center gap-4">
         <h1 className="text-2xl font-bold">{t('title')}</h1>
         <p className="text-muted-foreground">{user?.email}</p>
-        <form action={async () => { 'use server'; await logoutAction('one'); }}>
+        <form action={async () => { 'use server'; await logoutAction('one', params.locale); }}>
           <Button type="submit" variant="outline" className="w-full">{t('logout')}</Button>
         </form>
-        <form action={async () => { 'use server'; await logoutAction('all'); }}>
+        <form action={async () => { 'use server'; await logoutAction('all', params.locale); }}>
           <Button type="submit" variant="destructive" className="w-full">{t('logoutAll')}</Button>
         </form>
       </main>
