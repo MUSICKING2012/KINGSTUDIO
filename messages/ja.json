@@ -6,5 +6,46 @@
   "notFound": {
     "title": "ページが見つかりません",
     "description": "お探しのページは存在しません。"
+  },
+  "auth": {
+    "login": {
+      "title": "ログイン",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "submit": "ログイン",
+      "google": "Googleで続ける",
+      "toSignup": "アカウントを作成",
+      "error": "メールアドレスまたはパスワードが正しくありません。"
+    },
+    "signup": {
+      "title": "アカウント作成",
+      "name": "お名前",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "submit": "登録する",
+      "toLogin": "すでにアカウントをお持ちの方",
+      "strength": "強度",
+      "errors": {
+        "email.taken": "このメールアドレスはすでに登録されています。",
+        "password.weak": "より強力なパスワードを選択してください。",
+        "password.pwned": "このパスワードはデータ侵害で流出しています。別のパスワードを選択してください。"
+      }
+    },
+    "verify": {
+      "successTitle": "メール認証完了",
+      "successBody": "ありがとうございます — メールアドレスが確認されました。",
+      "failTitle": "認証失敗",
+      "failBody": "このリンクは無効または期限切れです。",
+      "cta": "マイページへ"
+    },
+    "banner": {
+      "unverified": "メールアドレスをご確認ください。受信トレイをご確認ください。",
+      "resend": "再送信"
+    },
+    "my": {
+      "title": "マイページ",
+      "logout": "ログアウト",
+      "logoutAll": "すべてのデバイスからログアウト"
+    }
   }
 }
