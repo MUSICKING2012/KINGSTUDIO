@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/db/prisma';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import { createSession, revokeAllSessions, revokeSession, validateSession } from './session';
+import {
+  createSession,
+  isKnownCountry,
+  revokeAllSessions,
+  revokeSession,
+  validateSession,
+} from './session';
 
 let userId: string;
 beforeEach(async () => {
@@ -41,5 +47,8 @@ describe('session store', () => {
     await revokeAllSessions(userId);
     expect(await validateSession(a.sessionId)).toBeNull();
     expect(await validateSession(b.sessionId)).toBeNull();
+  });
+  it('isKnownCountry returns true for a user with zero sessions (first-ever login)', async () => {
+    expect(await isKnownCountry(userId, 'TW')).toBe(true);
   });
 });

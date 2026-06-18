@@ -44,6 +44,8 @@ export async function revokeAllSessions(userId: string) {
 // For the unfamiliar-country check: has this user logged in from this country before?
 export async function isKnownCountry(userId: string, country: string | null): Promise<boolean> {
   if (!country) return true;
+  const total = await prisma.userSession.count({ where: { userId } });
+  if (total === 0) return true; // first-ever login is familiar
   const n = await prisma.userSession.count({ where: { userId, country } });
   return n > 0;
 }

@@ -14,7 +14,15 @@ export async function loginAction(input: { email: string; password: string }) {
   try {
     await signIn('credentials', { ...input, redirect: false });
     return { ok: true as const };
-  } catch {
+  } catch (err) {
+    if (
+      err &&
+      typeof err === 'object' &&
+      'digest' in err &&
+      String((err as { digest?: unknown }).digest).startsWith('NEXT_REDIRECT')
+    ) {
+      throw err;
+    }
     return { ok: false as const, error: 'error' };
   }
 }
