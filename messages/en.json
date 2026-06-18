@@ -6,5 +6,46 @@
   "notFound": {
     "title": "Page not found",
     "description": "The page you're looking for doesn't exist."
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "google": "Continue with Google",
+      "toSignup": "Create an account",
+      "error": "Email or password is incorrect."
+    },
+    "signup": {
+      "title": "Create account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign up",
+      "toLogin": "I already have an account",
+      "strength": "Strength",
+      "errors": {
+        "email_taken": "That email is already registered.",
+        "password_weak": "Choose a stronger password.",
+        "password_pwned": "This password appeared in a data breach. Choose another."
+      }
+    },
+    "verify": {
+      "successTitle": "Email verified",
+      "successBody": "Thanks — your email is confirmed.",
+      "failTitle": "Verification failed",
+      "failBody": "This link is invalid or has expired.",
+      "cta": "Go to my page"
+    },
+    "banner": {
+      "unverified": "Please verify your email. Check your inbox.",
+      "resend": "Resend"
+    },
+    "my": {
+      "title": "My page",
+      "logout": "Log out",
+      "logoutAll": "Log out all devices"
+    }
   }
 }

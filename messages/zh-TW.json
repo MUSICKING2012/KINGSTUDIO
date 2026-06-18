@@ -6,5 +6,46 @@
   "notFound": {
     "title": "找不到頁面",
     "description": "您尋找的頁面不存在。"
+  },
+  "auth": {
+    "login": {
+      "title": "登入",
+      "email": "電子郵件",
+      "password": "密碼",
+      "submit": "登入",
+      "google": "以 Google 繼續",
+      "toSignup": "建立帳號",
+      "error": "電子郵件或密碼不正確。"
+    },
+    "signup": {
+      "title": "建立帳號",
+      "name": "姓名",
+      "email": "電子郵件",
+      "password": "密碼",
+      "submit": "註冊",
+      "toLogin": "我已有帳號",
+      "strength": "強度",
+      "errors": {
+        "email_taken": "此電子郵件已被註冊。",
+        "password_weak": "請選擇更強的密碼。",
+        "password_pwned": "此密碼曾出現於資料外洩事件，請更換其他密碼。"
+      }
+    },
+    "verify": {
+      "successTitle": "電子郵件已驗證",
+      "successBody": "感謝您 — 您的電子郵件已確認。",
+      "failTitle": "驗證失敗",
+      "failBody": "此連結無效或已過期。",
+      "cta": "前往我的頁面"
+    },
+    "banner": {
+      "unverified": "請驗證您的電子郵件，請查看您的收件匣。",
+      "resend": "重新發送"
+    },
+    "my": {
+      "title": "我的頁面",
+      "logout": "登出",
+      "logoutAll": "登出所有裝置"
+    }
   }
 }
