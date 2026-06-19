@@ -91,7 +91,7 @@ Not a §4 danger zone, but `computePackageTotal` is **money-critical** — a wro
 
 ## §9 Tracking list (MUST NOT DROP)
 
-1. **Doc sync — C10 extension.** The experience 3–5 linear rule (`base × (1 + 0.5(n−1))`) is a NEW pricing policy beyond PRD's "3인 이상 추후 확정". On spec approval, sync PRD §5.2 (C10), CLAUDE §6, and the pricing model xlsx. Until synced, code is ahead of docs.
+1. **Doc sync — C10 extension. ✅ DONE (2026-06-19).** PRD §5.2 (1–5인 price rows + C10 정정·확장 note), CLAUDE §6, and the pricing-model xlsx now carry `base × (1 + 0.5(n−1))`. Docs and code agree. (Gold 3–5인 cells in the PRD price table are a uniform-table artifact; Gold capacity stays 1~2명 per its 인원 row.)
 2. **Deliverables matrix** (O2, PRD §5.6) — representation decided in the catalog-pages UI slice (Json vs typed fields).
 3. **Non-en locale copy + deliverables prose** — filled progressively per §5 (en first).
 4. **Admin catalog CMS** (price/active/order editing UI) — later M2 slice; prices are already DB-editable fields, CMS is just the UI.
