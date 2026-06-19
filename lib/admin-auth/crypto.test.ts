@@ -1,7 +1,9 @@
-import { describe, expect, it, beforeAll } from 'vitest';
-import { encryptSecret, decryptSecret } from './crypto';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { decryptSecret, encryptSecret } from './crypto';
 
-beforeAll(() => { process.env.ADMIN_TOTP_ENC_KEY = Buffer.alloc(32, 7).toString('base64'); });
+beforeAll(() => {
+  process.env.ADMIN_TOTP_ENC_KEY = Buffer.alloc(32, 7).toString('base64');
+});
 
 describe('crypto (AES-256-GCM)', () => {
   it('round-trips a secret', () => {

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { authenticator } from 'otplib';
+import { describe, expect, it } from 'vitest';
 import { verifyTotp } from './totp';
 
 describe('verifyTotp', () => {

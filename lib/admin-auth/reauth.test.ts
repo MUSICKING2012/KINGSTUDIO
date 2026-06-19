@@ -1,7 +1,7 @@
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import { authenticator } from 'otplib';
-import { prisma } from '@/lib/db/prisma';
 import { hashPassword } from '@/lib/auth/password';
+import { prisma } from '@/lib/db/prisma';
+import { authenticator } from 'otplib';
+import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { encryptSecret } from './crypto';
 import { verifyReauth } from './reauth';
 
@@ -12,15 +12,28 @@ beforeEach(async () => {
   await prisma.reauthChallenge.deleteMany();
   await prisma.adminUser.deleteMany({ where: { email: 'reauth@test.local' } });
   const a = await prisma.adminUser.create({
-    data: { email: 'reauth@test.local', name: 'A', passwordHash: await hashPassword('correcthorse12'), totpSecret: encryptSecret(SECRET), totpEnabled: true },
+    data: {
+      email: 'reauth@test.local',
+      name: 'A',
+      passwordHash: await hashPassword('correcthorse12'),
+      totpSecret: encryptSecret(SECRET),
+      totpEnabled: true,
+    },
   });
   adminId = a.id;
 });
-afterAll(async () => { await prisma.$disconnect(); });
+afterAll(async () => {
+  await prisma.$disconnect();
+});
 
 describe('verifyReauth', () => {
   it('verifies pw + TOTP and writes a challenge row', async () => {
-    const r = await verifyReauth(adminId, 'refund', 'correcthorse12', authenticator.generate(SECRET));
+    const r = await verifyReauth(
+      adminId,
+      'refund',
+      'correcthorse12',
+      authenticator.generate(SECRET),
+    );
     expect(r.ok).toBe(true);
     const row = await prisma.reauthChallenge.findFirstOrThrow({ where: { adminUserId: adminId } });
     expect(row.verifiedAt).toBeTruthy();

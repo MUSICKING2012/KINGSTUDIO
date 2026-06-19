@@ -24,5 +24,7 @@ export function decryptSecret(payload: string): string {
   if (version !== 'v1') throw new Error(`unsupported key version: ${version}`);
   const decipher = createDecipheriv('aes-256-gcm', key(), Buffer.from(ivB64, 'base64'));
   decipher.setAuthTag(Buffer.from(tagB64, 'base64'));
-  return Buffer.concat([decipher.update(Buffer.from(ctB64, 'base64')), decipher.final()]).toString('utf8');
+  return Buffer.concat([decipher.update(Buffer.from(ctB64, 'base64')), decipher.final()]).toString(
+    'utf8',
+  );
 }

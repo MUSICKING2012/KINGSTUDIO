@@ -6,10 +6,11 @@ export type { Permission } from './roles';
 
 export async function getAdminPermissions(adminUserId: string): Promise<string[]> {
   const roles = await prisma.adminUserRole.findMany({
-    where: { adminUserId }, include: { adminRole: { select: { permissions: true } } },
+    where: { adminUserId },
+    include: { adminRole: { select: { permissions: true } } },
   });
   const set = new Set<string>();
-  for (const r of roles) for (const p of (r.adminRole.permissions as string[])) set.add(p);
+  for (const r of roles) for (const p of r.adminRole.permissions as string[]) set.add(p);
   return [...set];
 }
 
