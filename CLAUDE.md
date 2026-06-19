@@ -33,7 +33,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | UI | shadcn/ui + Radix UI + Tailwind CSS |
 | 폼·검증 | react-hook-form + Zod (프론트·백엔드 스키마 공유) |
 | 상태 | Zustand (클라이언트) + TanStack Query (서버 상태) |
-| 다국어 | next-intl (서브경로 /ko /en /ja /zh-Hans /zh-Hant) |
+| 다국어 | next-intl (서브경로 /ko /en /ja /zh-TW /zh-HK) |
 | ORM | **Prisma** + Prisma Migrate (Drizzle 아님) |
 | DB | PostgreSQL 16 (GCP Cloud SQL, HA) |
 | 캐시·락 | Upstash Redis (Serverless) |
@@ -123,14 +123,14 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 ## 5. 다국어 (i18n) 규칙
 
 - **모든 사용자 노출 텍스트는 `/messages/{locale}.json`에 키로 분리.** 컴포넌트에 하드코딩 금지.
-- 5개 로케일: `ko, en, ja, zh-Hans, zh-Hant`. **en이 필수 기본값(fallback).**
+- 5개 로케일: `ko, en, ja, zh-TW, zh-HK`. 중국어 2종은 모두 **번체**(zh-TW=대만, zh-HK=홍콩), 간체/본토 미지원(C14). **en이 필수 기본값(fallback).**
 - **번역 2계층:**
   - UI·마케팅 카피 → 기계번역 + Aiden 감수 (개발 중 en 먼저 채우고 나머지는 순차)
   - **약관·개인정보·환불정책 → 법률 전문 번역/법무 검토 필수.** 기계번역 금지. M5 시점 별도 트랙.
 - 누락 키 검증 CI 스크립트 필수(빌드 시 5개 로케일 키 일치 확인).
 - 레이아웃은 **텍스트 길이 가변** 가정. 일본어·중국어가 영어보다 길거나 짧아도 안 깨지게.
 - 패키지 노출 필터: `languages_available` 필드로 제어. 1Hour·1Pro·꿈길·워크샵은 `['ko']`만(외국어 사이트 자동 제외). K-Pop Making Class·Gold·Diamond·Premium은 전 언어.
-- **GFW 대응(중국 본토):** Google Fonts 직접 로드 금지(self-host), reCAPTCHA 금지(hCaptcha), GA·YouTube 임베드는 중국 로케일에서 조건부 제외.
+- **중국 본토(간체) 미지원 (C14):** 타겟은 대만(zh-TW)·홍콩(zh-HK) 번체로 둘 다 GFW 밖이라 별도 GFW 대응(Google Fonts self-host·hCaptcha·GA 조건부 제외)은 **불필요**. 향후 본토(간체·CNY) 진출 시 재도입 검토.
 
 ---
 
