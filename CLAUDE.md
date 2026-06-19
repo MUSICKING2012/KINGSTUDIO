@@ -33,7 +33,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | UI | shadcn/ui + Radix UI + Tailwind CSS |
 | 폼·검증 | react-hook-form + Zod (프론트·백엔드 스키마 공유) |
 | 상태 | Zustand (클라이언트) + TanStack Query (서버 상태) |
-| 다국어 | next-intl (서브경로 /ko /en /ja /zh-TW /zh-HK) |
+| 다국어 | next-intl (서브경로 /ko /en /ja /zh-Hans /zh-Hant) |
 | ORM | **Prisma** + Prisma Migrate (Drizzle 아님) |
 | DB | PostgreSQL 16 (GCP Cloud SQL, HA) |
 | 캐시·락 | Upstash Redis (Serverless) |
@@ -116,20 +116,21 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 - **연습용 MR·가사 사전 배포 게이트** (어드민 모듈 ②) — `settings.mr_predelivery_enabled` 기본 false. 라이선스 미확보 상태에서 MR/가사 파일이 절대 배포되지 않아야 함(R2 직결). 게이트 우회 경로 금지.
 - **견적·인보이스 금액 계산** (어드민 모듈 ③) — 인원당 정액 × 인원(C11)이 가격 모델과 일치하는지. 부가세·할인 계산 오류는 금전 사고.
 - **SEO Code Injection 화이트리스트** (어드민 모듈 ①) — 자유 스크립트 주입 차단(XSS). 정의된 슬롯(GA4·GTM·인증 메타)만. custom_script는 Super Admin+재인증+로그.
+- **Engineer 행 스코프 (본인 세션 한정)** — Engineer 역할은 PRD 5.8상 "본인 배정 세션만" 접근 가능(booking.engineerId === adminId). RBAC 권한 플래그만으론 행 단위 스코프가 표현 안 되므로, 체크인·콘텐츠 업로드·셀렉트 기능을 구현할 때 반드시 owner 체크를 건다. 이를 빠뜨리면 Engineer가 남의 세션에 접근하는 보안 구멍이 된다. (어드민 인증 슬라이스에서는 거친 권한만, 행 스코프는 booking 기능 슬라이스에서 적용)
 
 ---
 
 ## 5. 다국어 (i18n) 규칙
 
 - **모든 사용자 노출 텍스트는 `/messages/{locale}.json`에 키로 분리.** 컴포넌트에 하드코딩 금지.
-- 5개 로케일: `ko, en, ja, zh-TW, zh-HK`. 중국어 2종은 모두 **번체**(zh-TW=대만, zh-HK=홍콩), 간체/본토 미지원(C14). **en이 필수 기본값(fallback).**
+- 5개 로케일: `ko, en, ja, zh-Hans, zh-Hant`. **en이 필수 기본값(fallback).**
 - **번역 2계층:**
   - UI·마케팅 카피 → 기계번역 + Aiden 감수 (개발 중 en 먼저 채우고 나머지는 순차)
   - **약관·개인정보·환불정책 → 법률 전문 번역/법무 검토 필수.** 기계번역 금지. M5 시점 별도 트랙.
 - 누락 키 검증 CI 스크립트 필수(빌드 시 5개 로케일 키 일치 확인).
 - 레이아웃은 **텍스트 길이 가변** 가정. 일본어·중국어가 영어보다 길거나 짧아도 안 깨지게.
 - 패키지 노출 필터: `languages_available` 필드로 제어. 1Hour·1Pro·꿈길·워크샵은 `['ko']`만(외국어 사이트 자동 제외). K-Pop Making Class·Gold·Diamond·Premium은 전 언어.
-- **중국 본토(간체) 미지원 (C14):** 타겟은 대만(zh-TW)·홍콩(zh-HK) 번체로 둘 다 GFW 밖이라 별도 GFW 대응(Google Fonts self-host·hCaptcha·GA 조건부 제외)은 **불필요**. 향후 본토(간체·CNY) 진출 시 재도입 검토.
+- **GFW 대응(중국 본토):** Google Fonts 직접 로드 금지(self-host), reCAPTCHA 금지(hCaptcha), GA·YouTube 임베드는 중국 로케일에서 조건부 제외.
 
 ---
 
@@ -165,6 +166,29 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 4. **Stage 종료 시 PRD 대조 요약.** ① 무엇을 했는지 ② PRD와 대조해 누락·모호점 ③ 다음 Stage가 무엇인지를 요약하고 멈춘다. 확인 전 다음 Stage로 넘어가지 않는다.
 5. **파괴적 작업은 검토 후.** `prisma migrate dev`, 프로덕션 변경 등 되돌리기 비싼 작업은 Aiden 검토 전까지 실행 금지. validate까지만 자동.
 6. **문서 정합 동기화.** 스키마·구현이 PRD와 갈리는 결정을 하면(예: user_social_connections → 표준 Account), 즉시 PRD·CLAUDE.md를 정정해 **세 문서(PRD·CLAUDE·코드)가 어긋나지 않게** 한다. 정정을 미루지 않는다 — 미룬 정정은 다음 Stage에서 혼란을 만든다.
+
+## 7-B. IDE 자동승인 정책 (Antigravity)
+
+개발 IDE는 Google Antigravity(에이전트형, VS Code 포크). 자동승인은 **위험도별로만** 켠다. 전체 자동승인(Always proceed 전역)은 §4 위험 구역 검증을 무력화하므로 금지.
+
+**기본값 (항상):**
+- Terminal Execution Policy = **Request review** (Always proceed 전역 금지)
+- **Terminal Sandbox = ON** (워크스페이스 밖 파일 보호)
+- Non-Workspace File Access = **OFF**
+
+**자동승인 허용 (Allow List에 추가 가능 — 위험 낮음):**
+- `pnpm install`, 빌드, `vitest`, `playwright`, `biome` (테스트·린트·포맷)
+- UI 컴포넌트·번역(messages/*.json)·문서 작성
+
+**자동승인 금지 (어떤 모드에서도 수동 검토 — §4 위험 구역 연동):**
+- `prisma migrate` (스키마 변경 — §7-A 5번, 되돌리기 가장 비쌈)
+- `gcloud` 및 모든 GCP 인프라 변경 (Cloud Run 배포·Cloud SQL·Storage)
+- 결제·webhook·환불 / 동의 기록·트리거 / 인증·세션·미성년자 검증
+- 슬롯 락·캘린더 동기화 / `rm`·파일 삭제·덮어쓰기
+
+**서드파티 자동승인 확장 금지.** "모든 승인 자동 클릭" 류 확장(CDP 기반 등)은 위험 구역 보호를 통째로 무력화하므로 사용하지 않는다. 공식 Terminal Execution Policy + Allow List로만 제어.
+
+**원칙:** 신뢰가 쌓인 워크플로우만 점진적으로 Allow List에 추가. 첫날부터 무인 실행 금지. Stage 2~7(스키마)은 전 기간 Request review 유지.
 
 ---
 
