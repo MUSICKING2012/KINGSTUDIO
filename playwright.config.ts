@@ -1,3 +1,4 @@
+import 'dotenv/config'; // load DATABASE_URL + ADMIN_TOTP_ENC_KEY into the test process (same key the dev server uses)
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
