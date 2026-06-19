@@ -32,31 +32,7 @@
 
 ---
 
-## Task 0: Serialize DB test files (prevents shared-table races)
-
-**Files:** Modify `vitest.config.ts`
-
-> Tasks 2 & 3 both wipe + seed the global `packages` table. Vitest runs test *files* in parallel by default, so one file's `deleteMany()` can race another's assertions. Existing admin/customer tests dodged this by scoping to unique emails; packages have fixed slugs, so we serialize files instead. (Strictly safer for all existing DB tests too; cost is a few seconds.)
-
-- [ ] **Step 1: Add `fileParallelism: false`** to the `test` block in `vitest.config.ts` (read the file first; place it alongside the existing `test` options — e.g. next to `globals`/`environment`/`alias`):
-
-```ts
-  test: {
-    // ...existing options (globals, environment, alias, etc.)...
-    fileParallelism: false, // DB-backed tests share one Postgres; run files serially for determinism
-  },
-```
-
-- [ ] **Step 2: Sanity-run** the existing suite to confirm nothing broke: `pnpm test` → all currently-passing suites still green (just serial).
-
-- [ ] **Step 3: Commit**
-```bash
-pnpm exec biome check --write vitest.config.ts
-git add vitest.config.ts
-git commit -m "test: run vitest files serially (shared Postgres determinism)"
-```
-
----
+> **Test isolation (no Task 0 needed).** The seed and queries tests both touch the global `packages` table. To avoid a cross-worker race under Vitest's default file-parallelism — WITHOUT serializing all files (which exposed latent flakiness in the existing admin/customer tests via their per-file `prisma.$disconnect()`) — put BOTH the seed tests and the queries tests in a **single file** `lib/catalog/catalog.test.ts`. No other test file touches `packages`, so one worker owns it and tests run sequentially within. No `vitest.config.ts` change.
 
 ## Task 1: Pricing calculator (the money-critical gate)
 
