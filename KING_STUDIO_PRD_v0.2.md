@@ -40,8 +40,8 @@
 | C17 | 결제 표시통화 타입 | `display_currency` 자유 String 금지 → **`DisplayCurrency` enum**(KRW/USD/JPY/TWD/HKD, 지원통화만). 환율·영수증 표기 불일치 방지(§4 결제 위험구역). payments·quotes 적용 (v0.2 Stage 3 확정) |
 | — | s3→storage_key 일괄 (C13 후속) | §5.5 dispute pdf_storage_key, §5.6 deliverables storage_key, §5.7 songs·settings, §5.8 mv main/short, §5.8-A③ quotes pdf_storage_key — GCS 전환 잔재 정리 |
 | — | 미성년 SSOT 신설 | booking_participants 테이블(date_of_birth·is_minor·guardian_consent_id) 신규 — Stage 2 bookings 소급 관계 추가. 나이 판정을 정형 컬럼으로(§3.4) |
-| — | consents append-only 강화 | supersedes_id 철회 추적 필드 추가, updatedAt 생략(의도적), UPDATE/DELETE 차단 DB 트리거 계획 명시 (§3 절대제약) |
-| — | C15·C16·C17 재퇴행 → 3차 재정정 | 04aaded(옛 베이스 C10 편집)가 d8fe3b9의 C15·C16·C17 정정을 퇴행시킴(magic_links→token(UUID), songs→title(Json), DisplayCurrency→CNY/EUR). **스키마/코드=진실**로 PRD 5곳 재정정(C16·C17 행 + magic_links·songs·payments 데이터줄). 옛 외부 복사본 기반 편집이 원인 — 단일출처 규칙은 CLAUDE §7-A.7. |
+| — | consents append-only 강화 | consentGroupId(lineage 그룹) 철회 추적, updatedAt 생략(의도적), UPDATE/DELETE 차단 DB 트리거 계획 명시 (§3 절대제약) |
+| — | C15·C16·C17·consents 재퇴행 → 3차 재정정 | 04aaded(옛 베이스 C10 편집)가 d8fe3b9의 C15·C16·C17 정정 + consents 필드를 퇴행시킴(magic_links→token(UUID), songs→title(Json), DisplayCurrency→CNY/EUR, consents→supersedes_id). **스키마/코드=진실**로 PRD 6곳 재정정(C16·C17 행 + magic_links·songs·payments 데이터줄 + consents consentGroupId). 옛 외부 복사본 기반 편집이 원인 — 단일출처 규칙은 CLAUDE §7-A.7. |
 
 ---
 
@@ -491,7 +491,7 @@ consents (append-only, UPDATE/DELETE 금지 — DB 트리거로 강제)
 │                     |'marketing_email'|'marketing_sms'|'license_self_brought'
 ├─ consent_version, consented, consented_at, ip, user_agent, language
 ├─ extra_data(JSONB), revoked_at, revocation_reason
-├─ supersedes_id(self FK nullable) — 철회/갱신 row가 어떤 원래 동의를 무효화하는지 추적
+├─ consentGroupId(@db.Uuid) — 한 논리적 동의의 lineage 그룹 id. 최초 부여가 그룹 시작, 철회(consented=false)·재부여가 같은 consentGroupId 재사용 → UPDATE 없이 철회 대상·현재 상태(그룹 내 최신 consentedAt) 추적
 │  # createdAt만(updatedAt 의도적 생략 — append-only). 철회는 새 row 삽입(consented=false)
 │  # UPDATE/DELETE 차단은 BEFORE UPDATE/DELETE 트리거(raw SQL 마이그레이션)로 강제 — §3 절대제약
 
