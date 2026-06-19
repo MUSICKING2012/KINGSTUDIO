@@ -42,6 +42,7 @@
 | — | 미성년 SSOT 신설 | booking_participants 테이블(date_of_birth·is_minor·guardian_consent_id) 신규 — Stage 2 bookings 소급 관계 추가. 나이 판정을 정형 컬럼으로(§3.4) |
 | — | consents append-only 강화 | consentGroupId(lineage 그룹) 철회 추적, updatedAt 생략(의도적), UPDATE/DELETE 차단 DB 트리거 계획 명시 (§3 절대제약) |
 | — | C15·C16·C17·consents 재퇴행 → 3차 재정정 | 04aaded(옛 베이스 C10 편집)가 d8fe3b9의 C15·C16·C17 정정 + consents 필드를 퇴행시킴(magic_links→token(UUID), songs→title(Json), DisplayCurrency→CNY/EUR, consents→supersedes_id). **스키마/코드=진실**로 PRD 6곳 재정정(C16·C17 행 + magic_links·songs·payments 데이터줄 + consents consentGroupId). 옛 외부 복사본 기반 편집이 원인 — 단일출처 규칙은 CLAUDE §7-A.7. |
+| — | TOTP verify window 명세 신설 | 어드민 2FA verify 관용 **window = ±1 step(±30초)** 명문화(§5.8 보안 표) — 미명세였던 OPEN DECISION 확정. 근거: 비번 bcrypt(~1s) 지연이 30초 step 경계를 넘는 straddle 흡수 + RFC 6238. otplib 기본 window=0이라 경계 거부(프로덕션) + 테스트 플래키 발생하던 것 정정. generate 무영향(verify 전용). |
 
 ---
 
@@ -532,7 +533,7 @@ song_licenses ├─ id(cuid), song_id, type('recording'|'mr_distribution'|'lyri
 
 | 항목 | 정책 |
 |---|---|
-| 2FA | 모든 계정 필수, TOTP (otplib) |
+| 2FA | 모든 계정 필수, TOTP (otplib). **verify 관용 window = ±1 step (±30초)** — 처리 지연(비번 bcrypt ~1s)·시계 오차 흡수(RFC 6238). window는 **verify 관용에만 작용하고 토큰 generate엔 영향 없음**(토큰 유효구간 최대 90초). |
 | 비밀번호 | 최소 12자, 영문 대소·숫자·특수문자 혼합, 90일 변경 권장 |
 | 세션 만료 | 8시간 비활동 시 자동 로그아웃 |
 | 동시 세션 | 최대 3개, 초과 시 가장 오래된 세션 자동 종료 |
