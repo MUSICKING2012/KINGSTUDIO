@@ -18,7 +18,7 @@ export async function registerUser(input: {
   const { email, password, name } = parsed.data;
 
   if (await isPwned(password)) return { ok: false, error: 'password.pwned' };
-  if (!isStrong(password).ok) return { ok: false, error: 'password.weak' };
+  if (!(await isStrong(password)).ok) return { ok: false, error: 'password.weak' };
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) return { ok: false, error: 'email.taken' };

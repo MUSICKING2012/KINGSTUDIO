@@ -11,8 +11,9 @@ describe('hash/verify', () => {
 });
 
 describe('isStrong (zxcvbn)', () => {
-  it('rejects a weak password', () => expect(isStrong('password').ok).toBe(false));
-  it('accepts a strong password', () => expect(isStrong('xK9!mq2vRt7wZ').ok).toBe(true));
+  it('rejects a weak password', async () => expect((await isStrong('password')).ok).toBe(false));
+  it('accepts a strong password', async () =>
+    expect((await isStrong('xK9!mq2vRt7wZ')).ok).toBe(true));
 });
 
 describe('isPwned (HIBP, fail-open)', () => {
