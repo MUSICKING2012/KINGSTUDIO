@@ -72,7 +72,12 @@ Add `packages.<slug>.name` and `packages.<slug>.tagline` (short one-line concept
 
 ## Testing
 
-- **pricing.ts (mandatory, money-critical):** every mode, the experience linear table above, flat invariance, group multiplication, and `RangeError` on out-of-range headcount. Pure unit tests, no DB.
+- **pricing.ts (mandatory, money-critical — this test passing is the slice's completion gate):** Pure unit tests, no DB. MUST cover:
+  1. **Per-head multiplier table (experience):** headcount 1→2→3→4→5 yields multiplier `1.0 / 1.5 / 2.0 / 2.5 / 3.0` of `base` (assert each).
+  2. **Representative KRW values:** Diamond 3인 = `1,000,000`; Premium 5인 = `4,500,000` (plus gold 2인 = 600,000, diamond 2인 = 750,000).
+  3. **Boundaries:** headcount `> headcountMax` (e.g. diamond 6) → `RangeError`; headcount `0` (and any `< headcountMin`, e.g. dreampath 9) → `RangeError`.
+  4. **Rental flat invariance:** 1hour/1pro headcount 1,2,3,4,5 all return `base` (100,000 / 300,000), unchanged.
+  5. **Group multiplication:** making-class 2→300,000 and 15→2,250,000; dreampath 10→300,000.
 - **queries.ts:** seed first, then assert locale filter (en site excludes rental/dreampath/workshop; ko site includes all), category filter, activeOnly, displayOrder.
 - **seed:** idempotency (run twice → 8 rows), exact field values for a spot-checked package (diamond).
 
