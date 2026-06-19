@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { PACKAGES, seedPackages } from '../../prisma/seed-packages';
+import { getPackageBySlug, listPackages } from './queries';
 
 // Single file owns the `packages` table so no other Vitest worker races it (see plan note).
 beforeEach(async () => {
@@ -42,5 +43,50 @@ describe('seedPackages', () => {
       const p = await prisma.package.findUniqueOrThrow({ where: { slug } });
       expect(p.languagesAvailable).toEqual(['ko']);
     }
+  });
+});
+
+describe('catalog queries', () => {
+  beforeEach(async () => {
+    await seedPackages(); // runs after the outer deleteMany → clean + seeded
+  });
+
+  describe('listPackages — locale filter (§5/C11)', () => {
+    it('ko site sees all 8', async () => {
+      expect(await listPackages({ locale: 'ko' })).toHaveLength(8);
+    });
+    it('en site excludes rental + dreampath + workshop (ko-only)', async () => {
+      const slugs = (await listPackages({ locale: 'en' })).map((p) => p.slug);
+      expect(slugs).toEqual(['gold', 'diamond', 'premium', 'making-class']); // displayOrder order
+    });
+  });
+
+  describe('listPackages — category + active + order', () => {
+    it('filters by category, ordered by displayOrder', async () => {
+      const slugs = (await listPackages({ category: 'experience', locale: 'ko' })).map(
+        (p) => p.slug,
+      );
+      expect(slugs).toEqual(['gold', 'diamond', 'premium']);
+    });
+    it('excludes inactive when activeOnly (default)', async () => {
+      await prisma.package.update({ where: { slug: 'gold' }, data: { isActive: false } });
+      const slugs = (await listPackages({ category: 'experience', locale: 'ko' })).map(
+        (p) => p.slug,
+      );
+      expect(slugs).toEqual(['diamond', 'premium']);
+    });
+    it('includes inactive when activeOnly=false', async () => {
+      await prisma.package.update({ where: { slug: 'gold' }, data: { isActive: false } });
+      expect(
+        await listPackages({ category: 'experience', locale: 'ko', activeOnly: false }),
+      ).toHaveLength(3);
+    });
+  });
+
+  describe('getPackageBySlug', () => {
+    it('returns the package or null', async () => {
+      expect((await getPackageBySlug('premium'))?.basePriceKrw).toBe(1_500_000);
+      expect(await getPackageBySlug('nope')).toBeNull();
+    });
   });
 });
