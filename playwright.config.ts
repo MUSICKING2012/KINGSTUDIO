@@ -9,7 +9,9 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev',
     url: 'http://localhost:3000/en',
-    reuseExistingServer: false,
+    // Local: reuse an already-running `pnpm dev` (no double-spawn → no CPU contention,
+    // which was the direct trigger of the webServer-startup timeout). CI: always fresh.
+    reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },
 });
