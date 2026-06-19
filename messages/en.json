@@ -47,5 +47,39 @@
       "logout": "Log out",
       "logoutAll": "Log out all devices"
     }
+  },
+  "packages": {
+    "gold": {
+      "name": "Gold",
+      "tagline": "K-POP vocal training, entry level"
+    },
+    "diamond": {
+      "name": "Diamond",
+      "tagline": "A full K-POP recording experience"
+    },
+    "premium": {
+      "name": "Premium",
+      "tagline": "Recording plus a full music-video package"
+    },
+    "1hour": {
+      "name": "1Hour",
+      "tagline": "Studio hourly rental with an engineer"
+    },
+    "1pro": {
+      "name": "1Pro",
+      "tagline": "Studio rental for serious recording"
+    },
+    "making-class": {
+      "name": "K-Pop Making Class",
+      "tagline": "A group K-pop making class"
+    },
+    "dreampath": {
+      "name": "Dreampath",
+      "tagline": "A group program"
+    },
+    "workshop": {
+      "name": "Workshop",
+      "tagline": "A group workshop program"
+    }
   }
 }

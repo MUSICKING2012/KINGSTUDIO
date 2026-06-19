@@ -20,6 +20,7 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "seed:admin": "tsx prisma/seed-admin.ts",
+    "seed:packages": "tsx prisma/seed-packages.ts",
     "e2e": "playwright test"
   },
   "dependencies": {

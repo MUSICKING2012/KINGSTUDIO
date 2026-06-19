@@ -47,5 +47,39 @@
       "logout": "로그아웃",
       "logoutAll": "전체 기기 로그아웃"
     }
+  },
+  "packages": {
+    "gold": {
+      "name": "Gold",
+      "tagline": "K-POP 보컬 트레이닝 입문"
+    },
+    "diamond": {
+      "name": "Diamond",
+      "tagline": "본격 K-POP 녹음 체험"
+    },
+    "premium": {
+      "name": "Premium",
+      "tagline": "녹음 + 뮤직비디오 풀패키지"
+    },
+    "1hour": {
+      "name": "1Hour",
+      "tagline": "스튜디오 시간 대여 + 엔지니어"
+    },
+    "1pro": {
+      "name": "1Pro",
+      "tagline": "본격 녹음용 스튜디오 대여"
+    },
+    "making-class": {
+      "name": "K-Pop Making Class",
+      "tagline": "단체 K-POP 메이킹 클래스"
+    },
+    "dreampath": {
+      "name": "꿈길",
+      "tagline": "단체 프로그램"
+    },
+    "workshop": {
+      "name": "워크샵",
+      "tagline": "단체 워크샵 프로그램"
+    }
   }
 }
