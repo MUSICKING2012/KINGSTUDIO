@@ -1,0 +1,625 @@
+<!DOCTYPE html><html class="dark" lang="en" style="width: 1280px; height: 5632px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>KING STUDIO | Professional K-POP Recording Experience</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#3f3739",
+                    "secondary-container": "#df7800",
+                    "success": "#2E9E5B",
+                    "surface-container-highest": "#3a3335",
+                    "outline-variant": "#5c403b",
+                    "secondary-fixed-dim": "#ffb77f",
+                    "on-primary-container": "#5c0001",
+                    "primary-container": "#ff5543",
+                    "brand-violet": "#7B2E8E",
+                    "on-tertiary-container": "#002d40",
+                    "on-tertiary": "#003549",
+                    "surface-variant": "#3a3335",
+                    "surface-container-lowest": "#120d0f",
+                    "muted-text": "#6B6460",
+                    "on-secondary-fixed": "#2f1500",
+                    "inverse-on-surface": "#362f31",
+                    "on-error-container": "#ffdad6",
+                    "brand-pink": "#C53562",
+                    "error-container": "#93000a",
+                    "on-secondary-container": "#472200",
+                    "on-secondary-fixed-variant": "#6f3900",
+                    "primary-fixed-dim": "#ffb4a9",
+                    "on-secondary": "#4e2600",
+                    "secondary": "#ffb77f",
+                    "on-tertiary-fixed-variant": "#004c68",
+                    "on-primary-fixed": "#410000",
+                    "background": "#181214",
+                    "surface": "#181214",
+                    "tertiary-container": "#2b9bca",
+                    "on-tertiary-fixed": "#001e2c",
+                    "error": "#D63A3A",
+                    "surface-tint": "#ffb4a9",
+                    "primary": "#ffb4a9",
+                    "surface-container-low": "#201a1c",
+                    "on-error": "#690005",
+                    "surface-container-high": "#2f282a",
+                    "inverse-primary": "#be0d0b",
+                    "secondary-fixed": "#ffdcc3",
+                    "surface-container": "#241e20",
+                    "on-primary": "#690001",
+                    "tertiary-fixed": "#c3e8ff",
+                    "on-background": "#ecdfe2",
+                    "on-primary-fixed-variant": "#930003",
+                    "warm-bg": "#FBF9F7",
+                    "on-surface": "#ecdfe2",
+                    "outline": "#ac8883",
+                    "on-surface-variant": "#e6bdb7",
+                    "inverse-surface": "#ecdfe2",
+                    "surface-dim": "#181214",
+                    "tertiary-fixed-dim": "#79d1ff",
+                    "tertiary": "#79d1ff",
+                    "primary-fixed": "#ffdad5",
+                    "brand-red": "#F0392B"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "section-gap": "80px",
+                    "margin-desktop": "40px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Anton"],
+                    "label-sm": ["Pretendard"],
+                    "display-lg": ["Anton"],
+                    "display-lg-mobile": ["Anton"],
+                    "body-md": ["Pretendard"],
+                    "body-lg": ["Pretendard"],
+                    "headline-xl": ["Anton"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                    "display-lg-mobile": ["48px", {"lineHeight": "1.1", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style class="">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #F4881A 0%, #F0392B 33%, #C53562 66%, #7B2E8E 100%);
+        }
+        .text-signature-gradient {
+            background: linear-gradient(135deg, #F4881A, #F0392B, #C53562, #7B2E8E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-nav {
+            background: rgba(24, 18, 20, 0.9);
+            backdrop-filter: blur(12px);
+        }
+        body { font-family: 'Pretendard', sans-serif; }
+        .font-headline { font-family: 'Anton', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- 1. HEADER -->
+<header class="fixed top-0 w-full z-50 glass-nav border-b border-outline-variant/20 h-20">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-full max-w-container-max mx-auto">
+<div class="flex items-center gap-stack-lg">
+<a class="block h-10 w-auto" href="#">
+<img alt="KING STUDIO Logo" class="h-full w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj5ggIT07OX2nVDqNyMERlpojH0RBwByE8cc-OMpsSfViROi6kj-ZzALHPzEqO9C7bbxikGM9wLZ7-bLITv4oftpP2tHO7KwIJuoJctb6Pbc1mpSfBOcTDm_fr-veoL1dm43xFu8a4xgrD2Qc8IzCmnFmLgYnUwmw-N6qXp7RQI7rjS_ItHbQb1aZikaU1Zv0S_WN9Z3X8UKhbaSCxFwuN1MofTa8hl4T4fL-M2kShR0V34XI9Cuehjar4F1FcYfMmN31OCHdjel0C">
+</a>
+<nav class="hidden lg:flex items-center gap-gutter">
+<a class="font-label-sm text-label-sm text-primary transition-colors border-b-2 border-brand-red pb-1" href="#">OVERVIEW</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-brand-red transition-colors" href="#">SERVICE</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-brand-red transition-colors" href="#">REVIEW</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-brand-red transition-colors" href="#">BLOG</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-brand-red transition-colors" href="#">ABOUT</a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="text-on-surface-variant hover:text-brand-red transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+<span class="font-label-sm text-label-sm hidden sm:inline">EN/KRW</span>
+</button>
+<button class="bg-surface-container-highest text-on-surface font-label-sm text-label-sm px-6 py-2.5 rounded-full hover:bg-surface-bright transition-all active:scale-95">Login</button>
+<button class="lg:hidden text-on-surface">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- 2. HERO -->
+<section class="relative min-h-[80vh] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Cinematic Studio Background" class="w-full h-full object-cover brightness-[0.4] scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZiUr4MvDcCiX3Ip-pASE63T-heRFiNnVAQXWA6atBgeglKemtf95-IH4Q6A88cxKxHdMUZGbrZUm_Ow5swl4dsvTG60shrJ32-57H8Wdz75Ld0SlBWsIzDQ8OCEDbRI2sKdMTHRF_X1dnYJfrmj2HbDRz0jeHdehDAmZ0JMKvY_vi30fX-OLrZs7fSN2ey4QeSl1fjFewj0ug3vKkt-yUdBcuVYdGHrjktKVws7TazW2S3gN1DoqTFF7db5GTdu9XHcSSLkCPuzefLyQ">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/40"></div>
+</div>
+<div class="relative z-10 w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-20">
+<div class="max-w-3xl space-y-stack-lg">
+<div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified" style="color: rgb(244, 136, 26);">verified</span>
+<span class="font-label-sm text-label-sm text-white uppercase tracking-widest">As featured in The New York Times</span>
+</div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white leading-tight uppercase">
+                    Record your own <span class="text-signature-gradient">K-POP</span> track in a real Seoul studio
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                    Experience the glamour and technical perfection of the Korean music industry. Take home professional vocals, high-end photos, and a cinematic music video.
+                </p>
+<div class="flex flex-col sm:flex-row items-center gap-gutter pt-stack-md">
+<button class="w-full sm:w-auto signature-gradient text-white font-label-sm text-label-sm px-10 py-5 rounded-full uppercase tracking-widest shadow-[0_0_30px_rgba(240,57,43,0.3)] hover:shadow-[0_0_50px_rgba(240,57,43,0.5)] transition-all active:scale-95">
+                        Book Your Session
+                    </button>
+<a class="flex items-center gap-2 font-label-sm text-label-sm text-white hover:text-brand-red transition-colors group" href="#">
+<span class="material-symbols-outlined border border-white/30 rounded-full p-2 group-hover:border-brand-red" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+                        Watch how it works
+                    </a>
+</div>
+</div>
+</div>
+</section>
+<!-- 2.1 BOOKING BAR (Updated Dropdowns) -->
+<section class="bg-warm-bg py-10 border-b border-outline-variant/10">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="bg-white rounded-2xl md:rounded-full shadow-2xl p-4 md:p-3 flex flex-col md:flex-row items-center gap-4 border border-outline-variant/10">
+<div class="flex-1 w-full grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-outline-variant/20">
+<div class="px-6 py-2">
+<label class="block text-[10px] font-bold text-inverse-on-surface/50 uppercase tracking-wider mb-0.5">Select Service</label>
+<select class="w-full bg-transparent border-none p-0 text-inverse-on-surface font-semibold focus:ring-0 text-sm cursor-pointer" id="service-select">
+<option value="gold">Gold</option>
+<option value="diamond">Diamond</option>
+<option value="premium">Premium</option>
+<option value="kpop-class">K-Pop Making Class</option>
+</select>
+</div>
+<div class="px-6 py-2">
+<label class="block text-[10px] font-bold text-inverse-on-surface/50 uppercase tracking-wider mb-0.5">Select Date</label>
+<input class="w-full bg-transparent border-none p-0 text-inverse-on-surface font-semibold focus:ring-0 text-sm cursor-pointer" type="date">
+</div>
+<div class="px-6 py-2">
+<label class="block text-[10px] font-bold text-inverse-on-surface/50 uppercase tracking-wider mb-0.5">Select Time</label>
+<select class="w-full bg-transparent border-none p-0 text-inverse-on-surface font-semibold focus:ring-0 text-sm cursor-pointer" id="time-select">
+<option disabled="" selected="">Select a slot</option>
+<option value="10:00">10:00</option>
+<option value="12:00">12:00</option>
+<option value="14:00">14:00</option>
+<option value="16:00">16:00</option>
+<option value="18:00">18:00</option>
+</select>
+</div>
+</div>
+<button class="w-full md:w-auto signature-gradient text-white font-label-sm text-label-sm px-10 py-5 rounded-full uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="search">search</span>
+                    Search Availability
+                </button>
+</div>
+</div>
+</section>
+<!-- 3. THREE CATEGORY ENTRY -->
+<section class="bg-warm-bg py-section-gap">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-xl text-headline-xl text-inverse-on-surface uppercase mb-4">Choose your experience</h2>
+<div class="w-20 h-1 signature-gradient mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="group bg-white/50 p-10 rounded-xl border border-outline-variant/10 transition-all hover:bg-white hover:shadow-xl hover:-translate-y-2">
+<div class="w-14 h-14 bg-surface-container-highest rounded-xl flex items-center justify-center mb-8" style="color: rgb(244, 136, 26);">
+<span class="material-symbols-outlined text-3xl" data-icon="settings_input_component">settings_input_component</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-4">Studio Rental</h3>
+<p class="font-body-md text-body-md text-muted-text mb-8">World-class acoustics and high-end gear for professional artists and engineers.</p>
+<a class="font-label-sm text-label-sm text-inverse-on-surface uppercase font-bold flex items-center gap-2 group/link" href="#">
+                        Explore 
+                        <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="group relative bg-white p-10 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.04)] border-2 border-brand-red overflow-hidden transition-all hover:-translate-y-2">
+<div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="mic_external_on">mic_external_on</span>
+</div>
+<div class="relative z-10">
+<div class="w-14 h-14 signature-gradient rounded-xl flex items-center justify-center text-white mb-8 shadow-lg">
+<span class="material-symbols-outlined text-3xl" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-4">INDIVIDUAL PACKAGE</h3>
+<p class="font-body-md text-body-md text-muted-text mb-8">Full idol production from vocal coaching to professional recording and cinematic video.</p>
+<a class="font-label-sm text-label-sm text-brand-red uppercase font-bold flex items-center gap-2 group/link" href="#">
+                            Explore 
+                            <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="group bg-white/50 p-10 rounded-xl border border-outline-variant/10 transition-all hover:bg-white hover:shadow-xl hover:-translate-y-2">
+<div class="w-14 h-14 bg-surface-container-highest rounded-xl flex items-center justify-center mb-8" style="color: rgb(244, 136, 26);">
+<span class="material-symbols-outlined text-3xl" data-icon="groups">groups</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-4">Group Package</h3>
+<p class="font-body-md text-body-md text-muted-text mb-8">Unforgettable team-building experiences and school programs in a real studio setting.</p>
+<a class="font-label-sm text-label-sm text-inverse-on-surface uppercase font-bold flex items-center gap-2 group/link" href="#">
+                        Explore 
+                        <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. PACKAGE PREVIEW -->
+<section class="bg-warm-bg py-section-gap border-t border-outline-variant/10">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-stack-md">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-inverse-on-surface uppercase mb-2">Our K-POP recording packages</h2>
+<p class="font-body-md text-body-md text-muted-text">Professional engineering for every level of aspiration.</p>
+</div>
+<div class="flex gap-2">
+<button class="w-12 h-12 rounded-full border border-outline flex items-center justify-center text-inverse-on-surface hover:bg-brand-red hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-12 h-12 rounded-full border border-outline flex items-center justify-center text-inverse-on-surface hover:bg-brand-red hover:text-white transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Gold Package -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-outline-variant/10">
+<div class="h-48 relative">
+<img alt="Professional Mic" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzs6SESmMbKVHXqsnYOZ_VaXsGgfUctRawl2eGXwC4-4ojzxxOHzRv2BJW_heXgk0KkLhFKZbuJGMoJ_68QJTQZwT9gQQCe6qCDR8kK0MK1M-M1Qwi_CI46Ryt8yyydgsoCdQT4GF5bsbEp3fFK4xDwNIFf-rKluQXEv6iYkeStGbkc_tlNf_caQ4cZ_xrp_L9L6lx7vljV3xRZiHkfrhc4_Q8t_BPD7GQQxEJQA3SERfyOnJXREQ6CcsQvM85BXGcqwHqw2VISZe45NI">
+</div>
+<div class="p-8">
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-2">Gold</h3>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-2xl font-bold text-inverse-on-surface">₩400,000</span>
+<span class="text-muted-text">/ $266 USD</span>
+</div>
+<ul class="space-y-4 mb-8">
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>2 Hour Session
+                            </li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>Personal Vocal</li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
+                                Detailed Results Report(PDF)</li>
+</ul>
+<button class="w-full py-4 border-2 border-outline-variant/30 text-inverse-on-surface font-label-sm text-label-sm rounded-xl uppercase tracking-widest hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">Select Plan</button>
+</div>
+</div>
+<!-- Diamond Package -->
+<div class="relative bg-white rounded-2xl overflow-hidden shadow-2xl border-4 border-brand-red scale-105 z-10">
+<div class="absolute top-4 right-4 z-20">
+<span class="signature-gradient text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">Most Popular</span>
+</div>
+<div class="h-48 relative">
+<img alt="Studio Control Room" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHGgST8piFYfYtGV9k7boINzK6Y1n-6TjyAoDB2zPNkSb8tb4HxZom3EMJoW9jixnTmAhei-kTSyYf7_sG-nxNdKt_Cay_HS3yOREPEZjy8veZ6RBiDd8uagpO_kjQRyGq-pOY9ksdA2ms-1UHv_aEtEZWf5fj7dNM1vlpvolwzQAiDSlSfS9d94xWiGwHLfPlA-QAoEyFrgEiGK_twDbUvlnYcVKp0aNftYqkXgCjEWGriFJidHwP1pxTh4FJwmnu2xB-4lFi3Ddqp1A">
+</div>
+<div class="p-8">
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-2">Diamond&nbsp;</h3>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-3xl font-bold text-inverse-on-surface">₩500,000</span>
+<span class="text-muted-text">/ $349 USD</span>
+</div>
+<ul class="space-y-4 mb-8">
+<li class="flex items-center gap-3 text-body-md text-muted-text font-semibold text-inverse-on-surface">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
+                                2 Hour Session
+                            </li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>Vocal Director</li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>Mixing &amp; Mastering</li>
+</ul>
+<button class="w-full py-4 signature-gradient text-white font-label-sm text-label-sm rounded-xl uppercase tracking-widest shadow-xl hover:opacity-90 transition-all">Select Plan</button>
+</div>
+</div>
+<!-- Premium Package -->
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-outline-variant/10">
+<div class="h-48 relative">
+<img alt="Video Set" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsNhHh9PgMPFiIFza8qXxICX1dmS2RY7QisFg_t0BjOdLQp7e5tVdEEsnaLPDmGewEE09GjtlrMEFQN8FHSAM3nZpTpVRQiIt-ZKukTNnLneRvW-5N8Mg7vTIvgYKN8PSiK4PduECzrBlRNdGCox8jMKP4DFqKpi2rf9aaHly19Jj9izadbI3rgltXFYyaRYbFSzzcX-NsSlh_KGk9H4TB3DEug2g-BNVBfr3EIZS5-k-gvP3AlqlMzL0w9sYxdbmgEr5Yfiidq7xazUI">
+</div>
+<div class="p-8">
+<h3 class="font-headline-lg text-headline-lg text-inverse-on-surface uppercase mb-2">Premium</h3>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-2xl font-bold text-inverse-on-surface">₩1,500,000</span>
+<span class="text-muted-text">/ $999 USD</span>
+</div>
+<ul class="space-y-4 mb-8">
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span><span class="" style="font-weight: 600;">3 Hour Session</span></li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>Vocal Director</li>
+<li class="flex items-center gap-3 text-body-md text-muted-text">
+<span class="material-symbols-outlined text-success text-xl" data-icon="check_circle" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>Full Music Video</li>
+</ul>
+<button class="w-full py-4 border-2 border-outline-variant/30 text-inverse-on-surface font-label-sm text-label-sm rounded-xl uppercase tracking-widest hover:bg-brand-red hover:border-brand-red hover:text-white transition-all">Select Plan</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. HOW IT WORKS -->
+<section class="bg-white py-section-gap relative overflow-hidden">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-headline-xl text-headline-xl text-inverse-on-surface uppercase mb-4">How it works</h2>
+<p class="font-body-md text-body-md text-muted-text">A seamless path from fan to superstar.</p>
+</div>
+<div class="relative grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-1 bg-outline-variant/10 -z-0"></div>
+<div class="relative z-10 text-center space-y-6">
+<div class="w-24 h-24 mx-auto signature-gradient rounded-2xl flex items-center justify-center text-white shadow-xl rotate-3">
+<span class="material-symbols-outlined text-4xl" data-icon="shopping_cart">shopping_cart</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-headline-lg text-inverse-on-surface text-xl uppercase mb-2">1. Package</h4>
+<p class="font-body-md text-body-md text-muted-text">Choose the session that fits your vision.</p>
+</div>
+</div>
+<div class="relative z-10 text-center space-y-6">
+<div class="w-24 h-24 mx-auto bg-inverse-on-surface rounded-2xl flex items-center justify-center text-brand-red shadow-xl -rotate-3">
+<span class="material-symbols-outlined text-4xl" data-icon="calendar_today" style="color: rgb(244, 136, 26);">calendar_today</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-headline-lg text-inverse-on-surface text-xl uppercase mb-2">2. Date/Time</h4>
+<p class="font-body-md text-body-md text-muted-text">Book your slot in our busy studio calendar.</p>
+</div>
+</div>
+<div class="relative z-10 text-center space-y-6">
+<div class="w-24 h-24 mx-auto signature-gradient rounded-2xl flex items-center justify-center text-white shadow-xl rotate-3">
+<span class="material-symbols-outlined text-4xl" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-headline-lg text-inverse-on-surface text-xl uppercase mb-2">3. Record</h4>
+<p class="font-body-md text-body-md text-muted-text">Work with top-tier Seoul engineers.</p>
+</div>
+</div>
+<div class="relative z-10 text-center space-y-6">
+<div class="w-24 h-24 mx-auto bg-inverse-on-surface rounded-2xl flex items-center justify-center text-brand-red shadow-xl -rotate-3">
+<span class="material-symbols-outlined text-4xl" data-icon="download_for_offline" style="color: rgb(244, 136, 26);">download_for_offline</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-headline-lg text-inverse-on-surface text-xl uppercase mb-2">4. Download</h4>
+<p class="font-body-md text-body-md text-muted-text">Get your polished track in 48 hours.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. SOCIAL PROOF / REVIEWS -->
+<section class="bg-surface py-section-gap overflow-hidden">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
+<div class="max-w-4xl mx-auto mb-20">
+<span class="material-symbols-outlined text-6xl mb-6" data-icon="format_quote" style="color: rgb(244, 136, 26);">format_quote</span>
+<p class="font-headline-lg text-headline-lg text-white italic mb-8">
+                    "A transformative experience that bridges the gap between fan and artist. KING STUDIO offers a rare, high-production glimpse into the machinery of K-POP."
+                </p>
+<p class="font-label-sm text-label-sm uppercase tracking-[0.2em]" style="color: rgb(244, 136, 26);">— The New York Times</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-16">
+<!-- Review 1 -->
+<div class="bg-surface-container p-8 rounded-2xl text-left border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<span class="text-2xl">🇺🇸</span>
+</div>
+<p class="font-body-md text-on-surface-variant italic mb-6">"Felt like a total celebrity. The engineer was so patient with my Korean pronunciation!"</p>
+<p class="font-label-sm text-label-sm text-white">— Sarah M., Los Angeles</p>
+</div>
+<!-- Review 2 -->
+<div class="bg-surface-container p-8 rounded-2xl text-left border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<span class="text-2xl">🇸🇬</span>
+</div>
+<p class="font-body-md text-on-surface-variant italic mb-6">"The studio quality is insane. It's better than most professional setups back home."</p>
+<p class="font-label-sm text-label-sm text-white">— David L., Singapore</p>
+</div>
+<!-- Review 3 -->
+<div class="bg-surface-container p-8 rounded-2xl text-left border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<div class="flex text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" data-weight="fill" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+</div>
+<span class="text-2xl">🇦🇺</span>
+</div>
+<p class="font-body-md text-on-surface-variant italic mb-6">"The highlight of my Seoul trip. The final mix sounds like something on Spotify."</p>
+<p class="font-label-sm text-label-sm text-white">— Chloe W., Sydney</p>
+</div>
+</div>
+<div class="inline-flex items-center gap-4 bg-white/5 px-8 py-4 rounded-full">
+<span class="font-headline-lg text-headline-lg" style="color: rgb(244, 136, 26);">4.8 / 5</span>
+<span class="w-px h-8 bg-outline-variant/30"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">from 200+ global travelers</span>
+</div>
+</div>
+</section>
+<!-- 7. BLOG SECTION -->
+<section class="bg-white py-section-gap">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex items-end justify-between mb-16">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-inverse-on-surface uppercase mb-2">Latest from our Blog</h2>
+<p class="font-body-md text-body-md text-muted-text">Insights into the heart of Seoul's music scene.</p>
+</div>
+<a class="font-label-sm text-label-sm text-brand-red uppercase font-bold flex items-center gap-2 group" href="#">
+                    View All Posts 
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-2xl mb-6">
+<img alt="Blog 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1dMa7AyhnY1e1Md16dQ3MaEIZs6yym-ItMgkQIne73vyL1-lUE3T0hWKfxQ8jQnVJxb0UbXf_oT978bN4fR6nlqEZCdb5g9GavORgRUouDVxwXj97iLBh2h6qFTJD21gGx_66OlvS_FAcmijIJUhDoT5ndycGsw3pjM4A6e1apNmf0RRaAM0KslJWQRDXn57Ztzsj2wtQPezxqp4rt0593gGxn8lTtfGZCoubds4Yj2J3xTsx51zHTlyXBQjPpLXh92lnJwUwYcHq">
+</div>
+<div class="space-y-3">
+<span class="font-label-sm text-[10px] uppercase tracking-widest" style="color: rgb(244, 136, 26);">March 12, 2024</span>
+<h4 class="font-headline-lg text-2xl text-inverse-on-surface leading-tight group-hover:text-brand-red transition-colors">How to Prepare for Your First Professional Recording Session</h4>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-2xl mb-6">
+<img alt="Blog 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB82Zu7vVHnozDrmb3fKE7wOg2dGOhNbmCHD2Mrio5YZjPAmwHKy9L7JfER8Fkzv3yoR_ch4Nzi1nq6zQC4TIopCcrrhm-SO3NdWbHkrZnGL8srbMbJ4ZH9b_7f1VH7MaQ541umjnlwCerccpkljIRHdNp2O_6RZA-ipn2OOdPYRtpnSEwYhKn8dWcrUG2UeT9cEzG-HtenJXg5suuLPBJY8m5cHmnG3kqTCSt0bb3wrhDOsdohvORlrBoGd3Nq1PUooFmui0UEgwTA">
+</div>
+<div class="space-y-3">
+<span class="font-label-sm text-[10px] uppercase tracking-widest" style="color: rgb(244, 136, 26);">March 05, 2024</span>
+<h4 class="font-headline-lg text-2xl text-inverse-on-surface leading-tight group-hover:text-brand-red transition-colors">Inside the Tech: The Gear Powering Seoul's Top Hits</h4>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-2xl mb-6">
+<img alt="Blog 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXOGz2QjyVNKNLDQmdvp1W_JO3Df6ndILoaui4Z6yibnrI9lZa856e-iI9dtm8i34kuRTjXH6MNRzCJINArtME92OTzd57n3p_I5cddmvNDMsn1QEDinJnBBEIaT_EuN_vKVBfTR2oYZxD-u7M1h19-q8SwYYl0wRlc0TpxBI9NCciPt4YSI7txKZNe4Nlls9Nggciqm_PRsdru9J3aBqCA3NBuIIFNhZL1fkwcooIaEa3HaHH63mzgx-P0biCNDCC4bdzRMH_nfbK">
+</div>
+<div class="space-y-3">
+<span class="font-label-sm text-[10px] uppercase tracking-widest" style="color: rgb(244, 136, 26);">Feb 28, 2024</span>
+<h4 class="font-headline-lg text-2xl text-inverse-on-surface leading-tight group-hover:text-brand-red transition-colors">Vocal Warm-up Secrets from K-POP Coaches</h4>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 8. FINAL CTA -->
+<section class="py-section-gap relative overflow-hidden signature-gradient">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<img alt="Background Overlay" class="w-full h-full object-cover mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUTLVZ2VDSFTRVni0dgEUwyEgEEAQEqxyKtWza7ZZ8v0Z5IE5qROAAmIkZI2PnqkxXBwFWfgPUHAfctx_tEKN37kvrOpgtsMkug7no2Ew6z1sJ6yr1Imqt_N1hOKKaBLBJSkwHHjbwf9FuqlX5OfRHEz9Jdb_3PoLOSYcTfph3Ug9Q951Vtf7HnAKufZ-TpLpVYauBQMezjZ4SVhYfY8u4bDsA2cTfoP6sSoamlO6RkG7WUt210vmK0141sZJ7zFOoURKRvJn9tj5F">
+</div>
+<div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto text-center">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white uppercase mb-8">Ready to become a <br> K-POP artist for a day?</h2>
+<p class="font-body-lg text-body-lg text-white/80 max-w-2xl mx-auto mb-12">Seats fill up weeks in advance. Secure your session today and start your musical journey in Seoul.</p>
+<button class="bg-white text-brand-red font-label-sm text-label-sm px-12 py-6 rounded-full uppercase tracking-widest shadow-2xl hover:scale-105 transition-all active:scale-95">Book Your Session</button>
+</div>
+</section>
+<!-- 9. FOOTER -->
+<footer class="bg-surface-container-lowest py-section-gap text-on-surface-variant border-t border-outline-variant/10">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"><div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-16">
+<!-- Column 1: Brand & SNS -->
+<div class="space-y-6">
+<img alt="KING STUDIO" class="h-12 w-auto brightness-0 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Oh7pSzbX4bLsIq87W98QMdU0Bk3rXpCGcqZ9pSRD6k3feI0HZEhuWYpmV6vhWIOQETSlhnwbYJEindXL12702lbCu4nJkBX7-pZoo4ujwWvgulS7jq-aOzAcc0tEKffBS61rfOCMsTUelIkAZ-RWicy-fsNPUsRfzT8q18D3-QCzEoBzAiCCOKOsUMwE_pNFr2Mip8Dq5g2fQfxvBYZpjWNqk2zCZwtHvpYfmW8HhYPQXQmKadTPSI_bsP-KU22_aM9M_8Q6ke4x">
+<div class="flex items-center gap-4 text-white">
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl">photo_camera</span></a>
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl">smart_display</span></a>
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl">facebook</span></a>
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl">video_library</span></a>
+<a class="hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl">rss_feed</span></a>
+</div>
+</div>
+<!-- Column 2: Navigation -->
+<div class="space-y-6">
+<h5 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Navigation</h5>
+<ul class="space-y-3 font-body-md text-white/70">
+<li class="">OVERVIEW</li>
+<li class="">SERVICE</li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">RE</a>VIEW</li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">BL</a>OG</li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">A</a>BOUT</li>
+</ul>
+</div>
+<!-- Column 3: Support -->
+<div class="space-y-6">
+<h5 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Support</h5>
+<ul class="space-y-3 font-body-md text-white/70">
+<li class=""><a class="hover:text-primary transition-colors" href="#">FAQ</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li class=""><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<!-- Column 4: Location -->
+<div class="space-y-6">
+<h5 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Location</h5>
+<div class="space-y-4">
+<div class="flex items-start gap-2 text-white/70">
+<span class="material-symbols-outlined text-lg shrink-0">location_on</span>
+<p class="text-sm leading-relaxed">B1, 52 Samseong-ro 75-gil,<br>Gangnam-gu, Seoul</p>
+</div>
+<div class="aspect-video bg-surface-container rounded-lg border border-outline-variant/20 overflow-hidden relative group cursor-pointer">
+<img class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZiUr4MvDcCiX3Ip-pASE63T-heRFiNnVAQXWA6atBgeglKemtf95-IH4Q6A88cxKxHdMUZGbrZUm_Ow5swl4dsvTG60shrJ32-57H8Wdz75Ld0SlBWsIzDQ8OCEDbRI2sKdMTHRF_X1dnYJfrmj2HbDRz0jeHdehDAmZ0JMKvY_vi30fX-OLrZs7fSN2ey4QeSl1fjFewj0ug3vKkt-yUdBcuVYdGHrjktKVws7TazW2S3gN1DoqTFF7db5GTdu9XHcSSLkCPuzefLyQ">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full">OPEN MAP</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section -->
+<div class="pt-12 border-t border-outline-variant/10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+<div class="space-y-2 text-[11px] text-white/50 font-body-md">
+<p class="font-bold text-white/70 tracking-widest uppercase mb-1">MUSICKING Co., Ltd.</p>
+<p class="">CEO: ROH KWANG KYUN | Address: B1, 52 Samseong-ro 75-gil, Gangnam-gu, Seoul</p>
+<p class="">Phone: +82-2-6349-2429 | Business Number: 374-87-00654 <a class="underline hover:text-white ml-1" href="#">Check business information</a></p>
+<p class="">Mail order sales registration number: 2021-Seoul Jongno-0949</p>
+</div>
+<div class="flex flex-col md:items-end gap-2">
+<p class="font-label-sm text-label-sm text-white/50">© 2024 KING STUDIO. All rights reserved.</p>
+</div>
+</div>
+</div></div>
+</footer>
+<script>
+  (function() {
+    const serviceSelect = document.getElementById('service-select');
+    const timeSelect = document.getElementById('time-select');
+
+    const timeOptions = {
+      'gold': ['10:00', '12:00', '14:00', '16:00', '18:00'],
+      'diamond': ['10:00', '12:00', '14:00', '16:00', '18:00'],
+      'premium': ['10:00', '14:00', '18:00'],
+      'kpop-class': ['10:00', '14:00']
+    };
+
+    serviceSelect.addEventListener('change', function() {
+      const selectedService = this.value;
+      const times = timeOptions[selectedService] || [];
+      
+      let html = '<option disabled selected>Select a slot</option>';
+      times.forEach(time => {
+        html += `<option value="${time}">${time}</option>`;
+      });
+      
+      timeSelect.innerHTML = html;
+    });
+  })();
+</script>
+
+</body></html>
