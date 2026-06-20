@@ -149,7 +149,10 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 ## 7. 작업 진행 규칙 (Claude Code 운영)
 
 1. **한 번에 한 마일스톤.** PRD 9.3의 M1~M11 순서를 따른다. 현재 마일스톤의 게이트를 통과하기 전 다음으로 넘어가지 않는다. (번아웃·범위 폭주 방지 — PRD R1·R6)
-2. **작업 시작 전 PRD 관련 절을 읽는다.** 예: 예약 엔진 작업 → PRD 5.3. 화면 작업 → DESIGN.md 해당 프롬프트. 컨텍스트를 추측하지 말고 문서에서 확인.
+2. **작업 시작 전 PRD 관련 절을 읽는다.** 예: 예약 엔진 작업 → PRD 5.3. 컨텍스트를 추측하지 말고 문서에서 확인.
+   - **화면 작업의 디자인 소스 = 두 가지를 함께 본다:** (a) **`stitch_king_studio_design_system_v2/king_studio_cinematic/DESIGN.md`** — 색상·타이포·spacing·rounded·컴포넌트 규칙(시스템 명세) + 해당 화면이 있으면 그 `code.html`(비주얼 참고), (b) **코드에 이식된 brand 토큰** — `tailwind.config.ts` `theme.extend`의 stitch 네임스페이스(2b-0 파운데이션). 이 둘이 합쳐져 "DESIGN.md를 읽어라"가 코드상 실행 가능해진다.
+   - **이식 토큰 위치·네임스페이스 (다음 화면이 어디서 토큰을 찾는지):** 모두 `tailwind.config.ts` `theme.extend`에 hex 직접(shadcn `hsl(var())` 토큰은 불변·별개). 색상 `brand-primary`(#e83528, 단일)·`brand-primary-on-dark`(#ffb4a9, 다크 surface 위 primary 텍스트용)·`surface-cinematic`(#181214)·`surface-warm`(#FBF9F7)·`on-surface`·`outline`·`brand-violet`·`brand-pink`·`success`·`muted-text` 등(stitch 원명, shadcn과 겹치는 primary·secondary·background만 리네임). 타이포 `text-/font-{display-lg,headline-xl/lg,body-lg/md,label-sm}`(Anton 헤드라인·Pretendard 본문, `next/font` 자가호스팅). spacing `gap-gutter`·`stack-sm/md/lg`·`section-gap`·`max-w-container-max`. 반경 `rounded-{xl,brand-card,brand-input}`(shadcn `sm/md/lg`는 불변). **듀얼 surface는 `components/ui/surface.tsx`의 `<Surface tone="cinematic|warm">`로 섹션별 선택**(전역 토글·shadcn `.dark` 아님).
+   - **DESIGN.md에 전용 레이아웃이 없는 화면(곡 카탈로그 등)은** stitch **비주얼 프리미티브로 구성**한다 — 타이포 스케일·인풋 스타일(`bg-surface-container-lowest border border-outline-variant/30 focus:border-brand-primary`)·그리드(`grid ... gap-gutter`)·배지(필: `rounded-full border border-brand-primary text-brand-primary uppercase tracking-widest`)·섹션 헤더(`border-l-4 border-brand-primary pl-4`). 새 레이아웃을 임의 창작하지 말고 기존 stitch 화면의 패턴을 재사용.
 3. **마이그레이션은 Prisma Migrate로만.** 스키마 변경 시 마이그레이션 파일 생성, 직접 SQL로 프로덕션 변경 금지.
 4. **커밋은 작고 의미 단위로.** Conventional Commits (`feat:`, `fix:`, `chore:` ...). 한 커밋에 여러 기능 섞지 말 것.
 5. **테스트:** 위험 구역(§4)은 테스트 필수. 결제·예약·동의는 Playwright E2E 포함.
