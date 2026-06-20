@@ -45,6 +45,7 @@
 | — | TOTP verify window 명세 신설 | 어드민 2FA verify 관용 **window = ±1 step(±30초)** 명문화(§5.8 보안 표) — 미명세였던 OPEN DECISION 확정. 근거: 비번 bcrypt(~1s) 지연이 30초 step 경계를 넘는 straddle 흡수 + RFC 6238. otplib 기본 window=0이라 경계 거부(프로덕션) + 테스트 플래키 발생하던 것 정정. generate 무영향(verify 전용). |
 | — | 곡 canonical 표시명 필드 신설 | Song 본체에 `canonicalTitle`·`canonicalArtist`(NOT NULL, 원어 정식 표기) 추가(§5.7 데이터모델) — 표시명을 번역과 분리. fallback 요청 locale→en→canonical(§5.4). 사유: 번역이 곡명 유일 출처면 en 누락 곡 1개가 카탈로그에서 소실되는 fragile 의존 차단. **init 위 첫 후속 마이그레이션.** 보류 결정 2건(미해결, 표기만): ① preview 음원 출처·Cloud Storage 경로 — 별도 슬라이스 ② 곡 목록↔상세 반환 필드 분리 — 2b 화면 결정 종속. |
 | C18 | SEO 워크스트림 분해·의존성 계약 | 곡 상세 SEO를 **2b-SEO-infra**(사이트 인프라·곡 비종속: robots/sitemap/hreflang 골격 + PageSeo/PageSchema 인터페이스) → **2b-SEO-migration**(곡 slug·per-locale description·MusicRecording 템플릿) → **2b-2b**(렌더: generateMetadata·JSON-LD·sitemap 곡 URL) → **2b-SEO-ai**(콘텐츠 전략 미결=블로킹) 순으로 분해(§6.3). slug = sitemap·상세링크 양쪽 선행. 메타 = Song 파생 + PageSeo override만(요청→en→canonical 재사용, ~2,500건 수동입력 회피). sitemap = ISR 동적 `revalidate=86400`(24h, 50k 한도 내 분할 불요, Aiden 결정). 곡 slug = 발행 후 **immutable**(ISR stale 시 죽은 URL 노출 차단; 불가피 변경은 2b-2b 외 별도 결정·301). 문서 계약(구현 아님). (v0.2 확정) |
+| — | 곡 slug 생성 규칙 사전 계약 (C18 하위) | §6.3에 slug 생성·충돌·예외·유효성 규칙 기록: (1) `slugify(canonicalArtist)-slugify(canonicalTitle)`, lib `@sindresorhus/slugify`(제안·확정 전); (2) 충돌 suffix `-2…`, baseline = `song.id` 오름차순(결정적); (3) **비ASCII 빈 slug = OPEN DECISION** — 실태(읽기전용): 시드 4곡 중 2곡 한국어 canonical→빈 slug, 실 ~2,500곡 미적재로 비율 미지수; 후보 A(en→`song-{id}` 체인)·B(id 직행)·C(입력 게이트); (4) NOT NULL·UNIQUE·길이상한 80자(제안). **lib·fallback·길이 3건 확정 전 마이그레이션 착수 금지.** 읽기전용 실태조사, 문서만. |
 
 ---
 
@@ -935,6 +936,29 @@ schema_templates ├─ id, type, name, json_template, required_fields(JSONB), v
 **곡 slug 정책 (immutable, 2b-SEO-migration):** 곡 `slug`는 발행 후 **immutable(변경 금지)**을 기본 정책으로 한다.
 - **근거:** ISR sitemap이 최대 24h stale이므로, slug 변경 시 해당 기간 sitemap이 **죽은 URL을 노출**한다. slug 고정으로 이 클래스의 버그를 원천 차단한다.
 - **불가피한 slug 변경:** 2b-2b 범위 **밖 별도 결정**으로 분리한다(301 리다이렉트 처리·sitemap 무효화 전략 포함).
+
+### 곡 slug 생성 규칙 (2b-SEO-migration 사전 계약)
+
+slug은 immutable이라 마이그레이션이 ~2,500행에 **되돌릴 수 없는** 값을 backfill한다. 생성·충돌·예외·유효성 규칙을 본체 전에 계약으로 확정한다(이 절은 규칙만 — 코드/스키마 변경 0).
+
+**실태 조사 (읽기 전용, 2026-06-20):** 현행 DB는 시드 4곡뿐(실 ~2,500곡 **미적재** — 콘텐츠는 추후 Aiden 적재, 실 빈-slug 비율은 **미지수**). 시드 기준 `slugify(canonicalArtist)-slugify(canonicalTitle)` 결과 **4곡 중 2곡이 빈 slug**(한국어 canonical: `아이유/밤편지`, `잔나비/주저하는 연인들을 위해` → `''`). 그중 love-poem은 en 번역(`iu-through-the-night`)으로 ASCII 확보 가능, jannabi는 en 번역 **부재** → en도 빈 값. **K-POP 특성상 한국어 canonical 비율이 높아 빈 slug는 소수 예외가 아니라 상시 케이스**다.
+
+**(1) 기본 형식:** `slug = slugify(canonicalArtist)-slugify(canonicalTitle)`.
+- slugify 구현: 현행 repo에 slugify 라이브러리·함수 **없음**(`packages.slug`는 수작업 입력). → **제안(확정 전 검토): `@sindresorhus/slugify`**, 옵션 `{ lowercase: true, separator: '-', decamelize: false }`. ASCII·diacritic 정규화는 처리하나 **한글·CJK는 transliterate 안 함 → 빈 slug 발생((3) fallback 필수)**. immutable이므로 lib·옵션을 마이그레이션 전 **고정**하고 이후 변경 금지.
+
+**(2) 충돌 해소 (결정적):** 동일 base slug 충돌 시 suffix `-2`·`-3`….
+- baseline 결정 순서 = **`song.id` 오름차순**. 먼저 처리된 곡이 suffix 없는 baseline, 이후 충돌 곡이 `-2`·`-3`. **실행 비결정성 금지**(immutable 안정성 근거). backfill·신규 삽입 동일 규칙.
+
+**(3) 비ASCII / 빈 slug 예외 — ⚠️ OPEN DECISION (Aiden 확정 필요, 임의 결정 금지):** canonical은 NOT NULL이나 ASCII 보장 없음. slugify 결과가 빈 값/`-`만일 때의 처리. 위 실태(상시 케이스)를 근거로 후보:
+- **(A) 체인 fallback:** canonical 빈 값 → **en 번역**에서 slugify → 그것도 빈 값/부재 → **`song-{id}`**. SEO 최선(영문 slug), 단 en 적재 시점 의존(immutable이라 마이그레이션 시점 en 없으면 id로 고정).
+- **(B) id 직행:** canonical 빈 값 → 즉시 **`song-{id}`**. 단순·결정적, 단 SEO 약함(불투명 slug).
+- **(C) 입력 게이트:** canonical 비ASCII 곡은 romanized/en 필수 입력 후에만 발행 허용. slug 품질 최고, 단 운영 부담·기존 행 backfill 차단.
+- 부수 미결: en 번역도 부재한 곡(jannabi형)은 (A)에서도 결국 `song-{id}` — **id-slug 허용 여부 자체**가 결정 대상.
+
+**(4) 유효성 제약:** slug **NOT NULL · UNIQUE**. 마이그레이션은 기존 행 backfill 포함(현 시드 4행, 실 적재 시 ~2,500행).
+- 길이 상한: **제안(확정 전) 최대 80자** — slugify 후 80자 초과 시 절단 후 (2)의 충돌 suffix 부여(절단이 충돌을 늘려도 suffix가 흡수). 상한값 확정 필요.
+
+**선행 게이트:** (1) lib·옵션 · (3) fallback · (4) 길이 상한 **3건 확정 전 2b-SEO-migration 마이그레이션 착수 금지**(immutable = 잘못된 값이 되돌릴 수 없는 ~2,500행 사고로 직결).
 
 ## 6.4 접근성 (WCAG 2.1 Level AA)
 
