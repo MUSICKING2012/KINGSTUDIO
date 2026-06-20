@@ -81,5 +81,14 @@
       "name": "Workshop",
       "tagline": "A group workshop program"
     }
+  },
+  "songs": {
+    "catalog": {
+      "title": "楽曲カタログ",
+      "empty": "まだ楽曲が登録されていません。"
+    },
+    "filters": {
+      "beginnerCuration": "初心者向けセレクト"
+    }
   }
 }

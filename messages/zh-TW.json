@@ -81,5 +81,14 @@
       "name": "Workshop",
       "tagline": "A group workshop program"
     }
+  },
+  "songs": {
+    "catalog": {
+      "title": "歌曲目錄",
+      "empty": "目前尚無可選歌曲。"
+    },
+    "filters": {
+      "beginnerCuration": "新手推薦"
+    }
   }
 }

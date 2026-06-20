@@ -81,5 +81,14 @@
       "name": "Workshop",
       "tagline": "A group workshop program"
     }
+  },
+  "songs": {
+    "catalog": {
+      "title": "Song catalog",
+      "empty": "No songs available yet."
+    },
+    "filters": {
+      "beginnerCuration": "Beginner picks"
+    }
   }
 }

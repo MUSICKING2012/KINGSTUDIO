@@ -81,5 +81,14 @@
       "name": "워크샵",
       "tagline": "단체 워크샵 프로그램"
     }
+  },
+  "songs": {
+    "catalog": {
+      "title": "곡 카탈로그",
+      "empty": "아직 등록된 곡이 없습니다."
+    },
+    "filters": {
+      "beginnerCuration": "입문자 추천곡"
+    }
   }
 }
