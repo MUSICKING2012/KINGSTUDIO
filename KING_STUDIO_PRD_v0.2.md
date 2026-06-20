@@ -44,7 +44,7 @@
 | — | C15·C16·C17·consents 재퇴행 → 3차 재정정 | 04aaded(옛 베이스 C10 편집)가 d8fe3b9의 C15·C16·C17 정정 + consents 필드를 퇴행시킴(magic_links→token(UUID), songs→title(Json), DisplayCurrency→CNY/EUR, consents→supersedes_id). **스키마/코드=진실**로 PRD 6곳 재정정(C16·C17 행 + magic_links·songs·payments 데이터줄 + consents consentGroupId). 옛 외부 복사본 기반 편집이 원인 — 단일출처 규칙은 CLAUDE §7-A.7. |
 | — | TOTP verify window 명세 신설 | 어드민 2FA verify 관용 **window = ±1 step(±30초)** 명문화(§5.8 보안 표) — 미명세였던 OPEN DECISION 확정. 근거: 비번 bcrypt(~1s) 지연이 30초 step 경계를 넘는 straddle 흡수 + RFC 6238. otplib 기본 window=0이라 경계 거부(프로덕션) + 테스트 플래키 발생하던 것 정정. generate 무영향(verify 전용). |
 | — | 곡 canonical 표시명 필드 신설 | Song 본체에 `canonicalTitle`·`canonicalArtist`(NOT NULL, 원어 정식 표기) 추가(§5.7 데이터모델) — 표시명을 번역과 분리. fallback 요청 locale→en→canonical(§5.4). 사유: 번역이 곡명 유일 출처면 en 누락 곡 1개가 카탈로그에서 소실되는 fragile 의존 차단. **init 위 첫 후속 마이그레이션.** 보류 결정 2건(미해결, 표기만): ① preview 음원 출처·Cloud Storage 경로 — 별도 슬라이스 ② 곡 목록↔상세 반환 필드 분리 — 2b 화면 결정 종속. |
-| — | SEO 워크스트림 4슬라이스 분해·의존성 계약 | 곡 상세 SEO를 **2b-SEO-infra**(사이트 인프라·곡 비종속: robots/sitemap/hreflang 골격 + PageSeo/PageSchema 인터페이스) → **2b-SEO-migration**(곡 slug·per-locale description·MusicRecording 템플릿) → **2b-2b**(렌더: generateMetadata·JSON-LD·sitemap 곡 URL) → **2b-SEO-ai**(콘텐츠 전략 미결=블로킹) 순으로 분해(§6.3). slug = sitemap·상세링크 양쪽 선행. 메타 = Song 파생 + PageSeo override만(요청→en→canonical 재사용, ~2,500건 수동입력 회피). sitemap = ISR 동적 `revalidate=86400`(24h, 50k 한도 내 분할 불요, Aiden 결정). 문서 계약(구현 아님). |
+| C18 | SEO 워크스트림 분해·의존성 계약 | 곡 상세 SEO를 **2b-SEO-infra**(사이트 인프라·곡 비종속: robots/sitemap/hreflang 골격 + PageSeo/PageSchema 인터페이스) → **2b-SEO-migration**(곡 slug·per-locale description·MusicRecording 템플릿) → **2b-2b**(렌더: generateMetadata·JSON-LD·sitemap 곡 URL) → **2b-SEO-ai**(콘텐츠 전략 미결=블로킹) 순으로 분해(§6.3). slug = sitemap·상세링크 양쪽 선행. 메타 = Song 파생 + PageSeo override만(요청→en→canonical 재사용, ~2,500건 수동입력 회피). sitemap = ISR 동적 `revalidate=86400`(24h, 50k 한도 내 분할 불요, Aiden 결정). 곡 slug = 발행 후 **immutable**(ISR stale 시 죽은 URL 노출 차단; 불가피 변경은 2b-2b 외 별도 결정·301). 문서 계약(구현 아님). (v0.2 확정) |
 
 ---
 
@@ -929,6 +929,10 @@ schema_templates ├─ id, type, name, json_template, required_fields(JSONB), v
 3. **locale fallback chain** — 곡 카탈로그 read 구현을 재사용(요청 locale → en → canonical, §5.4).
 
 **sitemap 생성 전략 (확정: ISR 동적):** `sitemap.ts`가 DB에서 곡 URL을 동적 생성하고 `revalidate = 86400`(24h)을 적용한다. 어드민이 곡 카탈로그 CMS로 추가·수정 시 **재배포 없이 24h 내** sitemap에 반영된다. ~2,500 URL은 단일 sitemap의 50,000 URL 한도 내라 분할(sitemap index) **불필요**. stale 허용 범위 = revalidate 주기(최대 24h). 곡 수가 50k URL에 근접하면 하이브리드 sitemap index 전환을 재검토한다(현재 규모엔 과설계라 미채택).
+
+**곡 slug 정책 (immutable, 2b-SEO-migration):** 곡 `slug`는 발행 후 **immutable(변경 금지)**을 기본 정책으로 한다.
+- **근거:** ISR sitemap이 최대 24h stale이므로, slug 변경 시 해당 기간 sitemap이 **죽은 URL을 노출**한다. slug 고정으로 이 클래스의 버그를 원천 차단한다.
+- **불가피한 slug 변경:** 2b-2b 범위 **밖 별도 결정**으로 분리한다(301 리다이렉트 처리·sitemap 무효화 전략 포함).
 
 ## 6.4 접근성 (WCAG 2.1 Level AA)
 
