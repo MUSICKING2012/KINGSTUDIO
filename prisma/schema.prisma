@@ -890,6 +890,10 @@ enum LicenseType {
 /// via SongLicense (R2). 1Hour/1Pro customers bring their own MR (booking.songId null).
 model Song {
   id               String   @id @default(cuid())
+  // Canonical original-language display name (NOT NULL) — translation-independent so a missing
+  // SongTranslation never drops a song from the catalog. Display fallback: locale → en → canonical (§5.4).
+  canonicalTitle   String   @map("canonical_title")
+  canonicalArtist  String   @map("canonical_artist")
   beginnerCuration Boolean  @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
   isActive         Boolean  @default(true) @map("is_active")
   createdAt        DateTime @default(now()) @map("created_at")

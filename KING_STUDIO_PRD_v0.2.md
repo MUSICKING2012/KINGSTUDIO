@@ -43,6 +43,7 @@
 | — | consents append-only 강화 | consentGroupId(lineage 그룹) 철회 추적, updatedAt 생략(의도적), UPDATE/DELETE 차단 DB 트리거 계획 명시 (§3 절대제약) |
 | — | C15·C16·C17·consents 재퇴행 → 3차 재정정 | 04aaded(옛 베이스 C10 편집)가 d8fe3b9의 C15·C16·C17 정정 + consents 필드를 퇴행시킴(magic_links→token(UUID), songs→title(Json), DisplayCurrency→CNY/EUR, consents→supersedes_id). **스키마/코드=진실**로 PRD 6곳 재정정(C16·C17 행 + magic_links·songs·payments 데이터줄 + consents consentGroupId). 옛 외부 복사본 기반 편집이 원인 — 단일출처 규칙은 CLAUDE §7-A.7. |
 | — | TOTP verify window 명세 신설 | 어드민 2FA verify 관용 **window = ±1 step(±30초)** 명문화(§5.8 보안 표) — 미명세였던 OPEN DECISION 확정. 근거: 비번 bcrypt(~1s) 지연이 30초 step 경계를 넘는 straddle 흡수 + RFC 6238. otplib 기본 window=0이라 경계 거부(프로덕션) + 테스트 플래키 발생하던 것 정정. generate 무영향(verify 전용). |
+| — | 곡 canonical 표시명 필드 신설 | Song 본체에 `canonicalTitle`·`canonicalArtist`(NOT NULL, 원어 정식 표기) 추가(§5.7 데이터모델) — 표시명을 번역과 분리. fallback 요청 locale→en→canonical(§5.4). 사유: 번역이 곡명 유일 출처면 en 누락 곡 1개가 카탈로그에서 소실되는 fragile 의존 차단. **init 위 첫 후속 마이그레이션.** 보류 결정 2건(미해결, 표기만): ① preview 음원 출처·Cloud Storage 경로 — 별도 슬라이스 ② 곡 목록↔상세 반환 필드 분리 — 2b 화면 결정 종속. |
 
 ---
 
@@ -290,6 +291,8 @@ rooms
 ### 공개 페이지 목록 (최소 화면 정의)
 
 홈 / 패키지 상세(패키지별) / 곡 카탈로그 + 미리듣기 / 예약(슬롯 캘린더) / 체크아웃 / 예약 확인·마이 예약 / 다운로드 페이지(매직링크) + 후기 / About·NYT·미디어 키트 / FAQ / 단체·B2B 문의 / 약관·개인정보·환불정책 / 로그인·회원가입 / 어드민(별도 도메인). 공개 페이지는 약 11~13개로 자연 산출된다.
+
+> **곡 표시명 fallback (canonical):** 곡 카탈로그·상세의 표시명(곡명·아티스트)은 **요청 locale의 `song_translations` → 없으면 `en` → 없으면 Song 본체의 canonical 표기(`canonicalTitle`/`canonicalArtist`, NOT NULL)** 순으로 해석한다. canonical을 본체에 NOT NULL로 두므로 **곡은 어떤 경우에도 표시명을 가지며, 번역 누락으로 카탈로그에서 제외되지 않는다**(번역이 곡명의 유일 출처면 번역 1개 누락이 곡을 통째로 소실시키는 fragile 의존을 차단).
 ## 5.5 결제 흐름
 
 ### 결제 수단 구조
@@ -505,7 +508,7 @@ booking_participants (미성년 검증 SSOT — §3.4)
 
 consent_documents ├─ id, type(enum LegalDocType: tos|privacy|payment|refund|usage_scope), version, language, content_md, content_hash(SHA-256), effective_from
 settings ├─ key('license_display_enabled'|'mr_predelivery_enabled'), value, updated_by, updated_at
-songs ├─ id(cuid), beginnerCuration, isActive  # title/artist는 다국어 → song_translations (C16)
+songs ├─ id(cuid), canonicalTitle, canonicalArtist (NOT NULL — 원어 정식 표기, 번역 이전 원본 명칭), beginnerCuration, isActive  # 표시명 fallback: 요청 locale 번역 → en → canonical (§5.4). 번역은 song_translations (C16)
 song_translations ├─ id(cuid), song_id, locale, title, artist  @@unique(song_id, locale)  # 카탈로그 FTS·번역
 song_licenses ├─ id(cuid), song_id, type('recording'|'mr_distribution'|'lyrics'), verified, evidence_storage_key(GCS·Bucket Lock), notes, verified_at, verified_by  @@unique(song_id, type)  # 종류별 라이선스 (C16, R2)
 ```
