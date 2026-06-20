@@ -85,10 +85,18 @@
   "songs": {
     "catalog": {
       "title": "Song catalog",
+      "subtitle": "Browse the K-POP catalog you can record at KING STUDIO.",
       "empty": "No songs available yet."
     },
     "filters": {
+      "aria": "Filter songs",
+      "all": "All songs",
       "beginnerCuration": "Beginner picks"
+    },
+    "license": {
+      "recording": "Recording",
+      "mr_distribution": "MR distribution",
+      "lyrics": "Lyrics"
     }
   }
 }
