@@ -923,6 +923,8 @@ schema_templates ├─ id, type, name, json_template, required_fields(JSONB), v
 - 곡 `slug` 마이그레이션은 **sitemap(곡 URL)·상세 링크 양쪽의 선행조건**이다. slug 없이는 곡↔URL·PageSeo 연결이 성립하지 않으므로 2b-SEO-migration이 sitemap 곡 URL과 상세 라우트보다 먼저 굳어야 한다.
 - 렌더 레이어(2b-2b)는 스키마 확장(2b-SEO-migration)의 **필드 모양에 종속**된다(slug·per-locale description·MusicRecording 템플릿). 필드 계약이 안정되기 전 2b-2b 착수 금지.
 
+**hreflang x-default 정책 (2b-SEO-infra):** `x-default = en`(외국인 타겟 기본 locale). **전 페이지 공용 정책** — 각 페이지의 locale별 대체 URL에 더해 x-default를 항상 en 페이지로 매핑한다(§5 "en 필수 기본값"·routing `defaultLocale`과 일관, 곡 상세 포함 모든 라우트 적용).
+
 **메타 파생 규칙 (수동입력 회피):** 곡 메타(title·description·canonical)는 Song에서 **파생**하고 PageSeo는 **override 전용**으로 둔다(곡 ~500 × 5로케일 = ~2,500건 수동입력 회피). 파생 fallback 우선순위:
 1. **PageSeo override** — 어드민이 해당 `page_path`·`language` 행을 명시 입력한 경우 그 값 우선.
 2. **Song 파생** — canonicalTitle/canonicalArtist + per-locale description 등에서 자동 구성.
