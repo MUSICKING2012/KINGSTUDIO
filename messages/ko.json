@@ -85,10 +85,18 @@
   "songs": {
     "catalog": {
       "title": "곡 카탈로그",
+      "subtitle": "킹스튜디오에서 녹음할 수 있는 K-POP 곡을 둘러보세요.",
       "empty": "아직 등록된 곡이 없습니다."
     },
     "filters": {
+      "aria": "곡 필터",
+      "all": "전체 곡",
       "beginnerCuration": "입문자 추천곡"
+    },
+    "license": {
+      "recording": "녹음",
+      "mr_distribution": "MR 배포",
+      "lyrics": "가사"
     }
   }
 }

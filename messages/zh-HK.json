@@ -85,10 +85,18 @@
   "songs": {
     "catalog": {
       "title": "歌曲目錄",
+      "subtitle": "瀏覽可在 KING STUDIO 錄製嘅 K-POP 歌曲。",
       "empty": "暫時未有可選歌曲。"
     },
     "filters": {
+      "aria": "歌曲篩選",
+      "all": "全部歌曲",
       "beginnerCuration": "新手推薦"
+    },
+    "license": {
+      "recording": "錄音",
+      "mr_distribution": "MR 發行",
+      "lyrics": "歌詞"
     }
   }
 }

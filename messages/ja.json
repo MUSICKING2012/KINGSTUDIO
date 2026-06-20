@@ -85,10 +85,18 @@
   "songs": {
     "catalog": {
       "title": "楽曲カタログ",
+      "subtitle": "KING STUDIOで録音できるK-POP楽曲をチェック。",
       "empty": "まだ楽曲が登録されていません。"
     },
     "filters": {
+      "aria": "楽曲フィルター",
+      "all": "すべての楽曲",
       "beginnerCuration": "初心者向けセレクト"
+    },
+    "license": {
+      "recording": "録音",
+      "mr_distribution": "MR配布",
+      "lyrics": "歌詞"
     }
   }
 }
