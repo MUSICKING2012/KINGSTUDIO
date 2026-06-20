@@ -17,8 +17,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     }
   }
-  // TODO(2b-SEO-infra-B, after the slug migration): append song-detail URLs
-  // (/{locale}/songs/{slug}) fetched from the DB, and apply ISR `export const revalidate = 86400`
-  // (PRD §6.3 / C18 — sitemap = ISR dynamic, 24h). Out of scope for infra-A.
+  // TODO(2b-2b, with the /songs/[slug] route): append song-detail URLs (/{locale}/songs/{slug})
+  // fetched from the DB and apply ISR `export const revalidate = 86400` (PRD §6.3 / C18 — sitemap =
+  // ISR dynamic, 24h). Coupled to the route so the sitemap never emits a URL that 404s. The
+  // slug-dependent helpers (songPath, getSongBySlug, buildSongDerivedMeta) shipped in infra-B.
   return entries;
 }

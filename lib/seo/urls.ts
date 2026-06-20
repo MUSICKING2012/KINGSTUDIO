@@ -20,6 +20,13 @@ export function absoluteUrl(locale: Locale, path = ''): string {
   return siteUrl() + localizedPath(locale, path);
 }
 
+// Song-detail route AFTER the locale segment (2b-SEO-infra-B). The locale-prefixed URL and hreflang
+// map come from absoluteUrl(locale, songPath(slug)) / hreflangLanguages(songPath(slug)) — this just
+// keeps the '/songs/{slug}' shape in one place. `slug` is a slugify output ([a-z0-9-]) → URL-safe.
+export function songPath(slug: string): string {
+  return `/songs/${slug}`;
+}
+
 // hreflang map for a path: one entry per supported locale + x-default (→ default locale).
 // Locales are sourced from routing (no hardcoding).
 export function hreflangLanguages(path = ''): Record<string, string> {

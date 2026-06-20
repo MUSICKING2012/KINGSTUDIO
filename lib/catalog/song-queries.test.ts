@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { SONGS, seedSongs } from '../../prisma/seed-songs';
-import { getSong, listSongs } from './song-queries';
+import { getSong, getSongBySlug, listSongs } from './song-queries';
 
 // Owns the `songs` table (+ cascaded translations/licenses) — a different table than catalog.test.ts
 // (`packages`), so the two files never race across Vitest workers. Deleting a song cascades its
@@ -128,6 +128,49 @@ describe('song read layer (§5.4 fallback / §5.7 / C16)', () => {
     it('returns an inactive song by id (no active filter, like getPackageBySlug)', async () => {
       const inactive = await getSong('seed_song_inactive', 'en');
       expect(inactive?.isActive).toBe(false);
+    });
+  });
+
+  describe('slug + per-locale description + getSongBySlug (2b-SEO-infra-B / W2)', () => {
+    // Parent beforeEach already seeded; set a slug + ko/en descriptions on dynamite (which has
+    // ko+en+ja translations) so the description fallback chain is exercisable. jannabi has NO
+    // translations and NO slug — the "neither" end of both chains.
+    beforeEach(async () => {
+      await prisma.song.update({
+        where: { id: 'seed_song_dynamite' },
+        data: { slug: 'bts-dynamite' },
+      });
+      await prisma.songTranslation.update({
+        where: { songId_locale: { songId: 'seed_song_dynamite', locale: 'ko' } },
+        data: { description: 'ko 설명' },
+      });
+      await prisma.songTranslation.update({
+        where: { songId_locale: { songId: 'seed_song_dynamite', locale: 'en' } },
+        data: { description: 'en desc' },
+      });
+    });
+
+    it('exposes slug on the view (null when unassigned)', async () => {
+      expect((await getSong('seed_song_dynamite', 'en'))?.slug).toBe('bts-dynamite');
+      expect((await getSong('seed_song_jannabi', 'en'))?.slug).toBeNull();
+    });
+
+    it('getSongBySlug resolves by unique slug (or null)', async () => {
+      expect((await getSongBySlug('bts-dynamite', 'en'))?.id).toBe('seed_song_dynamite');
+      expect(await getSongBySlug('no-such-slug', 'en')).toBeNull();
+    });
+
+    it('description: requested-locale wins (ko → "ko 설명")', async () => {
+      expect((await getSong('seed_song_dynamite', 'ko'))?.description).toBe('ko 설명');
+    });
+
+    it('description: falls back to en when requested locale has none (ja → "en desc")', async () => {
+      // dynamite has a ja translation (title) but no ja description → en description.
+      expect((await getSong('seed_song_dynamite', 'ja'))?.description).toBe('en desc');
+    });
+
+    it('description: undefined when neither requested nor en has one (jannabi — no translations)', async () => {
+      expect((await getSong('seed_song_jannabi', 'en'))?.description).toBeUndefined();
     });
   });
 });

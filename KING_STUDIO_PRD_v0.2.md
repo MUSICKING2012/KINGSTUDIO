@@ -923,6 +923,7 @@ schema_templates ├─ id, type, name, json_template, required_fields(JSONB), v
 **의존성 순서:** 2b-SEO-infra(인터페이스 계약) → 2b-SEO-migration → 2b-2b → 2b-SEO-ai.
 - 곡 `slug` 마이그레이션은 **sitemap(곡 URL)·상세 링크 양쪽의 선행조건**이다. slug 없이는 곡↔URL·PageSeo 연결이 성립하지 않으므로 2b-SEO-migration이 sitemap 곡 URL과 상세 라우트보다 먼저 굳어야 한다.
 - 렌더 레이어(2b-2b)는 스키마 확장(2b-SEO-migration)의 **필드 모양에 종속**된다(slug·per-locale description·MusicRecording 템플릿). 필드 계약이 안정되기 전 2b-2b 착수 금지.
+- **실행 분할(2b-SEO-infra = A/B):** 인프라를 2개로 나눠 실행했다. **infra-A**(slug-독립, 완료) = robots/sitemap 골격·hreflang·URL 헬퍼·PageSeo/PageSchema 인터페이스. **infra-B**(slug-의존 헬퍼, 완료) = `songPath(slug)`·곡 read의 slug+per-locale description 노출·`getSongBySlug`·`buildSongDerivedMeta`(정의만, 미배선). **sitemap 곡 URL 채우기·`/songs/[slug]` 라우트·generateMetadata·JSON-LD는 2b-2b 유지** — sitemap 곡 URL은 라우트와 같은 슬라이스에 묶어 죽은 URL(404) 노출을 차단한다(ISR 24h stale 동안 라우트 없는 URL 방지).
 
 **hreflang x-default 정책 (2b-SEO-infra):** `x-default = en`(외국인 타겟 기본 locale). **전 페이지 공용 정책** — 각 페이지의 locale별 대체 URL에 더해 x-default를 항상 en 페이지로 매핑한다(§5 "en 필수 기본값"·routing `defaultLocale`과 일관, 곡 상세 포함 모든 라우트 적용).
 
