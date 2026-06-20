@@ -894,6 +894,10 @@ model Song {
   // SongTranslation never drops a song from the catalog. Display fallback: locale → en → canonical (§5.4).
   canonicalTitle   String   @map("canonical_title")
   canonicalArtist  String   @map("canonical_artist")
+  // SEO slug (PRD §6.3 / C18, 2b-SEO-migration). Phase 1: nullable + UNIQUE, backfilled from
+  // canonical (ASCII only); non-ASCII/empty rows stay NULL until Phase 2 (which decides the
+  // fallback and promotes the column to NOT NULL). Immutable once assigned.
+  slug             String?  @unique
   beginnerCuration Boolean  @default(false) @map("beginner_curation") // Gold 입문자 큐레이션(20~30곡)
   isActive         Boolean  @default(true) @map("is_active")
   createdAt        DateTime @default(now()) @map("created_at")
@@ -917,6 +921,9 @@ model SongTranslation {
   locale    Locale
   title     String
   artist    String
+  // Per-locale SEO description (PRD §6.3 / C18). Nullable; the locale fallback (req→en→canonical)
+  // is applied at render time (2b-2b), not stored here.
+  description String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -1539,7 +1546,8 @@ enum KeywordType {
   geo
 }
 
-/// 7 structured-data types (PRD §6.3). schema.org names.
+/// Structured-data types (PRD §6.3). schema.org names. MusicRecording (8th) added for song-detail
+/// JSON-LD (2b-SEO-migration / C18); its SchemaTemplate DATA row is deferred to 2b-2b.
 enum SchemaType {
   Organization
   LocalBusiness
@@ -1548,6 +1556,7 @@ enum SchemaType {
   Review
   FAQPage
   BreadcrumbList
+  MusicRecording
 }
 
 /// SEO code-injection whitelist slots (PRD §5.8-A① / §4). custom_script is the only free-form
