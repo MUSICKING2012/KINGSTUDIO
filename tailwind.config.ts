@@ -78,6 +78,10 @@ const config: Config = {
         'outline-variant': '#5c403b',
         // Brand primary (renamed from stitch `primary`; fixed to #e83528)
         'brand-primary': '#e83528',
+        // On-dark variant: #e83528 as text/icon on cinematic #181214 = 4.38:1 (fails AA
+        // normal). This apricot tint = 10.88:1 ✓. Use for primary-colored TEXT/icons on
+        // dark surfaces; keep #e83528 for fills and large/bold type. (step 3 contrast)
+        'brand-primary-on-dark': '#ffb4a9',
         'on-primary': '#690001',
         'primary-container': '#ff5543',
         'on-primary-container': '#5c0001',
