@@ -149,6 +149,21 @@ const config: Config = {
         'body-md': ['16px', { lineHeight: '1.5', fontWeight: '400' }],
         'label-sm': ['12px', { lineHeight: '1.4', letterSpacing: '0.05em', fontWeight: '600' }],
       },
+      // Font families via next/font CSS variables (defined in app/[locale]/layout.tsx).
+      // `sans` (→ Pretendard) overrides the default so body/shadcn inherit Pretendard.
+      // Per-scale keys let stitch's `font-headline-lg` / `font-display-lg` / `font-body-md` work.
+      fontFamily: {
+        sans: ['var(--font-pretendard)', 'Pretendard', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-anton)', 'sans-serif'],
+        display: ['var(--font-anton)', 'sans-serif'],
+        'display-lg': ['var(--font-anton)', 'sans-serif'],
+        'display-lg-mobile': ['var(--font-anton)', 'sans-serif'],
+        'headline-xl': ['var(--font-anton)', 'sans-serif'],
+        'headline-lg': ['var(--font-anton)', 'sans-serif'],
+        'body-lg': ['var(--font-pretendard)', 'sans-serif'],
+        'body-md': ['var(--font-pretendard)', 'sans-serif'],
+        'label-sm': ['var(--font-pretendard)', 'sans-serif'],
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
