@@ -17,11 +17,17 @@ const LICENSE_TYPES = [
 
 export type SongView = {
   id: string;
+  // SEO slug (PRD §6.3 / C18). NULL until backfilled (non-ASCII canonical stays NULL pending
+  // migration Phase 2). A NULL-slug song has no detail URL — the meta/URL layer (W3) guards on it.
+  slug: string | null;
   // Display name resolved by the §5.4 fallback chain: requested locale → en → canonical.
   // A song ALWAYS has a display name (canonical is NOT NULL), so a missing translation never
   // drops it from the catalog.
   title: string;
   artist: string;
+  // Per-locale SEO description (PRD §6.3 / C18). Resolved requested-locale → en → undefined.
+  // No canonical fallback: canonical == en, and SongTranslation.description is nullable/optional.
+  description?: string;
   beginnerCuration: boolean;
   isActive: boolean;
   // Per-type verified flags (C16). Exposed unconditionally — the display gate is in 2b/admin (§5.7).
@@ -30,11 +36,12 @@ export type SongView = {
 
 type SongWithRelations = {
   id: string;
+  slug: string | null;
   canonicalTitle: string;
   canonicalArtist: string;
   beginnerCuration: boolean;
   isActive: boolean;
-  translations: { locale: Locale; title: string; artist: string }[];
+  translations: { locale: Locale; title: string; artist: string; description: string | null }[];
   licenses: { type: LicenseType; verified: boolean }[];
 };
 
@@ -51,6 +58,13 @@ function resolveDisplay(
   };
 }
 
+// Per-locale SEO description (PRD §6.3 / C18): requested-locale → en → undefined. No canonical
+// fallback (canonical == en); a null/absent description coalesces to undefined.
+function resolveDescription(song: SongWithRelations, locale: Locale): string | undefined {
+  const byLocale = new Map(song.translations.map((t) => [t.locale, t]));
+  return byLocale.get(locale)?.description ?? byLocale.get('en')?.description ?? undefined;
+}
+
 function resolveLicenses(song: SongWithRelations): Record<LicenseType, boolean> {
   const verified = new Map(song.licenses.map((l) => [l.type, l.verified]));
   return Object.fromEntries(
@@ -62,8 +76,10 @@ function toView(song: SongWithRelations, locale: Locale): SongView {
   const { title, artist } = resolveDisplay(song, locale);
   return {
     id: song.id,
+    slug: song.slug,
     title,
     artist,
+    description: resolveDescription(song, locale),
     beginnerCuration: song.beginnerCuration,
     isActive: song.isActive,
     licenseVerified: resolveLicenses(song),
@@ -94,6 +110,16 @@ export async function listSongs(opts: {
 export async function getSong(id: string, locale: Locale): Promise<SongView | null> {
   const song = await prisma.song.findUnique({
     where: { id },
+    include: { translations: true, licenses: true },
+  });
+  return song ? toView(song, locale) : null;
+}
+
+// Lookup by unique slug (PRD §6.3 / C18) — the song-detail route's entry point (consumed in 2b-2b).
+// No active filter (mirrors getSong/getPackageBySlug; visibility is the caller's call).
+export async function getSongBySlug(slug: string, locale: Locale): Promise<SongView | null> {
+  const song = await prisma.song.findUnique({
+    where: { slug },
     include: { translations: true, licenses: true },
   });
   return song ? toView(song, locale) : null;
