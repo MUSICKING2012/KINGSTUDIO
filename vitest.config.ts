@@ -7,6 +7,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, '.'),
     },
   },
+  // tsconfig uses jsx:'preserve' (Next transpiles JSX); Vitest's esbuild needs the automatic runtime
+  // so .tsx (e.g. RSC route components) transpile without an explicit React import, matching Next.
+  esbuild: { jsx: 'automatic' },
   test: {
     environment: 'node',
     include: ['**/*.test.ts', '**/*.test.tsx'],
