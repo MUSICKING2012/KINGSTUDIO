@@ -97,3 +97,39 @@ describe('songs/[slug] generateMetadata (2b-2b-2)', () => {
     await expect(meta('no-such-slug')).resolves.toEqual({});
   });
 });
+
+// JSON-LD (2b-2b-3): the route embeds a <script type="application/ld+json"> built by the same
+// gate/query as the page. Builder internals are unit-tested in lib/seo/song-jsonld.test.ts — these
+// cover the route wiring (rendered for a visible song; absent for a private one). Walk the returned
+// element tree for the ld+json script.
+// biome-ignore lint/suspicious/noExplicitAny: traversing an untyped React element tree in a test.
+function findJsonLd(node: any): string | null {
+  if (!node || typeof node !== 'object') return null;
+  if (node.props?.type === 'application/ld+json') {
+    return node.props.dangerouslySetInnerHTML?.__html ?? null;
+  }
+  const children = node.props?.children;
+  for (const child of Array.isArray(children) ? children : [children]) {
+    const found = findJsonLd(child);
+    if (found) return found;
+  }
+  return null;
+}
+
+describe('songs/[slug] JSON-LD (2b-2b-3)', () => {
+  it('embeds MusicRecording JSON-LD for an active, slug-bearing song', async () => {
+    vi.mocked(getSongBySlug).mockResolvedValue(view({}));
+    const el = await call('bts-dynamite');
+    const html = findJsonLd(el);
+    expect(html).toBeTruthy();
+    const parsed = JSON.parse(html as string);
+    expect(parsed['@type']).toBe('MusicRecording');
+    expect(parsed.name).toBe('Dynamite');
+    expect(parsed.byArtist).toEqual({ '@type': 'MusicGroup', name: 'BTS' });
+  });
+
+  it('inactive song never reaches render (notFound) → no JSON-LD', async () => {
+    vi.mocked(getSongBySlug).mockResolvedValue(view({ isActive: false }));
+    await expect(call('archive-retired-track')).rejects.toBe(NOT_FOUND);
+  });
+});
