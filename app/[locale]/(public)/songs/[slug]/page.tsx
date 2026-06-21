@@ -8,9 +8,10 @@ import { getSongBySlug } from '@/lib/catalog/song-queries';
 import { isSongPubliclyVisible } from '@/lib/catalog/song-visibility';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
+import { buildSongJsonLd } from '@/lib/seo/song-jsonld';
 import { buildSongMetadata } from '@/lib/seo/song-metadata';
 
-// Song-detail route (2b-2b-1 body + 2b-2b-2 generateMetadata). JSON-LD (2b-2b-3), sitemap song URLs
+// Song-detail route (2b-2b-1 body + 2b-2b-2 generateMetadata + 2b-2b-3 JSON-LD). Sitemap song URLs
 // (2b-2b-4) and catalog card links (2b-2b-5) are separate slices. Minimal body: title / artist /
 // per-locale description (all DB-derived; no hardcoded copy, §5).
 
@@ -48,8 +49,19 @@ export default async function SongDetailPage({
   // predicate keeps the rule in one place. The type guard narrows `song` to non-null below.
   if (!isSongPubliclyVisible(song)) notFound();
 
+  // MusicRecording JSON-LD (2b-2b-3): same isSongPubliclyVisible gate as above, so non-null here
+  // (private songs never reach this point — consistent with the notFound() path).
+  const jsonLd = buildSongJsonLd(song, locale as Locale);
+
   return (
     <main>
+      {jsonLd ? (
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: code-built object JSON.stringify'd (no user-controlled markup) — the canonical Next.js way to emit JSON-LD
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      ) : null}
       {/* Cinematic surface (§7.2): artist eyebrow uses the on-dark primary variant (#ffb4a9,
           10.88:1 — #e83528 would fail AA at label size); the display-size title may use
           brand-primary (#e83528 on #181214 = 4.38:1 → passes AA-large ≥3:1). */}
