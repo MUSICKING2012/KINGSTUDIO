@@ -7,11 +7,13 @@ import { listSongs } from '@/lib/catalog/song-queries';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import { Link } from '@/lib/i18n/navigation';
 import type { Locale } from '@/lib/i18n/routing';
+import { songPath } from '@/lib/seo/urls';
 import { getLicenseDisplayEnabled } from '@/lib/settings/license-display';
 import { cn } from '@/lib/utils';
 
-// Public song catalog (list only — no detail link, search, or preview this slice). First real use
-// of the 2b-0 design foundation: <Surface> dual surface, brand tokens, Anton/Pretendard.
+// Public song catalog. Cards link to /songs/[slug] (2b-2b-5; NULL-slug songs render as non-link
+// cards). Search/preview are still out of scope. First real use of the 2b-0 design foundation:
+// <Surface> dual surface, brand tokens, Anton/Pretendard.
 // License badges are gated by §5.7 (getLicenseDisplayEnabled, default OFF in MVP).
 
 // DB-backed catalog + a searchParams filter → render per request (live data, working ?beginner),
@@ -99,6 +101,9 @@ export default async function SongsPage({
                     beginnerCuration={song.beginnerCuration}
                     beginnerLabel={t('filters.beginnerCuration')}
                     licenseBadges={licenseBadges}
+                    // Link only when the song has a slug (NULL until Phase 2 → non-link card). Same
+                    // songPath helper as route/sitemap; the i18n Link adds the locale (no hardcoding).
+                    href={song.slug ? songPath(song.slug) : undefined}
                   />
                 );
               })}
