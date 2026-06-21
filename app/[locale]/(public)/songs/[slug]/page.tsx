@@ -1,18 +1,39 @@
+import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 
 import { Surface } from '@/components/ui/surface';
 import { getSongBySlug } from '@/lib/catalog/song-queries';
 import { isSongPubliclyVisible } from '@/lib/catalog/song-visibility';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
+import { buildSongMetadata } from '@/lib/seo/song-metadata';
 
-// Song-detail route (2b-2b-1) — route + data consumption only. generateMetadata (2b-2b-2), JSON-LD
-// (2b-2b-3), sitemap song URLs (2b-2b-4) and catalog card links (2b-2b-5) are separate slices.
-// Minimal body: title / artist / per-locale description (all DB-derived; no hardcoded copy, §5).
+// Song-detail route (2b-2b-1 body + 2b-2b-2 generateMetadata). JSON-LD (2b-2b-3), sitemap song URLs
+// (2b-2b-4) and catalog card links (2b-2b-5) are separate slices. Minimal body: title / artist /
+// per-locale description (all DB-derived; no hardcoded copy, §5).
 
 // DB-backed, per-request (slug lookup + active gate on live data) — never frozen at build time.
 export const dynamic = 'force-dynamic';
+
+// Next calls generateMetadata and the page component separately, each of which needs the song.
+// React cache() dedupes them to ONE DB read per request (same (slug, locale) args). Both also run
+// the SAME visibility predicate downstream, so meta and the page never disagree.
+const loadSong = cache((slug: string, locale: Locale) =>
+  getSongBySlug(slug, toPrismaLocale(locale)),
+);
+
+export async function generateMetadata({
+  params: { locale, slug },
+}: {
+  params: { locale: string; slug: string };
+}): Promise<Metadata> {
+  const routingLocale = locale as Locale;
+  const song = await loadSong(slug, routingLocale);
+  // Private / missing / NULL-slug → empty meta; the page component below owns notFound().
+  return buildSongMetadata(song, routingLocale);
+}
 
 export default async function SongDetailPage({
   params: { locale, slug },
@@ -21,7 +42,7 @@ export default async function SongDetailPage({
 }) {
   setRequestLocale(locale);
 
-  const song = await getSongBySlug(slug, toPrismaLocale(locale as Locale));
+  const song = await loadSong(slug, locale as Locale);
   // notFound gate (single source: isSongPubliclyVisible): no song, inactive (private even by direct
   // URL — the "(b)" decision), or NULL slug. A slug lookup can't match a NULL-slug row, but the
   // predicate keeps the rule in one place. The type guard narrows `song` to non-null below.
