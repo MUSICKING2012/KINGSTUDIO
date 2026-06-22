@@ -14,5 +14,7 @@ export default defineConfig({
     environment: 'node',
     include: ['**/*.test.ts', '**/*.test.tsx'],
     exclude: ['node_modules', '.next'],
+    // Loads root .env (DATABASE_URL etc.) into each worker — see vitest.setup.ts.
+    setupFiles: ['./vitest.setup.ts'],
   },
 });
