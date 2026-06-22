@@ -157,6 +157,9 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 3. **마이그레이션은 Prisma Migrate로만.** 스키마 변경 시 마이그레이션 파일 생성, 직접 SQL로 프로덕션 변경 금지.
 4. **커밋은 작고 의미 단위로.** Conventional Commits (`feat:`, `fix:`, `chore:` ...). 한 커밋에 여러 기능 섞지 말 것.
 5. **테스트:** 위험 구역(§4)은 테스트 필수. 결제·예약·동의는 Playwright E2E 포함.
+   - **E2E 예약 포트 = 3100** (로컬 :3000은 별개 앱 mk-artist-db가 상시 점유 → 분리). webServer는 `pnpm dev --port 3100`로 띄우고, `e2e/global-setup.ts`가 `/api/health` 응답 body의 `app === 'kingstudio'`를 단언해 **크로스앱 오접속을 차단**(HTTP-status readiness보다 강함). `reuseExistingServer:!CI` 유지(cold-compile fix 보존).
+   - **`/api/health` 노출 필드 계약:** dev/test = `{ status:'ok', app:'kingstudio', nodeEnv }`, **prod = `{ status:'ok' }`만**(노출면 최소화·env 원문 비노출). `app` 필드는 E2E 신원 게이트가 의존하므로 비-prod에서 제거 금지.
+   - **예약 포트 3100은 musicking(mk-artist-db) 측과 합의 필요** — 양 프로젝트가 같은 머신에서 포트가 겹치지 않도록. (현재는 우리 쪽 단독 회피이며, 상호 합의는 미확정 — 단정 금지.)
 6. **PR마다 CodeRabbit 리뷰를 거친다.** 1인 개발의 리뷰어 공백을 메우는 1차 안전망.
 7. **막히거나 PRD에 없는 결정이 필요하면 추측하지 말고 묻는다.** 임의 결정으로 진행 후 되돌리는 것이 가장 비싸다.
 8. **MVP 범위를 벗어나는 기능 제안 금지.** PRD 9.2 MVP 범위 밖이면 "v1.1 백로그" 라고만 메모. 지금 만들지 말 것.
