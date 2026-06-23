@@ -21,6 +21,7 @@
     "db:studio": "prisma studio",
     "seed:admin": "tsx prisma/seed-admin.ts",
     "seed:packages": "tsx prisma/seed-packages.ts",
+    "seed:rooms": "tsx prisma/seed-rooms.ts",
     "seed:schema-templates": "tsx prisma/seed-schema-templates.ts",
     "e2e": "playwright test"
   },
