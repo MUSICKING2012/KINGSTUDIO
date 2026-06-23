@@ -35,7 +35,7 @@ Given a package + date, compute which time slots are bookable for an active stud
 | **S2.3 DB exclusion migration** | `btree_gist` + `EXCLUDE` constraint (§4/§7-A.5 danger zone). | — (independent start; **MUST complete before S2.4**) |
 | **S2.4 Booking confirm + lock** | `confirmBooking` inside lock + room auto-assign + overlap re-check + pricing snapshot. | S2.1 + S2.2 + **S2.3 (hard prerequisite)** |
 | **S2.5 Admin blackout (3 modes)** | admin create/manage slot/full_day/recurring blackouts (feeds availability). | S2.2 |
-| **S2.6 Concurrency E2E (§4 gate)** | Playwright double-booking test (two concurrent confirms on overlapping slots → exactly one wins). | S2.4 (+S2.3) |
+| **S2.6 Concurrency E2E (§4 gate)** | Vitest 통합 테스트(실 DB + 실 Redis) — two concurrent `confirmBooking()` calls on overlapping slots → exactly one wins. | S2.4 (+S2.3) |
 
 Dependency order (APPROVED): S2.1, S2.2, S2.3 may start independently, **but S2.3 → S2.4 is a hard ordering — booking-confirm (S2.4) MUST run on top of the DB exclusion safety net, so S2.3 lands first (NOT parallel with S2.4).** Then **S2.4 → S2.6**; S2.5 after S2.2. Booking-flow UI (4-step) and payment (KG이니시스/PayPal) are **M3 / Stage 3**, out of this slice.
 
@@ -91,7 +91,7 @@ Availability for `(packageId, date)`:
 - **availability.ts** (DB integration, owns its read; mock or owner-file per the one-DB-file-per-table race rule): grid enumeration per package; overlap subtraction vs a seeded booking (a Premium 10–13 booking closes Gold 10–12 & 12–14); blackout modes (full_day blocks all; slot blocks overlap; roomId null = all rooms); operating-window + D+1..D+90 boundary; multi-room OR aggregate.
 - **lock.ts** (S2.1): acquire blocks a second acquire on the same key; release frees it; TTL expiry.
 - **confirm.ts** (S2.4): room auto-assign order; overlap re-check inside lock; pricing snapshot frozen.
-- **🔴 Concurrency E2E (S2.6, §4 MANDATE):** Playwright — two concurrent confirms on overlapping slots → exactly one Booking row, the other rejected (lock OR DB exclusion). This is the §4 danger-zone gate; **human-verified before merge.** Note the existing fresh-run caveat (single dev server / build+start) for the concurrency harness.
+- **🔴 Concurrency E2E (S2.6, §4 MANDATE):** Vitest 통합 테스트(실 DB + 실 Redis) — two concurrent `confirmBooking()` calls on overlapping slots → exactly one Booking row, the other rejected (lock OR DB exclusion). This is the §4 danger-zone gate; **human-verified before merge.**
 
 ## Out of scope (deferred — do NOT build here)
 
@@ -99,7 +99,7 @@ Booking-flow UI (4-step Step 1–4 pages) and payment integration (KG이니시�
 
 ## §4 / risk notes
 
-- **§4 danger zones touched:** Redis slot lock (double-booking — Playwright concurrency test mandatory) + DB exclusion migration (`btree_gist`, §7-A.5 — human-verified migration). Both human-verified before merge.
+- **§4 danger zones touched:** Redis slot lock (double-booking — Vitest 통합 테스트(실 DB + 실 Redis) mandatory) + DB exclusion migration (`btree_gist`, §7-A.5 — human-verified migration). Both human-verified before merge.
 - **Lock granularity vs overlap (resolved by C19):** room+date lock serializes the whole room-day so the overlap check is always inside one critical section; DB exclusion is the physical backstop ("don't trust code alone").
 - **`pricingMode` enum naming** (Slice-1 tracking #6) unaffected here.
 
