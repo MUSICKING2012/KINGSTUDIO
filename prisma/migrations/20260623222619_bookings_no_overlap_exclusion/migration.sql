@@ -5,10 +5,11 @@
 
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
+ALTER TABLE bookings DROP CONSTRAINT IF EXISTS bookings_no_overlap;
 ALTER TABLE bookings
   ADD CONSTRAINT bookings_no_overlap
   EXCLUDE USING gist (
     room_id WITH =,
     tsrange(date + start_time, date + end_time, '[)') WITH &&
   )
-  WHERE (status = ANY (ARRAY['paid', 'confirmed', 'completed']));
+  WHERE (status = ANY (ARRAY['paid', 'confirmed', 'completed']::"BookingStatus"[]));
