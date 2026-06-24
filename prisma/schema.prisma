@@ -716,9 +716,9 @@ model Payment {
   refunds           Refund[]
   referralAsInvitee Referral? // Stage 6 — this payment as a referral's invitee payment (1:1)
 
+  @@unique([pgTransactionId])
   @@index([bookingId])
   @@index([status])
-  @@index([pgTransactionId])
   @@map("payments")
 }
 
