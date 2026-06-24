@@ -49,37 +49,109 @@
     }
   },
   "packages": {
-    "gold": {
-      "name": "Gold",
-      "tagline": "K-POP vocal training, entry level"
+    "catalog": {
+      "title": "レコーディング体験パッケージ",
+      "subtitle": "ソウルの中心でK-POPスターのように録音しよう",
+      "sectionExperience": "K-POP体験",
+      "sectionRental": "スタジオレンタル",
+      "sectionGroup": "グループプログラム",
+      "fromLabel": "1名より",
+      "headcountLabel": "{min}〜{max}名",
+      "durationLabel": "{minutes}分",
+      "viewDetail": "詳細を見る",
+      "cta": "予約する"
     },
-    "diamond": {
-      "name": "Diamond",
-      "tagline": "A full K-POP recording experience"
+    "detail": {
+      "priceTableTitle": "人数別料金",
+      "perHeadcount": "{n}名",
+      "includesTitle": "含まれるもの",
+      "bookCta": "このパッケージを予約"
     },
-    "premium": {
-      "name": "Premium",
-      "tagline": "Recording plus a full music-video package"
-    },
-    "1hour": {
-      "name": "1Hour",
-      "tagline": "Studio hourly rental with an engineer"
-    },
-    "1pro": {
-      "name": "1Pro",
-      "tagline": "Studio rental for serious recording"
-    },
-    "making-class": {
-      "name": "K-Pop Making Class",
-      "tagline": "A group K-pop making class"
-    },
-    "dreampath": {
-      "name": "Dreampath",
-      "tagline": "A group program"
-    },
-    "workshop": {
-      "name": "Workshop",
-      "tagline": "A group workshop program"
+    "items": {
+      "gold": {
+        "name": "Gold",
+        "tagline": "K-POP vocal training, entry level",
+        "concept": "1対1ボーカルコーチング＋仕上げ編集（1番＋サビ）",
+        "includes": [
+          "初心者向け楽曲セレクション（20〜30曲）",
+          "1番＋サビ完成音源",
+          "無加工写真約30枚",
+          "多言語サポートあり"
+        ]
+      },
+      "diamond": {
+        "name": "Diamond",
+        "tagline": "A full K-POP recording experience",
+        "concept": "フル曲レコーディング＋プロのミックス＆マスタリング",
+        "includes": [
+          "全カタログから自由選択",
+          "フル曲レコーディング＋ミックス/マスタリング",
+          "無加工写真約30枚",
+          "多言語サポートあり"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "tagline": "Recording plus a full music-video package",
+        "concept": "レコーディング＋ミュージックビデオフルパッケージ",
+        "includes": [
+          "全カタログ＋MV向け楽曲推薦",
+          "フル曲レコーディング＋ミックス/マスタリング",
+          "ミュージックビデオ（プロクルー）",
+          "無加工写真約30枚",
+          "多言語サポートあり"
+        ]
+      },
+      "1hour": {
+        "name": "1Hour",
+        "tagline": "Studio hourly rental with an engineer",
+        "concept": "エンジニア同伴スタジオ1時間レンタル",
+        "includes": [
+          "MRトラック持参",
+          "Rawファイル提供（ミックスなし）",
+          "韓国語でのコミュニケーション必須"
+        ]
+      },
+      "1pro": {
+        "name": "1Pro",
+        "tagline": "Studio rental for serious recording",
+        "concept": "本格レコーディング用スタジオ3.5時間レンタル",
+        "includes": [
+          "MRトラック持参",
+          "Rawファイル提供（ミックスなし）",
+          "韓国語でのコミュニケーション必須"
+        ]
+      },
+      "making-class": {
+        "name": "K-Pop Making Class",
+        "tagline": "A group K-pop making class",
+        "concept": "グループK-POPメイキングクラス（2〜15名）",
+        "includes": [
+          "K-POP制作プロセス体験",
+          "2時間プログラム",
+          "多言語サポートあり"
+        ]
+      },
+      "dreampath": {
+        "name": "Dreampath",
+        "tagline": "A group program",
+        "concept": "グループ進路体験プログラム（10〜15名）",
+        "includes": [
+          "音楽業界キャリア探索",
+          "2時間プログラム",
+          "韓国語のみ"
+        ]
+      },
+      "workshop": {
+        "name": "Workshop",
+        "tagline": "A group workshop program",
+        "concept": "グループワークショッププログラム（5〜15名）",
+        "includes": [
+          "カスタムワークショップ形式",
+          "2時間プログラム",
+          "韓国語のみ"
+        ]
+      }
     }
   },
   "songs": {

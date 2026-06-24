@@ -49,37 +49,109 @@
     }
   },
   "packages": {
-    "gold": {
-      "name": "Gold",
-      "tagline": "K-POP 보컬 트레이닝 입문"
+    "catalog": {
+      "title": "녹음 체험 패키지",
+      "subtitle": "서울 한복판에서 K-POP 스타처럼 녹음하세요",
+      "sectionExperience": "K-POP 체험",
+      "sectionRental": "스튜디오 대여",
+      "sectionGroup": "단체 프로그램",
+      "fromLabel": "1인 기준",
+      "headcountLabel": "{min}~{max}명",
+      "durationLabel": "{minutes}분",
+      "viewDetail": "자세히 보기",
+      "cta": "예약하기"
     },
-    "diamond": {
-      "name": "Diamond",
-      "tagline": "본격 K-POP 녹음 체험"
+    "detail": {
+      "priceTableTitle": "인원별 요금",
+      "perHeadcount": "{n}인",
+      "includesTitle": "포함 항목",
+      "bookCta": "지금 예약하기"
     },
-    "premium": {
-      "name": "Premium",
-      "tagline": "녹음 + 뮤직비디오 풀패키지"
-    },
-    "1hour": {
-      "name": "1Hour",
-      "tagline": "스튜디오 시간 대여 + 엔지니어"
-    },
-    "1pro": {
-      "name": "1Pro",
-      "tagline": "본격 녹음용 스튜디오 대여"
-    },
-    "making-class": {
-      "name": "K-Pop Making Class",
-      "tagline": "단체 K-POP 메이킹 클래스"
-    },
-    "dreampath": {
-      "name": "꿈길",
-      "tagline": "단체 프로그램"
-    },
-    "workshop": {
-      "name": "워크샵",
-      "tagline": "단체 워크샵 프로그램"
+    "items": {
+      "gold": {
+        "name": "Gold",
+        "tagline": "K-POP 보컬 트레이닝 입문",
+        "concept": "1:1 보컬 코칭 + 간이 믹스 완결편 (1절+후렴)",
+        "includes": [
+          "입문자 큐레이션 곡 선택 (20~30곡)",
+          "1절+후렴 완결 편집 음원",
+          "무보정 사진 30컷 내외",
+          "통역·외국어 지원"
+        ]
+      },
+      "diamond": {
+        "name": "Diamond",
+        "tagline": "본격 K-POP 녹음 체험",
+        "concept": "풀 곡 녹음 + 정식 믹싱·마스터링",
+        "includes": [
+          "전체 카탈로그 자유 선택",
+          "풀 곡 녹음 + 정식 믹싱/마스터링",
+          "무보정 사진 30컷 내외",
+          "통역·외국어 지원"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "tagline": "녹음 + 뮤직비디오 풀패키지",
+        "concept": "녹음 + 뮤직비디오 풀패키지",
+        "includes": [
+          "전체 카탈로그 + MV용 곡 추천",
+          "풀 곡 녹음 + 정식 믹싱/마스터링",
+          "뮤직비디오 (외부 전문팀)",
+          "무보정 사진 30컷 내외",
+          "통역·외국어 지원"
+        ]
+      },
+      "1hour": {
+        "name": "1Hour",
+        "tagline": "스튜디오 시간 대여 + 엔지니어",
+        "concept": "엔지니어 동행 스튜디오 1시간 대여",
+        "includes": [
+          "고객 본인 MR 지참",
+          "Raw 파일 제공 (믹싱 미포함)",
+          "한국어 의사소통 필수"
+        ]
+      },
+      "1pro": {
+        "name": "1Pro",
+        "tagline": "본격 녹음용 스튜디오 대여",
+        "concept": "본격 녹음용 스튜디오 3시간 30분 대여",
+        "includes": [
+          "고객 본인 MR 지참",
+          "Raw 파일 제공 (믹싱 미포함)",
+          "한국어 의사소통 필수"
+        ]
+      },
+      "making-class": {
+        "name": "K-Pop Making Class",
+        "tagline": "단체 K-POP 메이킹 클래스",
+        "concept": "단체 K-POP 메이킹 클래스 (2~15명)",
+        "includes": [
+          "K-POP 제작 과정 체험",
+          "2시간 프로그램",
+          "통역·외국어 지원"
+        ]
+      },
+      "dreampath": {
+        "name": "꿈길",
+        "tagline": "단체 프로그램",
+        "concept": "단체 진로 체험 프로그램 (10~15명)",
+        "includes": [
+          "음악 산업 진로 탐색",
+          "2시간 프로그램",
+          "한국어 전용"
+        ]
+      },
+      "workshop": {
+        "name": "워크샵",
+        "tagline": "단체 워크샵 프로그램",
+        "concept": "단체 워크샵 프로그램 (5~15명)",
+        "includes": [
+          "맞춤형 워크샵 구성",
+          "2시간 프로그램",
+          "한국어 전용"
+        ]
+      }
     }
   },
   "songs": {

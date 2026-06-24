@@ -49,37 +49,109 @@
     }
   },
   "packages": {
-    "gold": {
-      "name": "Gold",
-      "tagline": "K-POP vocal training, entry level"
+    "catalog": {
+      "title": "Recording Experience Packages",
+      "subtitle": "Record like a K-POP star in the heart of Seoul",
+      "sectionExperience": "K-POP Experience",
+      "sectionRental": "Studio Rental",
+      "sectionGroup": "Group Programs",
+      "fromLabel": "from (1 person)",
+      "headcountLabel": "{min}–{max} people",
+      "durationLabel": "{minutes} min",
+      "viewDetail": "View details",
+      "cta": "Book now"
     },
-    "diamond": {
-      "name": "Diamond",
-      "tagline": "A full K-POP recording experience"
+    "detail": {
+      "priceTableTitle": "Pricing by group size",
+      "perHeadcount": "{n} people",
+      "includesTitle": "What's included",
+      "bookCta": "Book this package"
     },
-    "premium": {
-      "name": "Premium",
-      "tagline": "Recording plus a full music-video package"
-    },
-    "1hour": {
-      "name": "1Hour",
-      "tagline": "Studio hourly rental with an engineer"
-    },
-    "1pro": {
-      "name": "1Pro",
-      "tagline": "Studio rental for serious recording"
-    },
-    "making-class": {
-      "name": "K-Pop Making Class",
-      "tagline": "A group K-pop making class"
-    },
-    "dreampath": {
-      "name": "Dreampath",
-      "tagline": "A group program"
-    },
-    "workshop": {
-      "name": "Workshop",
-      "tagline": "A group workshop program"
+    "items": {
+      "gold": {
+        "name": "Gold",
+        "tagline": "K-POP vocal training, entry level",
+        "concept": "1-on-1 vocal coaching + polished edit (verse + chorus)",
+        "includes": [
+          "Curated song selection (20–30 tracks)",
+          "Verse + chorus master edit",
+          "~30 unedited photos",
+          "Multilingual support"
+        ]
+      },
+      "diamond": {
+        "name": "Diamond",
+        "tagline": "A full K-POP recording experience",
+        "concept": "Full-song recording + professional mix & master",
+        "includes": [
+          "Free choice from full catalogue",
+          "Full-song recording + mix/master",
+          "~30 unedited photos",
+          "Multilingual support"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "tagline": "Recording plus a full music-video package",
+        "concept": "Recording + full music-video package",
+        "includes": [
+          "Full catalogue + MV song recommendations",
+          "Full-song recording + mix/master",
+          "Music video (professional crew)",
+          "~30 unedited photos",
+          "Multilingual support"
+        ]
+      },
+      "1hour": {
+        "name": "1Hour",
+        "tagline": "Studio hourly rental with an engineer",
+        "concept": "1-hour studio rental with engineer",
+        "includes": [
+          "Bring your own MR track",
+          "Raw files provided (no mixing)",
+          "Korean communication required"
+        ]
+      },
+      "1pro": {
+        "name": "1Pro",
+        "tagline": "Studio rental for serious recording",
+        "concept": "3.5-hour studio rental for serious recording",
+        "includes": [
+          "Bring your own MR track",
+          "Raw files provided (no mixing)",
+          "Korean communication required"
+        ]
+      },
+      "making-class": {
+        "name": "K-Pop Making Class",
+        "tagline": "A group K-pop making class",
+        "concept": "Group K-pop making class (2–15 people)",
+        "includes": [
+          "K-pop production process experience",
+          "2-hour program",
+          "Multilingual support"
+        ]
+      },
+      "dreampath": {
+        "name": "Dreampath",
+        "tagline": "A group program",
+        "concept": "Group career exploration program (10–15 people)",
+        "includes": [
+          "Music industry career exploration",
+          "2-hour program",
+          "Korean only"
+        ]
+      },
+      "workshop": {
+        "name": "Workshop",
+        "tagline": "A group workshop program",
+        "concept": "Group workshop program (5–15 people)",
+        "includes": [
+          "Customised workshop format",
+          "2-hour program",
+          "Korean only"
+        ]
+      }
     }
   },
   "songs": {
