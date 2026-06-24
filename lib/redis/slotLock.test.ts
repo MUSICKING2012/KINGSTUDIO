@@ -6,7 +6,7 @@ const { mockSet, mockEval } = vi.hoisted(() => ({
   mockEval: vi.fn(),
 }));
 
-vi.mock('./client', () => ({ redis: { set: mockSet, eval: mockEval } }));
+vi.mock('./client', () => ({ getRedis: () => ({ set: mockSet, eval: mockEval }) }));
 
 beforeEach(() => {
   mockSet.mockReset();

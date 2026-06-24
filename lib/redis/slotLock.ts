@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { redis } from './client';
+import { getRedis } from './client';
 
 export const SLOT_LOCK_TTL_MS = 900_000; // 15 min (C19 §5.3)
 
@@ -33,11 +33,12 @@ export async function withSlotLock<T>(
 ): Promise<T> {
   const key = `slot_lock:${roomId}:${date}`;
   const token = randomUUID();
-  const acquired = await redis.set(key, token, { nx: true, px: SLOT_LOCK_TTL_MS });
+  const r = getRedis();
+  const acquired = await r.set(key, token, { nx: true, px: SLOT_LOCK_TTL_MS });
   if (!acquired) throw new SlotLockError(roomId, date);
   try {
     return await fn();
   } finally {
-    await redis.eval(RELEASE_SCRIPT, [key], [token]);
+    await r.eval(RELEASE_SCRIPT, [key], [token]);
   }
 }
