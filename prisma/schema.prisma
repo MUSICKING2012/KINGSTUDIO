@@ -683,6 +683,21 @@ enum DisplayCurrency {
   HKD
 }
 
+/// Daily exchange rate snapshot (PRD §5.5 — OpenExchangeRates → Redis 24h TTL + DB backup).
+/// rateToKrw = how many KRW 1 unit of `currency` buys (e.g. USD: ~1380).
+/// @@unique ensures one row per currency per fetch timestamp.
+model ExchangeRate {
+  id        String          @id @default(cuid())
+  currency  DisplayCurrency
+  rateToKrw Decimal         @map("rate_to_krw") @db.Decimal(18, 8)
+  fetchedAt DateTime        @default(now()) @map("fetched_at")
+  source    String          @default("openexchangerates")
+
+  @@unique([currency, fetchedAt])
+  @@index([currency, fetchedAt(sort: Desc)])
+  @@map("exchange_rates")
+}
+
 /// B2B group package type for quotes (PRD §5.2 group category — explicit enum per Aiden).
 enum GroupType {
   making_class // K-Pop Making Class
