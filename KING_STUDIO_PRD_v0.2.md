@@ -48,6 +48,7 @@
 | — | 곡 slug 생성 규칙 사전 계약 (C18 하위) | §6.3에 slug 생성·충돌·예외·유효성 규칙 기록: (1) `slugify(canonicalArtist)-slugify(canonicalTitle)`, lib `@sindresorhus/slugify`(**확정**); (2) 충돌 suffix `-2…`, baseline = `song.id` 오름차순(결정적); (3) **비ASCII 빈 slug = Phase 2 보류** — 실태(읽기전용): 시드 4곡 중 2곡 한국어 canonical→빈 slug, 실 ~2,500곡 미적재로 비율 미지수; 후보 A(en→`song-{id}` 체인)·B(id 직행)·C(입력 게이트); (4) UNIQUE·길이상한 **80자 확정**(NOT NULL은 Phase 2). **Aiden 확정: lib·80자; (3)은 2-페이즈 분할로 Phase 2(실 데이터 적재 후) 보류 → Phase 1(slug 컬럼·생성로직·ASCII backfill, nullable) 착수 가능, Phase 2(비ASCII fallback·NOT NULL)는 (3) 게이트.** 읽기전용 실태조사, 문서만. |
 | — | 곡 MusicRecording JSON-LD 계약 (C18 하위) | §6.3에 곡 상세 JSON-LD 계약 기록(2b-2b-3 사전, 구현 0): ① 타입=**MusicRecording 유지**(`recordingOf`→MusicComposition 의미보정; 곡=MusicRecording·패키지=Product+Offer 별개 엔티티로 §6.3 본문↔C18 긴장 해소, Product는 곡 페이지 부적합=offer 부재로 "Product without offers" 위반); ② **속성 매핑**(name←title, byArtist←artist를 MusicGroup 최소객체로, recordingOf←MusicComposition{name}, description optional, 데이터 없는 속성 제외); ③ **SchemaTemplate 행=seed 스크립트(멱등)**로 생성·관리(어드민 아님; 기존 7행도 미생성이라 동일 패턴이나 이번엔 MusicRecording 1행만, 7행 seed는 별도 슬라이스 부채). 곡별 수동 덮어쓰기는 PageSeo override 담당(역할 구분). (v0.2 확정) |
 | C19 | 슬롯 락 모델 교정 (기존 계약 수정) | §5.3/§5.5 슬롯 락 키 스킴 수정 + DB 제약 계약 추가(문서만, 구현 0). **기존 `slot_lock:{room_id}:{date}:{start_time}`(단일 시작시각)는 길이 다른 패키지 overlap을 못 막아 더블부킹 가능**(Premium 10–13 vs Gold 12–14 = 별개 락·시간 겹침) → **2중 안전망으로 교정**: ① Redis 락을 **`slot_lock:{room_id}:{date}`(룸+날 직렬화)**로 변경, 락 안에서 overlap 검사→확정(TTL 900s·15분 홀드 유지; 동시성↓이나 룸1개·슬롯 적어 무문제, 정확성 우선); ② **Postgres `EXCLUDE USING gist`**(btree_gist)로 겹침을 DB가 물리적 거부 = §4 "코드만 믿지 않는다", SSOT=DB 일관. ②·btree_gist 구현은 §4·§7-A.5 위험구역 **별도 마이그레이션 슬라이스**(계약만). 나머지 슬롯 공백(가용성 알고리즘·영업시간 저장·룸 자동배정·TZ)은 슬롯 엔진 설계 문서에서 확정. (v0.2 확정) |
+| — | Upstash env명 코드 정합 | §7.12 `UPSTASH_REDIS_URL` → `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_TOKEN` → `UPSTASH_REDIS_REST_TOKEN`. `@upstash/redis` SDK REST 클라이언트(`lib/redis/client.ts`)가 요구하는 실제 변수명과 맞춤. 기존 이름은 SDK가 인식하지 못해 런타임 에러 발생 확인 후 정정. |
 
 ---
 
@@ -1195,7 +1196,7 @@ Prisma Accelerate는 무료 티어(10M 쿼리/월) 사용, 피크 시 Cloud SQL 
 ```
 # DB·캐시
 DATABASE_URL / DATABASE_URL_REPLICA (v1.1)
-UPSTASH_REDIS_URL / UPSTASH_REDIS_TOKEN
+UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN
 
 # 결제
 KG_INICIS_MID / KG_INICIS_SIGN_KEY / KG_INICIS_API_KEY
