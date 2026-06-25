@@ -3,8 +3,10 @@ import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { PACKAGES, seedPackages } from '../../prisma/seed-packages';
 import { getPackageBySlug, listPackages } from './queries';
 
-// Single file owns the `packages` table so no other Vitest worker races it (see plan note).
+// bookings → packages FK 순서 필수(bookings_package_id_fkey, S3.1 추가).
+// fileParallelism:false 환경에서도 명시적 순서를 유지해 방어한다.
 beforeEach(async () => {
+  await prisma.booking.deleteMany();
   await prisma.package.deleteMany();
 });
 afterAll(async () => {
