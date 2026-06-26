@@ -74,3 +74,9 @@ export function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: str
 export function prismaTimeToStr(d: Date): string {
   return toKstTimeString(d.getUTCHours(), d.getUTCMinutes());
 }
+
+/** @db.Date write carrier. 입력은 호출부에서 assertDateString 통과한 "YYYY-MM-DD" date-only.
+ *  date-only는 ES 스펙상 UTC 자정으로 파싱되므로 TZ 독립. assert/정규화는 상류 중복이라 안 넣음. */
+export function toDbDate(s: string): Date {
+  return new Date(s);
+}

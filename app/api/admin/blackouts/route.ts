@@ -5,6 +5,7 @@ import { ForbiddenError, requirePermission } from '@/lib/admin-auth/rbac';
 import { validateAdminSession } from '@/lib/admin-auth/session';
 import { BlackoutValidationError, validateBlackoutInput } from '@/lib/slots/blackoutInput';
 import { toTimeDate } from '@/lib/slots/confirmBooking';
+import { toDbDate } from '@/lib/slots/time';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -60,11 +61,10 @@ export async function POST(req: NextRequest) {
     throw err;
   }
 
-  // Carrier conversions — reuse toTimeDate from confirmBooking (PRD C19, no epoch arithmetic)
   const data = {
     scope: v.scope,
-    dateStart: new Date(v.dateStart),   // @db.Date carrier
-    dateEnd: new Date(v.dateEnd),       // @db.Date carrier
+    dateStart: toDbDate(v.dateStart),   // @db.Date carrier
+    dateEnd: toDbDate(v.dateEnd),       // @db.Date carrier
     timeStart: v.timeStart !== null ? toTimeDate(v.timeStart) : null,  // @db.Time(0) carrier
     timeEnd: v.timeEnd !== null ? toTimeDate(v.timeEnd) : null,
     recurringRule: v.recurringRule,
