@@ -33,7 +33,7 @@ export type ConfirmBookingResult = {
 
 // Write-path adapter: converts "HH:MM:00" KST naive string to the Date carrier
 // Prisma requires for @db.Time(0). Not epoch arithmetic for time derivation (PRD C19).
-function toTimeDate(t: string): Date {
+export function toTimeDate(t: string): Date {
   return new Date(`1970-01-01T${t}.000Z`);
 }
 

@@ -16,7 +16,7 @@ function kstWeekday(dateStr: string): number {
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
-function weeklyRuleMatches(rule: string, dateStr: string): boolean {
+export function assertValidWeeklyRule(rule: string): void {
   const parts = Object.fromEntries(rule.split(';').map((p) => p.split('=') as [string, string]));
   if (parts.FREQ !== 'WEEKLY') {
     throw new Error(`Unsupported RRULE FREQ (S2.5a parses WEEKLY only): ${rule}`);
@@ -24,10 +24,15 @@ function weeklyRuleMatches(rule: string, dateStr: string): boolean {
   if (!parts.BYDAY) {
     throw new Error(`RRULE missing BYDAY: ${rule}`);
   }
-  const days = parts.BYDAY.split(',').map((tok) => {
+  for (const tok of parts.BYDAY.split(',')) {
     if (!(tok in BYDAY)) throw new Error(`Invalid BYDAY token: ${tok}`);
-    return BYDAY[tok];
-  });
+  }
+}
+
+function weeklyRuleMatches(rule: string, dateStr: string): boolean {
+  assertValidWeeklyRule(rule);
+  const parts = Object.fromEntries(rule.split(';').map((p) => p.split('=') as [string, string]));
+  const days = parts.BYDAY.split(',').map((tok) => BYDAY[tok]!);
   return days.includes(kstWeekday(dateStr));
 }
 

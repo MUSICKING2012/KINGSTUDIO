@@ -1,10 +1,13 @@
 import { adminAuth } from '@/adminAuth';
 import { prisma } from '@/lib/db/prisma';
+import { writeAudit } from '@/lib/admin-auth/audit';
 import { ForbiddenError, requirePermission } from '@/lib/admin-auth/rbac';
 import { validateAdminSession } from '@/lib/admin-auth/session';
-import { NextResponse } from 'next/server';
+import { BlackoutValidationError, validateBlackoutInput } from '@/lib/slots/blackoutInput';
+import { toTimeDate } from '@/lib/slots/confirmBooking';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   // 1. JWT validity (fast path — no DB)
   const session = await adminAuth();
   const sessionId = (session as { sessionId?: string } | null)?.sessionId;
@@ -38,6 +41,58 @@ export async function POST() {
     throw err;
   }
 
-  // 5. Stub — business logic in S2.5b-2
-  return NextResponse.json({ error: 'not_implemented' }, { status: 501 });
+  // 5. Parse + validate body
+  const body = await req.json().catch(() => null);
+  if (!body) {
+    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+  }
+
+  let v: ReturnType<typeof validateBlackoutInput>;
+  try {
+    v = validateBlackoutInput(body);
+  } catch (err) {
+    if (err instanceof BlackoutValidationError) {
+      return NextResponse.json(
+        { error: 'validation', field: err.field, message: err.message },
+        { status: 422 },
+      );
+    }
+    throw err;
+  }
+
+  // Carrier conversions — reuse toTimeDate from confirmBooking (PRD C19, no epoch arithmetic)
+  const data = {
+    scope: v.scope,
+    dateStart: new Date(v.dateStart),   // @db.Date carrier
+    dateEnd: new Date(v.dateEnd),       // @db.Date carrier
+    timeStart: v.timeStart !== null ? toTimeDate(v.timeStart) : null,  // @db.Time(0) carrier
+    timeEnd: v.timeEnd !== null ? toTimeDate(v.timeEnd) : null,
+    recurringRule: v.recurringRule,
+    reason: v.reason,
+    reasonNote: v.reasonNote,
+    roomId: v.roomId,
+    createdBy: adminUserId,
+  };
+
+  let created: Awaited<ReturnType<typeof prisma.blackout.create>>;
+  try {
+    created = await prisma.blackout.create({ data });
+  } catch (err) {
+    // Final safety net: CHECK constraint violated despite app-layer validation
+    console.error('[blackout.create] CHECK constraint violated:', err);
+    return NextResponse.json(
+      { error: 'validation', field: 'db_check', message: 'database constraint violated' },
+      { status: 422 },
+    );
+  }
+
+  await writeAudit({
+    actorAdminUserId: adminUserId,
+    action: 'blackout_create',
+    targetType: 'blackout',
+    targetId: created.id,
+    metadata: { scope: v.scope, dateStart: v.dateStart, dateEnd: v.dateEnd, roomId: v.roomId },
+  });
+
+  return NextResponse.json({ blackout: created }, { status: 201 });
 }
