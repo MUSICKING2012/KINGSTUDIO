@@ -8,7 +8,7 @@ import {
   type PackageTier,
   SLOT_START_MINUTE,
 } from './constants';
-import { assertDateString, overlaps, prismaTimeToStr, toKstTimeString } from './time';
+import { assertDateString, overlaps, prismaTimeToStr, toDbDate, toKstTimeString } from './time';
 
 export type AvailableSlot = {
   startTime: string; // "HH:MM:00" KST naive
@@ -27,7 +27,7 @@ function normTime(t: string): string {
 
 export async function getAvailability(roomId: string, date: string): Promise<AvailableSlot[]> {
   assertDateString(date);
-  const dateObj = new Date(date);
+  const dateObj = toDbDate(date);   // 읽기 경로도 write carrier 경유 — 단일 변경점
   const [setting, bookings, blackouts] = await Promise.all([
     prisma.setting.findUnique({ where: { key: 'operating_hours' } }),
     prisma.booking.findMany({
