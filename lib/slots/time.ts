@@ -30,7 +30,10 @@ export function toKstDateString(date: Date): string {
     if (d > daysInMonth(y, mo)) {
       d = 1;
       mo++;
-      if (mo > 12) { mo = 1; y++; }
+      if (mo > 12) {
+        mo = 1;
+        y++;
+      }
     }
   }
 
@@ -42,4 +45,17 @@ export function toKstDateString(date: Date): string {
 // never from a JS Date / UTC epoch (PRD C19: Date.getTime() forbidden on slot times).
 export function toKstTimeString(h: number, m: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00`;
+}
+
+// Half-open interval overlap: [aStart, aEnd) ∩ [bStart, bEnd) ≠ ∅  iff  aStart < bEnd && bStart < aEnd.
+// String lex order is valid for zero-padded "HH:MM:00" in 00:00–23:59 range (PRD C19 constraint).
+export function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string): boolean {
+  return aStart < bEnd && bStart < aEnd;
+}
+
+// Converts a Prisma @db.Time(0) value (Date rooted at 1970-01-01T00:00:00Z) to "HH:MM:00".
+// Uses getUTCHours/getUTCMinutes because Prisma represents time-without-timezone as UTC epoch + offset.
+// This is the read path only — not slot creation from a real-world Date (PRD C19 epoch ban applies there).
+export function prismaTimeToStr(d: Date): string {
+  return toKstTimeString(d.getUTCHours(), d.getUTCMinutes());
 }

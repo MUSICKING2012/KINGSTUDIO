@@ -6,15 +6,17 @@ import type { PackageTier } from '../constants';
 import { toKstTimeString } from '../time';
 
 // vi.hoisted: vi.mock factory is hoisted before variable declarations
-const { mockSettingFindUnique, mockBookingFindMany } = vi.hoisted(() => ({
+const { mockSettingFindUnique, mockBookingFindMany, mockBlackoutFindMany } = vi.hoisted(() => ({
   mockSettingFindUnique: vi.fn(),
   mockBookingFindMany: vi.fn(),
+  mockBlackoutFindMany: vi.fn(),
 }));
 
 vi.mock('@/lib/db/prisma', () => ({
   prisma: {
     setting: { findUnique: mockSettingFindUnique },
     booking: { findMany: mockBookingFindMany },
+    blackout: { findMany: mockBlackoutFindMany },
   },
 }));
 
@@ -32,8 +34,10 @@ const has = (slots: AvailableSlot[], pkg: PackageTier, h: number, m = 0) =>
 beforeEach(() => {
   mockSettingFindUnique.mockReset();
   mockBookingFindMany.mockReset();
+  mockBlackoutFindMany.mockReset();
   mockSettingFindUnique.mockResolvedValue(stdHours);
   mockBookingFindMany.mockResolvedValue([]);
+  mockBlackoutFindMany.mockResolvedValue([]);
 });
 
 describe('getAvailability', () => {
