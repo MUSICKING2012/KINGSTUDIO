@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import { getAdminPermissions } from './rbac';
+import { ForbiddenError, getAdminPermissions, requirePermission } from './rbac';
 import { ALL_PERMISSIONS, ROLE_PERMISSIONS, hasPermission } from './roles';
 
 let adminId: string;
@@ -44,6 +44,13 @@ describe('hasPermission', () => {
   it('grants only listed', () => {
     expect(hasPermission(['booking:read'], 'booking:read')).toBe(true);
     expect(hasPermission(['booking:read'], 'refund:process')).toBe(false);
+  });
+});
+
+describe('requirePermission', () => {
+  it('throws ForbiddenError (instanceof) when permission is missing', async () => {
+    // adminId has no roles assigned → no permissions
+    await expect(requirePermission(adminId, 'blackout:manage')).rejects.toThrow(ForbiddenError);
   });
 });
 

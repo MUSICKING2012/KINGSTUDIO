@@ -118,6 +118,7 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 - **SEO Code Injection 화이트리스트** (어드민 모듈 ①) — 자유 스크립트 주입 차단(XSS). 정의된 슬롯(GA4·GTM·인증 메타)만. custom_script는 Super Admin+재인증+로그.
 - **Engineer 행 스코프 (본인 세션 한정)** — Engineer 역할은 PRD 5.8상 "본인 배정 세션만" 접근 가능(booking.engineerId === adminId). RBAC 권한 플래그만으론 행 단위 스코프가 표현 안 되므로, 체크인·콘텐츠 업로드·셀렉트 기능을 구현할 때 반드시 owner 체크를 건다. 이를 빠뜨리면 Engineer가 남의 세션에 접근하는 보안 구멍이 된다. (어드민 인증 슬라이스에서는 거친 권한만, 행 스코프는 booking 기능 슬라이스에서 적용)
 - **어드민 화면(권한-보호 라우트) RBAC 적용 + 라우트 레벨 거부 E2E** — 어드민 기능 화면을 만들 때, 해당 보호 라우트에 **`requirePermission` 적용** + **저권한 역할(예: Engineer)이 라우트 레벨에서 거부되는지 E2E를 그 슬라이스에서 반드시 추가**한다. 현재 어드민 인증 슬라이스는 RBAC **단위 테스트**(hasPermission·getAdminPermissions)까지만 검증됨 — `app/admin`에 `requirePermission`이 걸린 보호 라우트가 없어 **라우트 레벨 거부는 미검증(설계상 정상)**. 첫 권한-보호 어드민 기능에서 이 E2E 추가를 빠뜨리면 권한 우회 구멍을 검증 없이 출시하게 된다.
+- **권한-보호 admin 라우트 표준 (S2.5b-0 확립):** `adminAuth()` → `session.sessionId` → `validateAdminSession(sessionId)` → `adminUserId`; `prisma.adminUser.findUnique` → `status === 'active'`; `requirePermission(adminUserId, token)`; `ForbiddenError instanceof` → 403 `{error:'forbidden'}`. **세션 판정은 AdminSession(DB)이 SoT, JWT auth() 아님.** `validateAdminSession`은 만료만 체크하므로 status(active/inactive/locked)는 라우트에서 직접 확인 필수.
 
 ---
 

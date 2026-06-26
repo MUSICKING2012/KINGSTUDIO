@@ -14,9 +14,16 @@ export async function getAdminPermissions(adminUserId: string): Promise<string[]
   return [...set];
 }
 
-// Guard for server actions / route handlers. Throws on denial (caller maps to 403/redirect).
+export class ForbiddenError extends Error {
+  constructor(perm: string) {
+    super(`FORBIDDEN: missing ${perm}`);
+    this.name = 'ForbiddenError';
+  }
+}
+
+// Guard for server actions / route handlers. Throws ForbiddenError on denial (caller maps to 403).
 export async function requirePermission(adminUserId: string, required: string): Promise<void> {
   if (!hasPermission(await getAdminPermissions(adminUserId), required)) {
-    throw new Error(`FORBIDDEN: missing ${required}`);
+    throw new ForbiddenError(required);
   }
 }

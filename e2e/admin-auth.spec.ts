@@ -7,6 +7,9 @@ import { prisma } from '../lib/db/prisma';
 const SECRET = authenticator.generateSecret();
 const SUPER = `e2e_super_${Date.now()}@test.local`;
 
+const ACCT_SECRET = authenticator.generateSecret();
+const ACCT = `e2e_acct_${Date.now()}@test.local`;
+
 test.beforeAll(async () => {
   // ADMIN_TOTP_ENC_KEY comes from .env (loaded by playwright.config) — SAME key the dev server uses.
   // ['*'] inlined (only datum needed); avoids importing rbac.ts (which chains to the '@/' alias).
@@ -35,14 +38,44 @@ test.beforeAll(async () => {
     update: {},
     create: { adminUserId: admin.id, adminRoleId: role.id },
   });
+  // Seed Accountant role + user (deny guard for blackout:manage)
+  await prisma.adminRole.upsert({
+    where: { name: 'Accountant' },
+    update: { permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'] },
+    create: { name: 'Accountant', permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'] },
+  });
+  await prisma.adminUser.upsert({
+    where: { email: ACCT },
+    update: {},
+    create: {
+      email: ACCT,
+      name: 'E2E Accountant',
+      passwordHash: await hashPassword('correcthorse12'),
+      totpSecret: encryptSecret(ACCT_SECRET),
+      totpEnabled: true,
+      status: 'active',
+    },
+  });
+  const acctRole = await prisma.adminRole.findUniqueOrThrow({ where: { name: 'Accountant' } });
+  const acctAdmin = await prisma.adminUser.findUniqueOrThrow({ where: { email: ACCT } });
+  await prisma.adminUserRole.upsert({
+    where: { adminUserId_adminRoleId: { adminUserId: acctAdmin.id, adminRoleId: acctRole.id } },
+    update: {},
+    create: { adminUserId: acctAdmin.id, adminRoleId: acctRole.id },
+  });
+
   await prisma.$disconnect();
 });
 
-async function login(page: import('@playwright/test').Page, email: string) {
+async function login(
+  page: import('@playwright/test').Page,
+  email: string,
+  secret = SECRET,
+) {
   await page.goto('/admin/login');
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill('correcthorse12');
-  await page.getByLabel('2FA code').fill(authenticator.generate(SECRET));
+  await page.getByLabel('2FA code').fill(authenticator.generate(secret));
   await page.getByRole('button', { name: 'Sign in' }).click();
 }
 
@@ -83,4 +116,13 @@ test('logout returns to admin login', async ({ page }) => {
   await expect(page).toHaveURL(/\/admin\/dashboard/);
   await page.getByRole('button', { name: 'Log out' }).click();
   await expect(page).toHaveURL(/\/admin\/login/);
+});
+
+test('🚫 Accountant (no blackout:manage) → POST /api/admin/blackouts returns 403', async ({ page }) => {
+  await login(page, ACCT, ACCT_SECRET);
+  await expect(page).toHaveURL(/\/admin\/dashboard/);
+  const res = await page.context().request.post('/api/admin/blackouts', { data: {} });
+  expect(res.status()).toBe(403);
+  const body = await res.json();
+  expect(body).toEqual({ error: 'forbidden' });
 });
