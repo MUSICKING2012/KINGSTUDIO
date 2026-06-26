@@ -22,5 +22,6 @@ export default defineConfig({
     // fileParallelism:false 직렬 실행 + bcrypt cost12 무거운 테스트가
     // 5s 기본 timeout에 빠듯 → 상향. B(직렬)의 동반 설정.
     testTimeout: 10000,
+    env: { TZ: 'Asia/Seoul' },
   },
 });
