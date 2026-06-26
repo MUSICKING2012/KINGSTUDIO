@@ -2,6 +2,7 @@ import { withSlotLock } from '@/lib/redis/slotLock';
 import { prisma } from '@/lib/db/prisma';
 import { getAvailability } from './availability';
 import type { PackageTier } from './constants';
+import { assertDateString } from './time';
 
 export class BookingUnavailableError extends Error {
   constructor(roomId: string, date: string, packageId: string) {
@@ -37,6 +38,7 @@ function toTimeDate(t: string): Date {
 }
 
 export async function confirmBooking(input: ConfirmBookingInput): Promise<ConfirmBookingResult> {
+  assertDateString(input.date);
   const {
     roomId, date, startTime, packageId,
     headcount, customerEmail, unitPriceKrw, priceTotalKrw,

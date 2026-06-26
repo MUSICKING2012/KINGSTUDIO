@@ -4,9 +4,24 @@
 // spec:
 // - toKstDateString(date: Date): string  → "YYYY-MM-DD" KST 벽시계
 // - toKstTimeString(h: number, m: number): string → "HH:MM:00" (정수 시·분만 받음)
+// - assertDateString(date: string): void → 진입점 가드 — "YYYY-MM-DD" 외 throw
 // - JS Date 입력은 toKstDateString 하나만 — 내부에서 UTC+9 offset 산술로 변환
 // - Date.getTime() / UTC epoch 기반 변환 금지 (PRD C19 KST naive 규약)
 // - toKstTimeString은 Date 입력 없음 — 정수 산술만
+
+export class InvalidDateInputError extends Error {
+  constructor(date: string) {
+    super(`date must be "YYYY-MM-DD", got: ${JSON.stringify(date)}`);
+    this.name = 'InvalidDateInputError';
+  }
+}
+
+// Guards entry-points that accept a KST date string — throws before any DB/Redis call.
+export function assertDateString(date: string): void {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new InvalidDateInputError(date);
+  }
+}
 
 const KST_OFFSET_H = 9;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toKstDateString, toKstTimeString } from '../time';
+import { InvalidDateInputError, assertDateString, toKstDateString, toKstTimeString } from '../time';
 
 describe('toKstDateString', () => {
   it('returns YYYY-MM-DD in KST wall-clock, not UTC', () => {
@@ -36,5 +36,21 @@ describe('toKstTimeString', () => {
   it('always appends :00 seconds', () => {
     expect(toKstTimeString(12, 0).endsWith(':00')).toBe(true);
     expect(toKstTimeString(18, 30).endsWith(':00')).toBe(true);
+  });
+});
+
+describe('assertDateString', () => {
+  it('accepts a valid YYYY-MM-DD string', () => {
+    expect(() => assertDateString('2026-06-26')).not.toThrow();
+  });
+
+  it.each([
+    '2026-6-26',
+    '2026-06-26T00:00:00',
+    '2026/06/26',
+    '',
+    '  2026-06-26',
+  ])('rejects %j with InvalidDateInputError', (bad) => {
+    expect(() => assertDateString(bad)).toThrowError(InvalidDateInputError);
   });
 });

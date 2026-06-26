@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAvailability } from '../availability';
+import { InvalidDateInputError } from '../time';
 import type { AvailableSlot } from '../availability';
 import type { PackageTier } from '../constants';
 import { toKstTimeString } from '../time';
@@ -91,5 +92,18 @@ describe('getAvailability', () => {
     mockSettingFindUnique.mockResolvedValue(null);
     const slots = await getAvailability('room-A', '2026-07-01');
     expect(slots).toHaveLength(23);
+  });
+
+  it.each([
+    '2026-6-26',
+    '2026-06-26T00:00:00',
+    '2026/06/26',
+    '',
+    '  2026-06-26',
+  ])('오염 입력 %j → prisma 호출 0회, InvalidDateInputError throw', async (bad) => {
+    await expect(getAvailability('room-A', bad)).rejects.toThrow(InvalidDateInputError);
+    expect(mockSettingFindUnique).not.toHaveBeenCalled();
+    expect(mockBookingFindMany).not.toHaveBeenCalled();
+    expect(mockBlackoutFindMany).not.toHaveBeenCalled();
   });
 });
