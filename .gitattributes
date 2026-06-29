@@ -1,0 +1,5 @@
+# 부채 #9: dual-machine(macOS↔Windows) 줄끝 통일. md/문서 LF 고정, xlsx 바이너리.
+*.md text eol=lf
+*.txt text eol=lf
+*.xlsx binary
+*.xlsm binary
