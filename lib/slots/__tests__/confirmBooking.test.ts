@@ -1,6 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { BookingUnavailableError, confirmBooking } from '../confirmBooking';
+import { BookingUnavailableError, SlotConflictError, confirmBooking } from '../confirmBooking';
 import type { ConfirmBookingInput } from '../confirmBooking';
 import { SlotLockError } from '../../redis/slotLock';
 
@@ -109,5 +110,18 @@ describe('confirmBooking', () => {
 
     await expect(confirmBooking(BASE_INPUT)).resolves.toBeDefined();
     await expect(confirmBooking(BASE_INPUT)).rejects.toThrow(SlotLockError);
+  });
+
+  it('23P01 exclusion 위반 → SlotConflictError 변환 (raw 에러 미전파)', async () => {
+    // 합성 에러는 2026-06-30 probe 실측 표면을 모사: PrismaClientUnknownRequestError, .code 없음, '23P01'은 message에만.
+    const exclusionErr = new Prisma.PrismaClientUnknownRequestError(
+      'Error occurred during query execution: PostgresError { code: "23P01", message: "conflicting key value violates exclusion constraint \\"bookings_no_overlap\\"" }',
+      { clientVersion: 'test' },
+    );
+    mockBookingCreate.mockRejectedValue(exclusionErr);
+
+    const caught = await confirmBooking(BASE_INPUT).catch((e) => e);
+    expect(caught).toBeInstanceOf(SlotConflictError);
+    expect(caught).not.toBeInstanceOf(Prisma.PrismaClientUnknownRequestError);
   });
 });
