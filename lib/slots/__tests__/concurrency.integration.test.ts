@@ -44,11 +44,16 @@ function baseInput(): ConfirmBookingInput {
     pricingSnapshot:      { basis: 'per_person', unitPrice: 400_000, headcount: 1, multiplier: 1 },
     packageSnapshot:      { name: 'Gold', category: 'experience', slotMinutes: 120 },
     refundPolicySnapshot: { policy: 'standard' },
+    payment:              { pg: 'inicis', amountKrw: 400_000, pgTransactionId: null },
   };
 }
 
 // ── Cleanup — idempotent, runs after every test ───────────────────────────
 afterEach(async () => {
+  // payment가 booking을 FK 참조(payments_booking_id_fkey) → payment 먼저 삭제.
+  await prisma.payment.deleteMany({
+    where: { booking: { date: TEST_DATE_D, roomId: TEST_ROOM_ID } },
+  });
   await prisma.booking.deleteMany({
     where: { date: TEST_DATE_D, roomId: TEST_ROOM_ID },
   });

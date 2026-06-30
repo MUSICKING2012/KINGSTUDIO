@@ -5,11 +5,16 @@ import { BookingUnavailableError, SlotConflictError, confirmBooking } from '../c
 import type { ConfirmBookingInput } from '../confirmBooking';
 import { SlotLockError } from '../../redis/slotLock';
 
-const { mockGetAvailability, mockWithSlotLock, mockBookingCreate, mockPackageFindUniqueOrThrow } =
+const {
+  mockGetAvailability, mockWithSlotLock, mockBookingCreate,
+  mockPaymentCreate, mockTransaction, mockPackageFindUniqueOrThrow,
+} =
   vi.hoisted(() => ({
     mockGetAvailability: vi.fn(),
     mockWithSlotLock: vi.fn(),
     mockBookingCreate: vi.fn(),
+    mockPaymentCreate: vi.fn(),
+    mockTransaction: vi.fn(),
     mockPackageFindUniqueOrThrow: vi.fn(),
   }));
 
@@ -27,6 +32,8 @@ vi.mock('@/lib/db/prisma', () => ({
   prisma: {
     package: { findUniqueOrThrow: mockPackageFindUniqueOrThrow },
     booking: { create: mockBookingCreate },
+    payment: { create: mockPaymentCreate },
+    $transaction: mockTransaction,
   },
 }));
 
@@ -47,6 +54,7 @@ const BASE_INPUT: ConfirmBookingInput = {
   pricingSnapshot: { basis: 'per_person', unitPrice: 400_000, headcount: 2, multiplier: 1.5 },
   packageSnapshot: { name: 'Gold', category: 'experience', slotMinutes: 120 },
   refundPolicySnapshot: { policy: 'standard' },
+  payment: { pg: 'inicis', amountKrw: 600_000, pgFeeKrw: 18_000, pgTransactionId: 'pg-txn-test' },
 };
 
 beforeEach(() => {
@@ -56,6 +64,12 @@ beforeEach(() => {
   mockPackageFindUniqueOrThrow.mockResolvedValue({ name: 'Gold' });
   mockGetAvailability.mockResolvedValue(GOLD_SLOTS);
   mockBookingCreate.mockResolvedValue({ id: 'booking-abc' });
+  mockPaymentCreate.mockResolvedValue({ id: 'payment-xyz' });
+  // 인터랙티브 트랜잭션 mock: 콜백에 가짜 tx(booking/payment create) 주입 후 실행.
+  // tx.booking.create/tx.payment.create가 각 mock을 가리키므로 기존 booking 단언이 그대로 유효.
+  mockTransaction.mockImplementation((fn: (tx: unknown) => Promise<unknown>) =>
+    fn({ booking: { create: mockBookingCreate }, payment: { create: mockPaymentCreate } }),
+  );
 });
 
 describe('confirmBooking', () => {
@@ -64,6 +78,7 @@ describe('confirmBooking', () => {
 
     expect(result).toEqual({
       bookingId: 'booking-abc',
+      paymentId: 'payment-xyz',
       startTime: '10:00:00',
       endTime: '12:00:00',
     });
