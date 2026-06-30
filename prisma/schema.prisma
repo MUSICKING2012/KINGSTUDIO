@@ -661,6 +661,7 @@ enum RefundReasonCategory {
   business_fault
   force_majeure
   post_download // download already occurred → max 50% (PRD §5.3)
+  concurrent_booking_lost // PG captured but slot lost to concurrent booking (sync 23P01 OR async settlement re-check fail) → 100% auto-refund, PG fee absorbed, system-triggered (adminUserId null) — PRD §5.3-D
 }
 
 enum QuoteStatus {
