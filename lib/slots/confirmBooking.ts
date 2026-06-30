@@ -2,7 +2,7 @@ import { withSlotLock } from '@/lib/redis/slotLock';
 import { prisma } from '@/lib/db/prisma';
 import { getAvailability } from './availability';
 import type { PackageTier } from './constants';
-import { assertDateString, toDbDate } from './time';
+import { assertDateString, toDbDate, toTimeDate } from './time';
 
 export class BookingUnavailableError extends Error {
   constructor(roomId: string, date: string, packageId: string) {
@@ -30,12 +30,6 @@ export type ConfirmBookingResult = {
   startTime: string;  // "HH:MM:00"
   endTime: string;    // "HH:MM:00"
 };
-
-// Write-path adapter: converts "HH:MM:00" KST naive string to the Date carrier
-// Prisma requires for @db.Time(0). Not epoch arithmetic for time derivation (PRD C19).
-export function toTimeDate(t: string): Date {
-  return new Date(`1970-01-01T${t}.000Z`);
-}
 
 export async function confirmBooking(input: ConfirmBookingInput): Promise<ConfirmBookingResult> {
   assertDateString(input.date);

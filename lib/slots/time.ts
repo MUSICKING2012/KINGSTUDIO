@@ -80,3 +80,9 @@ export function prismaTimeToStr(d: Date): string {
 export function toDbDate(s: string): Date {
   return new Date(s);
 }
+
+// Write-path adapter: converts "HH:MM:00" KST naive string to the Date carrier
+// Prisma requires for @db.Time(0). Not epoch arithmetic for time derivation (PRD C19).
+export function toTimeDate(t: string): Date {
+  return new Date(`1970-01-01T${t}.000Z`);
+}

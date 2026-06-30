@@ -4,8 +4,7 @@ import { writeAudit } from '@/lib/admin-auth/audit';
 import { ForbiddenError, requirePermission } from '@/lib/admin-auth/rbac';
 import { validateAdminSession } from '@/lib/admin-auth/session';
 import { BlackoutValidationError, validateBlackoutInput } from '@/lib/slots/blackoutInput';
-import { toTimeDate } from '@/lib/slots/confirmBooking';
-import { toDbDate } from '@/lib/slots/time';
+import { toDbDate, toTimeDate } from '@/lib/slots/time';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
