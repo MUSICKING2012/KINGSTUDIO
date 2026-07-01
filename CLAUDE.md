@@ -152,7 +152,7 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 
 `KING_STUDIO_Pricing_Model.xlsx`는 계산 캐시 없이 저장된다(openpyxl `data_only`로 읽으면 계산 셀 전부 공란). 따라서 **원본을 직접 읽어 값을 신뢰하지 않는다.** 반드시 아래 강제 recalc를 거친 결과만 검증에 쓴다.
 
-**표준 절차 (맥, LibreOffice 26.2.4.2 고정):**
+**표준 절차 (macOS·Windows 공통, LibreOffice 26.2.4.2 고정 — 경로는 §6-B):**
 1. SoT 고정 — 워킹트리 아닌 커밋된 blob을 검증: `git show HEAD:KING_STUDIO_Pricing_Model.xlsx > /tmp/ksv/model.xlsx`
 2. 강제 recalc 프로파일 — `registrymodifications.xcu`에 `OOXMLRecalcMode=0`(+`ODFRecalcMode=0`) 설정. 문법: `<profile>/user/registrymodifications.xcu`에 `<item oor:path="/org.openoffice.Office.Calc/Formula/Load"><prop oor:name="OOXMLRecalcMode" oor:op="fuse"><value>0</value></prop></item>`(+ODFRecalcMode 동일 구조). Windows 2026-07-02 recalc 작동 raw 확인.
 3. xlsx 라운드트립 — `soffice --headless -env:UserInstallation=<profile> --convert-to xlsx:"Calc MS Excel 2007 XML"`
@@ -219,7 +219,7 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 4. **Stage 종료 시 PRD 대조 요약.** ① 무엇을 했는지 ② PRD와 대조해 누락·모호점 ③ 다음 Stage가 무엇인지를 요약하고 멈춘다. 확인 전 다음 Stage로 넘어가지 않는다.
 5. **파괴적 작업은 검토 후.** `prisma migrate dev`, 프로덕션 변경 등 되돌리기 비싼 작업은 Aiden 검토 전까지 실행 금지. validate까지만 자동.
 6. **문서 정합 동기화.** 스키마·구현이 PRD와 갈리는 결정을 하면(예: user_social_connections → 표준 Account), 즉시 PRD·CLAUDE.md를 정정해 **세 문서(PRD·CLAUDE·코드)가 어긋나지 않게** 한다. 정정을 미루지 않는다 — 미룬 정정은 다음 Stage에서 혼란을 만든다.
-7. **문서 편집은 레포 git main 위에서만 (단일 출처).** PRD·CLAUDE 편집의 유일 경로 = "채팅에서 무엇을·어떻게 바꿀지 결정 → Antigravity가 레포 main 위에서 직접 편집·커밋". 채팅 측 outputs 복사본은 **참조 스냅샷일 뿐 편집 출처가 아니다**(옛 버전 위 편집 = 클로버링 재발). 외부 에디터 직접 편집 지양("편집 전 수동 동기화"는 기억 의존이라 깨진다). 출처를 레포 하나로 수렴시켜 옛 버전 위 편집을 구조적으로 차단한다. (실제 사고: zh-TW/zh-HK 로케일 정정이 옛 복사본 기반 편집으로 2회 퇴행 — a26c45f·04aaded.)
+7. **문서 편집은 레포 git main 위에서만 (단일 출처).** PRD·CLAUDE 편집의 유일 경로 = "채팅에서 무엇을·어떻게 바꿀지 결정 → Antigravity가 레포 main 위에서 직접 편집(커밋·태그·푸시는 Aiden 터미널 전담)". 채팅 측 outputs 복사본은 **참조 스냅샷일 뿐 편집 출처가 아니다**(옛 버전 위 편집 = 클로버링 재발). 외부 에디터 직접 편집 지양("편집 전 수동 동기화"는 기억 의존이라 깨진다). 출처를 레포 하나로 수렴시켜 옛 버전 위 편집을 구조적으로 차단한다. (실제 사고: zh-TW/zh-HK 로케일 정정이 옛 복사본 기반 편집으로 2회 퇴행 — a26c45f·04aaded.)
 
 ## 7-B. IDE 자동승인 정책 (Antigravity)
 
