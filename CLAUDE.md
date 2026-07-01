@@ -119,6 +119,7 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 - **Engineer 행 스코프 (본인 세션 한정)** — Engineer 역할은 PRD 5.8상 "본인 배정 세션만" 접근 가능(booking.engineerId === adminId). RBAC 권한 플래그만으론 행 단위 스코프가 표현 안 되므로, 체크인·콘텐츠 업로드·셀렉트 기능을 구현할 때 반드시 owner 체크를 건다. 이를 빠뜨리면 Engineer가 남의 세션에 접근하는 보안 구멍이 된다. (어드민 인증 슬라이스에서는 거친 권한만, 행 스코프는 booking 기능 슬라이스에서 적용)
 - **어드민 화면(권한-보호 라우트) RBAC 적용 + 라우트 레벨 거부 E2E** — 어드민 기능 화면을 만들 때, 해당 보호 라우트에 **`requirePermission` 적용** + **저권한 역할(예: Engineer)이 라우트 레벨에서 거부되는지 E2E를 그 슬라이스에서 반드시 추가**한다. 현재 어드민 인증 슬라이스는 RBAC **단위 테스트**(hasPermission·getAdminPermissions)까지만 검증됨 — `app/admin`에 `requirePermission`이 걸린 보호 라우트가 없어 **라우트 레벨 거부는 미검증(설계상 정상)**. 첫 권한-보호 어드민 기능에서 이 E2E 추가를 빠뜨리면 권한 우회 구멍을 검증 없이 출시하게 된다.
 - **권한-보호 admin 라우트 표준 (S2.5b-0 확립):** `adminAuth()` → `session.sessionId` → `validateAdminSession(sessionId)` → `adminUserId`; `prisma.adminUser.findUnique` → `status === 'active'`; `requirePermission(adminUserId, token)`; `ForbiddenError instanceof` → 403 `{error:'forbidden'}`. **세션 판정은 AdminSession(DB)이 SoT, JWT auth() 아님.** `validateAdminSession`은 만료만 체크하므로 status(active/inactive/locked)는 라우트에서 직접 확인 필수.
+- **가격 모델 무결성** — `KING_STUDIO_Pricing_Model.xlsx`의 단위마진·BEP recalc 결과가 모델 기대값과 일치하는지 검증(절차 §6-A). 입력값이 바뀌면 재검증. xlsx 수식 구조(반올림·참조·시트 레이아웃)가 바뀌면 §6-A 절차 자체의 유효성부터 재검토.
 
 ---
 
@@ -144,6 +145,30 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 - **단체(인원당 정액 × 인원):** Making Class 150,000 / 꿈길 30,000 / 워크샵 50,000.
 - 가격은 DB(`packages` 테이블)에서 관리. 코드에 하드코딩 금지(어드민 가격 변경 대응).
 - 친구초대 10%·상한 5만, Diamond·Premium·단체만(Gold·대여 제외). 프로모션과 동시 사용 불가.
+
+---
+
+## 6-A. 가격 모델(xlsx) 검증 절차
+
+`KING_STUDIO_Pricing_Model.xlsx`는 계산 캐시 없이 저장된다(openpyxl `data_only`로 읽으면 계산 셀 전부 공란). 따라서 **원본을 직접 읽어 값을 신뢰하지 않는다.** 반드시 아래 강제 recalc를 거친 결과만 검증에 쓴다.
+
+**표준 절차 (맥, LibreOffice 26.2.4.2 고정):**
+1. SoT 고정 — 워킹트리 아닌 커밋된 blob을 검증: `git show HEAD:KING_STUDIO_Pricing_Model.xlsx > /tmp/ksv/model.xlsx`
+2. 강제 recalc 프로파일 — `registrymodifications.xcu`에 `OOXMLRecalcMode=0`(+`ODFRecalcMode=0`) 설정
+3. xlsx 라운드트립 — `soffice --headless -env:UserInstallation=<profile> --convert-to xlsx:"Calc MS Excel 2007 XML"`
+4. 캐시 읽기 — 산출된 xlsx를 openpyxl `data_only=True`로 읽음
+
+**검증 대상 셀 (기대값은 매번 recalc로 재생성 — 하드코딩 금지):**
+- `2.단위마진` C17(Gold)·D17(Diamond)·E17(Premium) = 단위 마진
+- `1.입력값` C41 = 월 고정비 합계
+- `4.손익분기` C9 = BEP
+
+**금지:**
+- `--convert-to csv` — CSV는 단일 시트만 내보내 `0.안내`만 나온다.
+- 원본 xlsx를 openpyxl로 직접 읽기 — 캐시 공란이라 계산값이 안 나온다.
+- 문서·prose·memory에 기록된 기대값을 검증 근거로 재사용 — 입력값 변경 시 stale. 반드시 그 시점 recalc로 재생성.
+
+soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Windows 경로·recalc은 xlsx gate Windows 검증 통과 후 추가(미검증 상태로 문서 고정 금지).
 
 ---
 
