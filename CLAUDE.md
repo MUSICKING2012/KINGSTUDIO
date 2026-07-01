@@ -154,7 +154,7 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 
 **표준 절차 (맥, LibreOffice 26.2.4.2 고정):**
 1. SoT 고정 — 워킹트리 아닌 커밋된 blob을 검증: `git show HEAD:KING_STUDIO_Pricing_Model.xlsx > /tmp/ksv/model.xlsx`
-2. 강제 recalc 프로파일 — `registrymodifications.xcu`에 `OOXMLRecalcMode=0`(+`ODFRecalcMode=0`) 설정
+2. 강제 recalc 프로파일 — `registrymodifications.xcu`에 `OOXMLRecalcMode=0`(+`ODFRecalcMode=0`) 설정. 문법: `<profile>/user/registrymodifications.xcu`에 `<item oor:path="/org.openoffice.Office.Calc/Formula/Load"><prop oor:name="OOXMLRecalcMode" oor:op="fuse"><value>0</value></prop></item>`(+ODFRecalcMode 동일 구조). Windows 2026-07-02 recalc 작동 raw 확인.
 3. xlsx 라운드트립 — `soffice --headless -env:UserInstallation=<profile> --convert-to xlsx:"Calc MS Excel 2007 XML"`
 4. 캐시 읽기 — 산출된 xlsx를 openpyxl `data_only=True`로 읽음
 
@@ -184,7 +184,7 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 - 편집 허용: xlsx 편집은 macOS·Windows 양쪽 허용(결정 2026-07-01). 전제 = LibreOffice soffice 버전 pin 26.2.4.2, 양 플랫폼 동일(확인됨). 버전이 갈리면 편집 중단, 버전 정합부터.
 - soffice 경로(PATH 미등록, 풀경로 호출): 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice` / Windows `/c/Program Files/LibreOffice/program/soffice.com`.
 - 편집 게이트(플랫폼 불문): 편집·저장 후 커밋 전 §6-A recalc 게이트를 돌려 canonical 5(값 241840·267440·723440·3452000·13, 주소 §6-A 부록)가 recalc로 재현되는지 확인. 통과분만 커밋.
-- 검증 상태: macOS측 recalc parity 확인됨(§6-A 부록). Windows측 recalc-on-load 재현은 아직 미실행 — 첫 Windows 편집·커밋 전 §6-A 게이트를 1회 반드시 통과시킬 것. Windows 편집은 허용이되 게이트 선통과 조건부.
+- 검증 상태: macOS·Windows 양측 recalc parity 확인(mac 2026-07-01 / win 2026-07-02, blob 5b5f3ec, canonical 5 전항 일치). Windows 재현은 재구성 xcu(§6-A step 2 문법)로 수행 — macOS 프로파일 byte 복제 아님, 설정 등가 재현.
 - parity 범위: 보증 범위는 버전 pin 정합 + 편집 후 recalc 강제까지. mac-authored blob의 Windows recalc, Windows-authored blob의 mac recalc — 전 조합 영구 일치는 보증 대상 아님. 편집이 발생한 플랫폼 조합에서 그때 §6-A로 확인.
 - 캐시 상태: 저장 플랫폼에 따라 committed blob이 계산 캐시를 포함할 수도/안 할 수도 있음. 소비처 0이라 무해(§6-A 부록). 어느 경우든 캐시 의존 금지, 항상 recalc.
 
