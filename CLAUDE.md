@@ -170,6 +170,8 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 
 soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Windows 경로·recalc은 xlsx gate Windows 검증 통과 후 추가(미검증 상태로 문서 고정 금지).
 
+**버전 drift 상태:** cross-version recalc drift는 known·unmonitored. 현 모델 수식은 산술 + `{SUM, IF, MIN, ROUNDUP}`뿐이라 volatile/locale/버전 발산 함수가 없다(2026-07-01 committed blob raw 확인). 따라서 drift 위험은 `4.손익분기` ROUNDUP 기반 BEP 정수 경계 1개로 한정되고, 이는 버전이 아니라 아키텍처 의존이며 IEEE-754 결정성상 ARM↔x86 간에도 비트 동일. detection tripwire는 미도입 — recalc 실행 harness 없이 §6-A에 값만 박으면 inert이고 위 하드코딩 금지 원칙과 충돌하기 때문. 위 함수 집합을 벗어나는 수식이 추가되면 이 판정은 무효이고 drift 감지 수단을 재검토한다.
+
 ---
 
 ## 7. 작업 진행 규칙 (Claude Code 운영)
