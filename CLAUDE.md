@@ -170,6 +170,13 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 
 soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Windows 경로·recalc은 xlsx gate Windows 검증 통과 후 추가(미검증 상태로 문서 고정 금지).
 
+**§6-A 부록 — xlsx 소비처 감사 (2026-07-01 raw, grep at fbd9194)**
+
+- 소비처 감사 fbd9194: 트리 전수 `git grep`(리더 API 토큰 포함) 결과, `KING_STUDIO_Pricing_Model.xlsx`를 값으로 읽는 프로그래매틱 소비처 **0건**. 히트는 `.gitattributes`(binary 속성)와 본 문서(§6-A 서술)뿐, 코드 파일(.py/.ts/.js/.yml) 0. 따라서 캐시리스 저장은 **무해 확정** — 커밋 blob에 계산 캐시가 없어도 그 값을 소비하는 코드가 없어 잠복버그가 아니다. 사각: 커밋 안 된 로컬 스크립트·repo 밖 파이프라인(외부 CI·서버 cron)은 감사 범위 밖.
+- 커밋 전 recalc-save는 **불필요**. 유일한 읽기 경로인 §6-A 절차가 이미 recalc-on-load(soffice convert-to)를 강제하므로 읽기 시점 recalc가 보장된다.
+- Forward guard: 향후 xlsx를 openpyxl `data_only`·pandas `read_excel`·SheetJS `XLSX.read` 등으로 값을 읽는 소비처를 추가하는 순간 캐시리스가 잠복버그로 전환된다. 소비처를 추가하면 **커밋 전 recalc-save를 워크플로에 편입**할 것.
+- canonical 5 실주소(recalc 확정): Gold = 시트 2.단위마진 셀 C17 / Dia = 2.단위마진 D17 / Prem = 2.단위마진 E17 / 고정비 = 1.입력값 C41 (→ 4.손익분기 C4) / BEP = 4.손익분기 C9 = ROUNDUP(3452000 / 267440) = 13.
+
 **버전 drift 상태:** cross-version recalc drift는 known·unmonitored. 현 모델 수식은 산술 + `{SUM, IF, MIN, ROUNDUP}`뿐이라 volatile/locale/버전 발산 함수가 없다(2026-07-01 committed blob raw 확인). 따라서 drift 위험은 `4.손익분기` ROUNDUP 기반 BEP 정수 경계 1개로 한정되고, 이는 버전이 아니라 아키텍처 의존이며 IEEE-754 결정성상 ARM↔x86 간에도 비트 동일. detection tripwire는 미도입 — recalc 실행 harness 없이 §6-A에 값만 박으면 inert이고 위 하드코딩 금지 원칙과 충돌하기 때문. 위 함수 집합을 벗어나는 수식이 추가되면 이 판정은 무효이고 drift 감지 수단을 재검토한다.
 
 ---
