@@ -168,7 +168,7 @@ Claude는 이 영역 작업 시 "위험 구역 작업 중 — 검증 필요" 라
 - 원본 xlsx를 openpyxl로 직접 읽기 — 캐시 공란이라 계산값이 안 나온다.
 - 문서·prose·memory에 기록된 기대값을 검증 근거로 재사용 — 입력값 변경 시 stale. 반드시 그 시점 recalc로 재생성.
 
-soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Windows 경로·recalc은 xlsx gate Windows 검증 통과 후 추가(미검증 상태로 문서 고정 금지).
+soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Windows 경로·플랫폼 편집 정책은 §6-B 참조.
 
 **§6-A 부록 — xlsx 소비처 감사 (2026-07-01 raw, grep at fbd9194)**
 
@@ -178,6 +178,15 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 - canonical 5 실주소(recalc 확정): Gold = 시트 2.단위마진 셀 C17 / Dia = 2.단위마진 D17 / Prem = 2.단위마진 E17 / 고정비 = 1.입력값 C41 (→ 4.손익분기 C4) / BEP = 4.손익분기 C9 = ROUNDUP(3452000 / 267440) = 13.
 
 **버전 drift 상태:** cross-version recalc drift는 known·unmonitored. 현 모델 수식은 산술 + `{SUM, IF, MIN, ROUNDUP}`뿐이라 volatile/locale/버전 발산 함수가 없다(2026-07-01 committed blob raw 확인). 따라서 drift 위험은 `4.손익분기` ROUNDUP 기반 BEP 정수 경계 1개로 한정되고, 이는 버전이 아니라 아키텍처 의존이며 IEEE-754 결정성상 ARM↔x86 간에도 비트 동일. detection tripwire는 미도입 — recalc 실행 harness 없이 §6-A에 값만 박으면 inert이고 위 하드코딩 금지 원칙과 충돌하기 때문. 위 함수 집합을 벗어나는 수식이 추가되면 이 판정은 무효이고 drift 감지 수단을 재검토한다.
+
+## 6-B. xlsx 편집 플랫폼 정책 (dual, version-pinned)
+
+- 편집 허용: xlsx 편집은 macOS·Windows 양쪽 허용(결정 2026-07-01). 전제 = LibreOffice soffice 버전 pin 26.2.4.2, 양 플랫폼 동일(확인됨). 버전이 갈리면 편집 중단, 버전 정합부터.
+- soffice 경로(PATH 미등록, 풀경로 호출): 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice` / Windows `/c/Program Files/LibreOffice/program/soffice.com`.
+- 편집 게이트(플랫폼 불문): 편집·저장 후 커밋 전 §6-A recalc 게이트를 돌려 canonical 5(값 241840·267440·723440·3452000·13, 주소 §6-A 부록)가 recalc로 재현되는지 확인. 통과분만 커밋.
+- 검증 상태: macOS측 recalc parity 확인됨(§6-A 부록). Windows측 recalc-on-load 재현은 아직 미실행 — 첫 Windows 편집·커밋 전 §6-A 게이트를 1회 반드시 통과시킬 것. Windows 편집은 허용이되 게이트 선통과 조건부.
+- parity 범위: 보증 범위는 버전 pin 정합 + 편집 후 recalc 강제까지. mac-authored blob의 Windows recalc, Windows-authored blob의 mac recalc — 전 조합 영구 일치는 보증 대상 아님. 편집이 발생한 플랫폼 조합에서 그때 §6-A로 확인.
+- 캐시 상태: 저장 플랫폼에 따라 committed blob이 계산 캐시를 포함할 수도/안 할 수도 있음. 소비처 0이라 무해(§6-A 부록). 어느 경우든 캐시 의존 금지, 항상 recalc.
 
 ---
 
