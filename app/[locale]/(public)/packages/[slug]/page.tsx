@@ -8,6 +8,8 @@ import { Surface } from '@/components/ui/surface';
 import { getPackageBySlug } from '@/lib/catalog/queries';
 import { isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
+import { getExchangeRates } from '@/lib/exchange/cache';
+import { Price } from '@/components/price/price';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
 
@@ -15,10 +17,6 @@ export const dynamic = 'force-dynamic';
 
 // generateMetadata + page component each need the package — cache() dedupes to 1 DB read.
 const loadPackage = cache((slug: string) => getPackageBySlug(slug));
-
-function formatKrw(amount: number) {
-  return amount.toLocaleString('ko-KR') + ' KRW';
-}
 
 export async function generateMetadata({
   params: { locale, slug },
@@ -50,6 +48,11 @@ export default async function PackageDetailPage({
   if (!isPackageViewable(pkg, prismaLocale)) notFound();
 
   const t = await getTranslations({ locale, namespace: 'packages' });
+  // 표시 전용 환율. 실패 시 null → KRW 단독 표기 강등.
+  const rates = await getExchangeRates().catch((e) => {
+    console.error('[packages/detail] exchange rate fetch failed, KRW-only fallback:', e);
+    return null;
+  });
 
   type PkgItem = { name: string; tagline: string; concept: string; includes: string[] };
   const pkgItems = t.raw('items') as Record<string, PkgItem>;
@@ -132,7 +135,7 @@ export default async function PackageDetailPage({
                           {t('detail.perHeadcount', { n })}
                         </td>
                         <td className="py-stack-sm text-right font-semibold text-surface-cinematic">
-                          {formatKrw(result.totalKrw)}
+                          <Price amountKrw={result.totalKrw} locale={locale as Locale} rates={rates} />
                         </td>
                       </tr>
                     );

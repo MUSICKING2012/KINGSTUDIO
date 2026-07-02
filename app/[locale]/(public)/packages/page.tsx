@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Surface } from '@/components/ui/surface';
 import { listPackages } from '@/lib/catalog/queries';
 import { computePackageTotal } from '@/lib/catalog/pricing';
+import { getExchangeRates } from '@/lib/exchange/cache';
+import { Price } from '@/components/price/price';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
 import type { PackageCategory } from '@prisma/client';
@@ -20,10 +22,6 @@ export async function generateMetadata({
   return { title: t('title'), description: t('subtitle') };
 }
 
-function formatKrw(amount: number) {
-  return amount.toLocaleString('ko-KR') + ' KRW';
-}
-
 const CATEGORY_ORDER: PackageCategory[] = ['experience', 'rental', 'group'];
 
 export default async function PackageCatalogPage({
@@ -36,6 +34,11 @@ export default async function PackageCatalogPage({
 
   const prismaLocale = toPrismaLocale(locale as Locale);
   const packages = await listPackages({ locale: prismaLocale });
+  // 표시 전용 환율. 실패 시 null → KRW 단독 표기 강등(패키지 페이지가 환율 장애로 죽으면 안 됨).
+  const rates = await getExchangeRates().catch((e) => {
+    console.error('[packages/catalog] exchange rate fetch failed, KRW-only fallback:', e);
+    return null;
+  });
 
   const byCategory = CATEGORY_ORDER.reduce<Record<PackageCategory, typeof packages>>(
     (acc, cat) => {
@@ -105,7 +108,7 @@ export default async function PackageCatalogPage({
                         </div>
 
                         <p className="mt-stack-md text-body-md font-semibold text-surface-cinematic">
-                          {formatKrw(fromPrice)}{' '}
+                          <Price amountKrw={fromPrice} locale={locale as Locale} rates={rates} />{' '}
                           <span className="text-label-sm font-normal text-muted-text">
                             {t('catalog.fromLabel')}
                           </span>
