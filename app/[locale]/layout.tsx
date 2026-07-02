@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { SiteHeader } from '@/components/header/site-header';
 import { type Locale, locales, routing } from '@/lib/i18n/routing';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
@@ -53,7 +54,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${pretendard.variable} ${anton.variable}`}>
       <body className="font-sans antialiased">
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          <SiteHeader />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

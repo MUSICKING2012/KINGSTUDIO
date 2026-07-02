@@ -1,4 +1,8 @@
 {
+  "header": {
+    "localeAria": "언어",
+    "currencyAria": "표시 통화"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "서울에서 즐기는 K-POP 녹음 체험."

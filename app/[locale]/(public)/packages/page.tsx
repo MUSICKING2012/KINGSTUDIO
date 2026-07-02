@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 import { Surface } from '@/components/ui/surface';
 import { listPackages } from '@/lib/catalog/queries';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getExchangeRates } from '@/lib/exchange/cache';
+import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
+import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
 import { Price } from '@/components/price/price';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
@@ -39,6 +42,9 @@ export default async function PackageCatalogPage({
     console.error('[packages/catalog] exchange rate fetch failed, KRW-only fallback:', e);
     return null;
   });
+  // ④-b 오버라이드 체인: 쿠키 ?? 로케일 기본. cookies()는 force-dynamic 페이지라 렌더 모드 영향 없음.
+  const currencyOverride = parseCurrencyOverride(cookies().get(CURRENCY_COOKIE)?.value);
+  const currency = currencyOverride ?? LOCALE_DEFAULT_CURRENCY[locale as Locale];
 
   const byCategory = CATEGORY_ORDER.reduce<Record<PackageCategory, typeof packages>>(
     (acc, cat) => {
@@ -108,7 +114,7 @@ export default async function PackageCatalogPage({
                         </div>
 
                         <p className="mt-stack-md text-body-md font-semibold text-surface-cinematic">
-                          <Price amountKrw={fromPrice} locale={locale as Locale} rates={rates} />{' '}
+                          <Price amountKrw={fromPrice} currency={currency} intlLocale={locale} rates={rates} />{' '}
                           <span className="text-label-sm font-normal text-muted-text">
                             {t('catalog.fromLabel')}
                           </span>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import Link from 'next/link';
@@ -9,6 +10,8 @@ import { getPackageBySlug } from '@/lib/catalog/queries';
 import { isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getExchangeRates } from '@/lib/exchange/cache';
+import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
+import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
 import { Price } from '@/components/price/price';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
@@ -53,6 +56,9 @@ export default async function PackageDetailPage({
     console.error('[packages/detail] exchange rate fetch failed, KRW-only fallback:', e);
     return null;
   });
+  // ④-b 오버라이드 체인: 쿠키 ?? 로케일 기본. cookies()는 force-dynamic 페이지라 렌더 모드 영향 없음.
+  const currencyOverride = parseCurrencyOverride(cookies().get(CURRENCY_COOKIE)?.value);
+  const currency = currencyOverride ?? LOCALE_DEFAULT_CURRENCY[locale as Locale];
 
   type PkgItem = { name: string; tagline: string; concept: string; includes: string[] };
   const pkgItems = t.raw('items') as Record<string, PkgItem>;
@@ -135,7 +141,7 @@ export default async function PackageDetailPage({
                           {t('detail.perHeadcount', { n })}
                         </td>
                         <td className="py-stack-sm text-right font-semibold text-surface-cinematic">
-                          <Price amountKrw={result.totalKrw} locale={locale as Locale} rates={rates} />
+                          <Price amountKrw={result.totalKrw} currency={currency} intlLocale={locale} rates={rates} />
                         </td>
                       </tr>
                     );

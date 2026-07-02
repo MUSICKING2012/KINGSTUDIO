@@ -1,4 +1,8 @@
 {
+  "header": {
+    "localeAria": "Language",
+    "currencyAria": "Display currency"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "K-POP recording experience in Seoul."
