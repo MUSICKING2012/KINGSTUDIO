@@ -3,3 +3,6 @@
 *.txt text eol=lf
 *.xlsx binary
 *.xlsm binary
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
