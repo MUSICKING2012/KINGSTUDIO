@@ -5,7 +5,65 @@
   },
   "home": {
     "title": "KING STUDIO",
-    "subtitle": "在首爾體驗K-POP錄音。"
+    "subtitle": "首爾的K-POP錄音體驗。",
+    "metaTitle": "KING STUDIO — 在首爾錄製屬於你的K-POP音源",
+    "metaDescription": "在真正的首爾錄音室與聲樂總監一起錄製K-POP，帶走自己的音源與照片的體驗。獲The New York Times報導。",
+    "hero": {
+      "eyebrow": "首爾 · 聖水 · 自2017年",
+      "title": "在真正的首爾錄音室，錄製屬於你的K-POP音源。",
+      "subtitle": "與聲樂總監一起訓練，在專業錄音間演唱，帶走這場錄音的音源與照片 — The New York Times報導過的體驗。",
+      "ctaPrimary": "查看方案",
+      "ctaSecondary": "瀏覽歌曲"
+    },
+    "nyt": {
+      "label": "媒體報導",
+      "source": "The New York Times · 2024年11月",
+      "cta": "閱讀報導"
+    },
+    "steps": {
+      "heading": "錄音流程",
+      "step1": {
+        "title": "聲樂訓練",
+        "body": "與專業聲樂總監一起暖聲，找到你的聲音。"
+      },
+      "step2": {
+        "title": "錄音與混音",
+        "body": "在真正的錄音間演唱，工程師為你混音與母帶處理。"
+      },
+      "step3": {
+        "title": "帶回家",
+        "body": "取得屬於你的音源與錄音室照片。"
+      }
+    },
+    "experience": {
+      "heading": "選擇你的方案",
+      "sub": "從專注的聲樂錄音到完整的音樂錄影帶方案。",
+      "tiers": {
+        "gold": {
+          "name": "GOLD",
+          "hook": "製作人聲樂訓練與錄音，含錄音室照片與CD。"
+        },
+        "diamond": {
+          "name": "DIAMOND",
+          "hook": "完整混音與母帶處理，含錄音室照片與CD。"
+        },
+        "premium": {
+          "name": "PREMIUM",
+          "hook": "DIAMOND的全部內容，再加上電影感音樂錄影帶。"
+        }
+      },
+      "cta": "比較所有方案"
+    },
+    "songs": {
+      "heading": "唱你喜愛的歌",
+      "sub": "抵達前先從歌曲庫挑選你的曲目。",
+      "cta": "瀏覽歌曲"
+    },
+    "finalCta": {
+      "heading": "準備好在首爾錄音了嗎？",
+      "sub": "選擇方案，開始你的錄音。",
+      "cta": "查看方案"
+    }
   },
   "notFound": {
     "title": "找不到頁面",

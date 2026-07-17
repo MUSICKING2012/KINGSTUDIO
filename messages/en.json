@@ -5,7 +5,65 @@
   },
   "home": {
     "title": "KING STUDIO",
-    "subtitle": "K-POP recording experience in Seoul."
+    "subtitle": "K-POP recording experience in Seoul.",
+    "metaTitle": "KING STUDIO — Record your own K-pop track in Seoul",
+    "metaDescription": "A real Seoul recording studio where visitors train with a vocal director, record a K-pop song, and take home their own audio and photos. Featured in The New York Times.",
+    "hero": {
+      "eyebrow": "SEOUL · SEONGSU · SINCE 2017",
+      "title": "Record your own K-pop track in a real Seoul studio.",
+      "subtitle": "Train with a vocal director, sing in a professional booth, and take home the audio and photos from your session — the experience The New York Times wrote about.",
+      "ctaPrimary": "See packages",
+      "ctaSecondary": "Browse songs"
+    },
+    "nyt": {
+      "label": "As featured in",
+      "source": "The New York Times · November 2024",
+      "cta": "Read the article"
+    },
+    "steps": {
+      "heading": "How a session works",
+      "step1": {
+        "title": "Vocal training",
+        "body": "Warm up and find your sound with a professional vocal director."
+      },
+      "step2": {
+        "title": "Record & mix",
+        "body": "Sing your song in a real booth; our engineers mix and master your take."
+      },
+      "step3": {
+        "title": "Take it home",
+        "body": "Leave with your own audio and studio photos — yours to keep."
+      }
+    },
+    "experience": {
+      "heading": "Choose your session",
+      "sub": "From a focused vocal recording to a full music-video package.",
+      "tiers": {
+        "gold": {
+          "name": "GOLD",
+          "hook": "Producer-led vocal training and your recorded take, with studio photos and a CD."
+        },
+        "diamond": {
+          "name": "DIAMOND",
+          "hook": "A full mix and master of your song, with studio photos and a CD."
+        },
+        "premium": {
+          "name": "PREMIUM",
+          "hook": "Everything in Diamond, plus a cinematic music video."
+        }
+      },
+      "cta": "Compare all packages"
+    },
+    "songs": {
+      "heading": "Sing a song you love",
+      "sub": "Browse the catalog and choose your track before you arrive.",
+      "cta": "Browse songs"
+    },
+    "finalCta": {
+      "heading": "Ready to record in Seoul?",
+      "sub": "Pick a package and start your session.",
+      "cta": "See packages"
+    }
   },
   "notFound": {
     "title": "Page not found",
