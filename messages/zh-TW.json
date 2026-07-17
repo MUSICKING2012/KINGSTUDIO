@@ -168,51 +168,31 @@
         "name": "1Hour",
         "tagline": "Studio hourly rental with an engineer",
         "concept": "附工程師1小時錄音室租用",
-        "includes": [
-          "自備MR音軌",
-          "提供原始檔案（不含混音）",
-          "需具備韓語溝通能力"
-        ]
+        "includes": ["自備MR音軌", "提供原始檔案（不含混音）", "需具備韓語溝通能力"]
       },
       "1pro": {
         "name": "1Pro",
         "tagline": "Studio rental for serious recording",
         "concept": "專業錄音用錄音室3.5小時租用",
-        "includes": [
-          "自備MR音軌",
-          "提供原始檔案（不含混音）",
-          "需具備韓語溝通能力"
-        ]
+        "includes": ["自備MR音軌", "提供原始檔案（不含混音）", "需具備韓語溝通能力"]
       },
       "making-class": {
         "name": "K-Pop Making Class",
         "tagline": "A group K-pop making class",
         "concept": "K-POP製作體驗課程（2〜15人）",
-        "includes": [
-          "K-POP製作流程體驗",
-          "2小時課程",
-          "多語言支援"
-        ]
+        "includes": ["K-POP製作流程體驗", "2小時課程", "多語言支援"]
       },
       "dreampath": {
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "團體職涯探索體驗（10〜15人）",
-        "includes": [
-          "音樂產業職涯探索",
-          "2小時課程",
-          "僅限韓語"
-        ]
+        "includes": ["音樂產業職涯探索", "2小時課程", "僅限韓語"]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "團體工作坊方案（5〜15人）",
-        "includes": [
-          "客製化工作坊形式",
-          "2小時課程",
-          "僅限韓語"
-        ]
+        "includes": ["客製化工作坊形式", "2小時課程", "僅限韓語"]
       }
     }
   },
@@ -254,7 +234,7 @@
       },
       "takeaway": {
         "title": "帶走你的作品",
-        "body": "錄音音源、錄音室照片與CD — 錄音後以安全連結送達。"
+        "body": "錄音音源與錄音室照片於錄音後以安全連結送達，CD 則於當天在錄音室現場交付。"
       },
       "direct": {
         "title": "直接向我們預約",
@@ -298,7 +278,7 @@
       },
       "q5": {
         "q": "我能帶走什麼？",
-        "a": "錄音音源、錄音室照片與CD。Diamond與Premium另含混音母帶版本，Premium含音樂錄影帶。檔案於錄音後以安全連結送達。"
+        "a": "錄音音源、錄音室照片與CD。Diamond與Premium另含混音母帶版本，Premium含音樂錄影帶。數位檔案於錄音後以安全連結送達，CD 則於當天在錄音室現場交付。"
       },
       "q6": {
         "q": "一場錄音多長？",
