@@ -351,6 +351,72 @@
       "timezoneNote": "時間以 KST（Asia/Seoul）顯示",
       "selectedLabel": "已選時段",
       "continueCta": "下一步"
+    },
+    "step3": {
+      "title": "選項與同意",
+      "subtitle": "填寫歌曲、人數與預約者資料，並確認必要同意事項。",
+      "back": "返回日期與時間",
+      "missingSlot": "尚未選擇日期與時間，請先於上一步選擇時段。",
+      "backToSchedule": "前往日期與時間",
+      "headcount": {
+        "label": "人數",
+        "hint": "請於方案允許範圍內選擇。"
+      },
+      "song": {
+        "label": "選擇歌曲",
+        "placeholder": "請選擇歌曲",
+        "rentalNote": "租借方案由客人自行攜帶 MR，毋須選擇歌曲。"
+      },
+      "reservant": {
+        "title": "預約者資料",
+        "name": "姓名",
+        "email": "電郵",
+        "phone": "聯絡電話",
+        "nationality": "國籍",
+        "passportName": "護照英文姓名",
+        "hint": "用於付款與預約確認。"
+      },
+      "participants": {
+        "title": "使用者出生日期",
+        "dobLabel": "第 {n} 位使用者的出生日期",
+        "hint": "請輸入所有使用者的出生日期。若有未滿 16 歲者，須取得監護人同意。"
+      },
+      "guardian": {
+        "title": "監護人同意",
+        "notice": "使用者中包含未滿 16 歲者，須提供法定代理人（監護人）資料與同意，未完成前將無法付款。",
+        "name": "監護人姓名",
+        "relation": "關係",
+        "contact": "聯絡方式",
+        "email": "電郵",
+        "consentLabel": "本人以法定代理人身分，同意上述未成年人之預約與使用。"
+      },
+      "consent": {
+        "requiredTitle": "必要同意",
+        "optionalTitle": "選擇性同意（市場推廣）",
+        "items": {
+          "tos": "我同意服務條款。",
+          "privacy": "我同意個人資料之收集與使用（項目、目的、保存期間）。",
+          "usage_scope": "我明白個人、非商業性的社交分享可自由進行，但商業使用（廣告、獲利、轉售等）須取得原曲權利人另行授權，且 KING STUDIO 不予保證。",
+          "korean_only": "我確認能以韓語順暢溝通。（限租借方案）",
+          "license_self_brought": "我同意自行攜帶之 MR／音源使用權歸本人所有，使用過程中所生之版權爭議由本人負責。"
+        },
+        "marketing": {
+          "note": "為選擇性項目。使用期間自同意日起三年。",
+          "basic": "我同意基本使用（自家網站、官方社交平台、新聞稿）。",
+          "ads": "我同意用於付費數碼廣告。",
+          "outdoor": "我同意用於戶外廣告與印刷品。",
+          "broadcast": "我同意用於電視、OTT 與廣播。",
+          "email": "我同意接收推廣電郵。",
+          "sms": "我同意接收推廣短訊。"
+        }
+      },
+      "errors": {
+        "dob_missing": "請輸入所有使用者的出生日期。",
+        "reservant_missing": "請輸入預約者的姓名與電郵。",
+        "guardian_incomplete": "請完整填寫監護人資料與同意。",
+        "consent_missing": "請勾選所有必要同意項目。"
+      },
+      "continueCta": "前往付款"
     }
   }
 }
