@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 import { Price } from '@/components/price/price';
+import { Button } from '@/components/ui/button';
 import { isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getPackageBySlug } from '@/lib/catalog/queries';
@@ -13,8 +13,13 @@ import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
 import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
 import { getExchangeRates } from '@/lib/exchange/cache';
 import { toPrismaLocale } from '@/lib/i18n/locale';
+import { Link } from '@/lib/i18n/navigation';
 import type { Locale } from '@/lib/i18n/routing';
 
+// Editorial package detail (KING_STUDIO_DESIGN.md). Prices live in the DB (CLAUDE.md §6) — the
+// per-headcount table is computed from the DB row at request time (force-dynamic). Copy
+// (name/tagline/concept/includes) from messages/*.json packages.items[slug]. Locale exposure via
+// isPackageViewable (languagesAvailable, CLAUDE.md §5) → notFound for hidden packages.
 export const dynamic = 'force-dynamic';
 
 // generateMetadata + page component each need the package — cache() dedupes to 1 DB read.
@@ -70,97 +75,94 @@ export default async function PackageDetailPage({
   );
 
   return (
-    <section>
-      <main className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop py-section-gap">
-        {/* 뒤로가기 */}
-        <Link
-          href={`/${locale}/packages`}
-          className="mb-stack-lg inline-flex items-center gap-stack-sm text-label-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          ← {t('catalog.title')}
-        </Link>
+    <main className="mx-auto max-w-container-max px-margin-mobile py-section-gap md:px-margin-desktop">
+      {/* Back */}
+      <Link
+        href="/packages"
+        className="inline-flex items-center gap-stack-sm text-label-sm text-muted-foreground transition-colors hover:text-foreground"
+      >
+        ← {t('catalog.title')}
+      </Link>
 
-        <div className="grid grid-cols-1 gap-section-gap lg:grid-cols-2">
-          {/* 왼쪽: 패키지 정보 */}
-          <div>
-            <h1 className="font-display text-headline-xl text-foreground">{item?.name}</h1>
-            <p className="mt-stack-md text-body-lg text-muted-foreground">{item?.tagline}</p>
+      <div className="mt-stack-lg grid grid-cols-1 gap-section-gap lg:grid-cols-2">
+        {/* Left: package info */}
+        <div>
+          <h1 className="font-display text-headline-xl font-light text-foreground md:text-display-lg-mobile">
+            {item?.name}
+          </h1>
+          <p className="mt-stack-md text-body-lg text-muted-foreground">{item?.tagline}</p>
+          <p className="mt-stack-lg text-body-md text-foreground">{item?.concept}</p>
 
-            <p className="mt-stack-lg text-body-md text-foreground">{item?.concept}</p>
-
-            {/* 포함 항목 */}
-            <div className="mt-stack-lg">
-              <h2 className="mb-stack-md border-l-4 border-primary pl-4 text-body-lg font-bold text-foreground">
-                {t('detail.includesTitle')}
-              </h2>
-              <ul className="space-y-stack-sm">
-                {(item?.includes ?? []).map((item: string) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-stack-sm text-body-md text-foreground"
-                  >
-                    <span
-                      className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary"
-                      aria-hidden="true"
-                    />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* 소요 시간 / 인원 */}
-            <div className="mt-stack-lg flex gap-stack-lg text-body-md text-muted-foreground">
-              <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
-              <span>
-                {t('catalog.headcountLabel', {
-                  min: pkg.headcountMin,
-                  max: pkg.headcountMax,
-                })}
-              </span>
-            </div>
+          {/* Includes */}
+          <div className="mt-section-gap">
+            <h2 className="border-l-4 border-primary pl-4 font-display text-headline-lg text-foreground">
+              {t('detail.includesTitle')}
+            </h2>
+            <ul className="mt-stack-lg space-y-stack-sm">
+              {(item?.includes ?? []).map((line: string) => (
+                <li
+                  key={line}
+                  className="flex items-start gap-stack-sm text-body-md text-foreground"
+                >
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                    aria-hidden="true"
+                  />
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* 오른쪽: 요금 + CTA */}
-          <div>
-            <div className="rounded-brand-card border border-border/20 bg-white p-stack-lg shadow-sm">
-              <h2 className="mb-stack-md text-body-lg font-bold text-foreground">
-                {t('detail.priceTableTitle')}
-              </h2>
-
-              <table className="w-full text-body-md">
-                <tbody>
-                  {headcounts.map((n) => {
-                    const result = computePackageTotal(pkg, n);
-                    return (
-                      <tr key={n} className="border-b border-border/10 last:border-0">
-                        <td className="py-stack-sm text-muted-foreground">
-                          {t('detail.perHeadcount', { n })}
-                        </td>
-                        <td className="py-stack-sm text-right font-semibold text-foreground">
-                          <Price
-                            amountKrw={result.totalKrw}
-                            currency={currency}
-                            intlLocale={locale}
-                            rates={rates}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-
-              <Link
-                href={`/${locale}/booking?package=${slug}`}
-                className="mt-stack-lg block w-full rounded-lg bg-foreground py-3 text-center text-body-md font-bold text-background hover:opacity-90 transition-opacity"
-              >
-                {t('detail.bookCta')}
-              </Link>
-            </div>
+          {/* Duration / headcount */}
+          <div className="mt-stack-lg flex flex-wrap gap-stack-lg text-label-sm text-muted-foreground">
+            <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
+            <span>
+              {t('catalog.headcountLabel', { min: pkg.headcountMin, max: pkg.headcountMax })}
+            </span>
           </div>
         </div>
-      </main>
-    </section>
+
+        {/* Right: pricing + CTA */}
+        <div>
+          <div className="rounded-brand-card border border-border bg-card p-stack-lg">
+            <h2 className="font-display text-headline-lg text-foreground">
+              {t('detail.priceTableTitle')}
+            </h2>
+
+            <table className="mt-stack-md w-full text-body-md">
+              <tbody>
+                {headcounts.map((n) => {
+                  const result = computePackageTotal(pkg, n);
+                  return (
+                    <tr key={n} className="border-b border-border last:border-0">
+                      <td className="py-stack-sm text-muted-foreground">
+                        {t('detail.perHeadcount', { n })}
+                      </td>
+                      <td className="py-stack-sm text-right font-semibold text-foreground">
+                        <Price
+                          amountKrw={result.totalKrw}
+                          currency={currency}
+                          intlLocale={locale}
+                          rates={rates}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            <Button
+              asChild
+              size="lg"
+              className="mt-stack-lg w-full bg-foreground text-background hover:bg-foreground/90"
+            >
+              <Link href={`/booking?package=${slug}`}>{t('detail.bookCta')}</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
