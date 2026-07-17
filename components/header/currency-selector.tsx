@@ -48,7 +48,7 @@ export function CurrencySelector() {
         document.cookie = `${CURRENCY_COOKIE}=${next}; ${CURRENCY_COOKIE_ATTRS}`;
         router.refresh();
       }}
-      className="rounded-brand-input border border-outline/20 bg-white px-2 py-1 text-label-sm text-on-surface"
+      className="rounded-lg border border-border/20 bg-white px-2 py-1 text-label-sm text-foreground"
     >
       {DISPLAY_CURRENCIES.map((c) => (
         <option key={c} value={c}>

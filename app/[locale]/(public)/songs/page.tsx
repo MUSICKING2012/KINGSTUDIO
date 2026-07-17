@@ -2,7 +2,6 @@ import type { LicenseType } from '@prisma/client';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { SongCard } from '@/components/song/song-card';
-import { Surface } from '@/components/ui/surface';
 import { listSongs } from '@/lib/catalog/song-queries';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import { Link } from '@/lib/i18n/navigation';
@@ -12,8 +11,7 @@ import { getLicenseDisplayEnabled } from '@/lib/settings/license-display';
 import { cn } from '@/lib/utils';
 
 // Public song catalog. Cards link to /songs/[slug] (2b-2b-5; NULL-slug songs render as non-link
-// cards). Search/preview are still out of scope. First real use of the 2b-0 design foundation:
-// <Surface> dual surface, brand tokens, Anton/Pretendard.
+// cards). Search/preview are still out of scope.
 // License badges are gated by §5.7 (getLicenseDisplayEnabled, default OFF in MVP).
 
 // DB-backed catalog + a searchParams filter → render per request (live data, working ?beginner),
@@ -49,25 +47,24 @@ export default async function SongsPage({
 
   return (
     <main>
-      {/* Cinematic storytelling surface. The display-size headline may use brand-primary text
-          (#e83528 on #181214 = 4.38:1 → passes AA-large ≥3:1). The small eyebrow uses the
-          on-dark variant (#ffb4a9 = 10.88:1) per §7.2 — #e83528 would fail AA at that size. */}
-      <Surface tone="cinematic" className="px-margin-mobile py-section-gap md:px-margin-desktop">
+      {/* Editorial hero (§7.2): large headline = ink (text-foreground), small eyebrow =
+          text-muted-foreground — accent (#F5461E) is a fill/spot color only, never small text. */}
+      <section className="px-margin-mobile py-section-gap md:px-margin-desktop">
         <div className="mx-auto max-w-container-max">
-          <p className="font-label-sm text-label-sm uppercase tracking-widest text-brand-primary-on-dark">
+          <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
             KING STUDIO
           </p>
-          <h1 className="mt-stack-md font-display text-display-lg-mobile uppercase leading-none text-brand-primary md:text-display-lg">
+          <h1 className="mt-stack-md font-display text-display-lg-mobile uppercase leading-none text-foreground md:text-display-lg">
             {t('catalog.title')}
           </h1>
-          <p className="mt-stack-md max-w-2xl font-sans text-body-lg text-on-surface-variant">
+          <p className="mt-stack-md max-w-2xl font-sans text-body-lg text-muted-foreground">
             {t('catalog.subtitle')}
           </p>
         </div>
-      </Surface>
+      </section>
 
-      {/* Warm transactional surface: filters + catalog grid. */}
-      <Surface tone="warm" className="px-margin-mobile py-section-gap md:px-margin-desktop">
+      {/* Filters + catalog grid. */}
+      <section className="px-margin-mobile py-section-gap md:px-margin-desktop">
         <div className="mx-auto flex max-w-container-max flex-col gap-stack-lg">
           <nav aria-label={t('filters.aria')} className="flex flex-wrap gap-stack-sm">
             <FilterPill href="/songs" active={!beginnerOnly}>
@@ -82,7 +79,7 @@ export default async function SongsPage({
           </nav>
 
           {songs.length === 0 ? (
-            <p className="font-sans text-body-lg text-muted-text">{t('catalog.empty')}</p>
+            <p className="font-sans text-body-lg text-muted-foreground">{t('catalog.empty')}</p>
           ) : (
             <ul className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
               {songs.map((song) => {
@@ -110,7 +107,7 @@ export default async function SongsPage({
             </ul>
           )}
         </div>
-      </Surface>
+      </section>
     </main>
   );
 }
@@ -133,8 +130,8 @@ function FilterPill({
       className={cn(
         'rounded-full px-4 py-2 font-label-sm text-label-sm uppercase tracking-widest transition-colors',
         active
-          ? 'bg-surface-cinematic text-surface-warm'
-          : 'border border-outline text-surface-cinematic hover:border-brand-primary',
+          ? 'bg-foreground text-background'
+          : 'border border-border text-foreground hover:border-primary',
       )}
     >
       {children}
