@@ -1,18 +1,23 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 
 import { Price } from '@/components/price/price';
+import { Button } from '@/components/ui/button';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { listPackages } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
 import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
 import { getExchangeRates } from '@/lib/exchange/cache';
 import { toPrismaLocale } from '@/lib/i18n/locale';
+import { Link } from '@/lib/i18n/navigation';
 import type { Locale } from '@/lib/i18n/routing';
 import type { PackageCategory } from '@prisma/client';
 
+// Editorial catalog (KING_STUDIO_DESIGN.md). Prices live in the DB (CLAUDE.md §6) — this page is
+// force-dynamic and reads packages + display FX at request time. Descriptive copy (name/tagline)
+// comes from messages/*.json packages.items keyed by slug; money/headcount/duration from the DB.
+// Locale exposure is handled by listPackages (languagesAvailable filter, CLAUDE.md §5).
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
@@ -63,80 +68,75 @@ export default async function PackageCatalogPage({
   };
 
   return (
-    <section>
-      <main className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop py-section-gap">
-        {/* 헤더 */}
-        <div className="mb-stack-lg text-center">
-          <h1 className="font-display text-headline-xl text-foreground">{t('catalog.title')}</h1>
-          <p className="mt-stack-md text-body-lg text-muted-foreground">{t('catalog.subtitle')}</p>
-        </div>
+    <main className="mx-auto max-w-container-max px-margin-mobile py-section-gap md:px-margin-desktop">
+      {/* Header */}
+      <header className="max-w-3xl">
+        <h1 className="font-display text-headline-xl font-light text-foreground md:text-display-lg-mobile">
+          {t('catalog.title')}
+        </h1>
+        <p className="mt-stack-md text-body-lg text-muted-foreground">{t('catalog.subtitle')}</p>
+      </header>
 
-        {/* 카테고리별 섹션 */}
-        {CATEGORY_ORDER.map((cat) => {
-          const pkgs = byCategory[cat];
-          if (pkgs.length === 0) return null;
-          return (
-            <section key={cat} className="mb-section-gap">
-              <h2 className="mb-stack-lg border-l-4 border-primary pl-4 text-body-lg font-bold text-foreground">
-                {sectionLabel[cat]}
-              </h2>
-              <div className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
-                {pkgs.map((pkg) => {
-                  const fromPrice = computePackageTotal(pkg, pkg.headcountMin).totalKrw;
-                  const slug = pkg.slug;
-                  return (
-                    <article
-                      key={pkg.id}
-                      className="flex flex-col rounded-brand-card bg-white shadow-sm border border-border/20 overflow-hidden"
-                    >
-                      <div className="flex-1 p-stack-lg">
-                        <h3 className="text-body-lg font-bold text-foreground">
-                          {pkgItems[slug]?.name}
-                        </h3>
-                        <p className="mt-stack-sm text-body-md text-muted-foreground">
-                          {pkgItems[slug]?.tagline}
-                        </p>
+      {/* Category sections */}
+      {CATEGORY_ORDER.map((cat) => {
+        const pkgs = byCategory[cat];
+        if (pkgs.length === 0) return null;
+        return (
+          <section key={cat} className="mt-section-gap">
+            <h2 className="border-l-4 border-primary pl-4 font-display text-headline-lg text-foreground">
+              {sectionLabel[cat]}
+            </h2>
+            <div className="mt-stack-lg grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
+              {pkgs.map((pkg) => {
+                const fromPrice = computePackageTotal(pkg, pkg.headcountMin).totalKrw;
+                const slug = pkg.slug;
+                return (
+                  <article
+                    key={pkg.id}
+                    className="flex flex-col rounded-brand-card border border-border bg-card p-stack-lg"
+                  >
+                    <h3 className="font-display text-headline-lg text-foreground">
+                      {pkgItems[slug]?.name}
+                    </h3>
+                    <p className="mt-stack-sm text-body-md text-muted-foreground">
+                      {pkgItems[slug]?.tagline}
+                    </p>
 
-                        <div className="mt-stack-md flex flex-wrap gap-stack-sm text-label-sm text-muted-foreground">
-                          <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
-                          <span>·</span>
-                          <span>
-                            {t('catalog.headcountLabel', {
-                              min: pkg.headcountMin,
-                              max: pkg.headcountMax,
-                            })}
-                          </span>
-                        </div>
+                    <div className="mt-stack-md flex flex-wrap gap-stack-sm text-label-sm text-muted-foreground">
+                      <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>
+                        {t('catalog.headcountLabel', {
+                          min: pkg.headcountMin,
+                          max: pkg.headcountMax,
+                        })}
+                      </span>
+                    </div>
 
-                        <p className="mt-stack-md text-body-md font-semibold text-foreground">
-                          <Price
-                            amountKrw={fromPrice}
-                            currency={currency}
-                            intlLocale={locale}
-                            rates={rates}
-                          />{' '}
-                          <span className="text-label-sm font-normal text-muted-foreground">
-                            {t('catalog.fromLabel')}
-                          </span>
-                        </p>
-                      </div>
+                    <p className="mt-stack-md text-body-lg font-semibold text-foreground">
+                      <Price
+                        amountKrw={fromPrice}
+                        currency={currency}
+                        intlLocale={locale}
+                        rates={rates}
+                      />{' '}
+                      <span className="text-label-sm font-normal text-muted-foreground">
+                        {t('catalog.fromLabel')}
+                      </span>
+                    </p>
 
-                      <div className="border-t border-border/20 p-stack-md">
-                        <Link
-                          href={`/${locale}/packages/${slug}`}
-                          className="block w-full rounded-lg bg-foreground py-2 text-center text-label-sm font-bold text-background hover:opacity-90 transition-opacity"
-                        >
-                          {t('catalog.viewDetail')}
-                        </Link>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </main>
-    </section>
+                    <div className="mt-auto pt-stack-lg">
+                      <Button asChild variant="outline" className="w-full">
+                        <Link href={`/packages/${slug}`}>{t('catalog.viewDetail')}</Link>
+                      </Button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </main>
   );
 }

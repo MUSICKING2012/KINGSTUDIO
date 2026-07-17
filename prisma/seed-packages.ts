@@ -22,6 +22,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: ALL,
     bookingFlow: 'instant_payment',
     friendReferralEligible: false,
+    cdIncluded: true,
+    returningDiscountEligible: true,
     displayOrder: 1,
   },
   {
@@ -36,6 +38,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: ALL,
     bookingFlow: 'instant_payment',
     friendReferralEligible: true,
+    cdIncluded: true,
+    returningDiscountEligible: true,
     displayOrder: 2,
   },
   {
@@ -50,6 +54,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: ALL,
     bookingFlow: 'instant_payment',
     friendReferralEligible: true,
+    cdIncluded: true,
+    returningDiscountEligible: true,
     displayOrder: 3,
   },
   {
@@ -64,6 +70,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: KO,
     bookingFlow: 'instant_payment',
     friendReferralEligible: false,
+    cdIncluded: false,
+    returningDiscountEligible: false,
     displayOrder: 4,
   },
   {
@@ -78,6 +86,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: KO,
     bookingFlow: 'instant_payment',
     friendReferralEligible: false,
+    cdIncluded: false,
+    returningDiscountEligible: false,
     displayOrder: 5,
   },
   {
@@ -92,6 +102,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: ALL,
     bookingFlow: 'instant_payment',
     friendReferralEligible: true,
+    cdIncluded: false,
+    returningDiscountEligible: false,
     displayOrder: 6,
   },
   {
@@ -106,6 +118,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: KO,
     bookingFlow: 'b2b_quote',
     friendReferralEligible: true,
+    cdIncluded: false,
+    returningDiscountEligible: false,
     displayOrder: 7,
   },
   {
@@ -120,6 +134,8 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     languagesAvailable: KO,
     bookingFlow: 'b2b_quote',
     friendReferralEligible: true,
+    cdIncluded: false,
+    returningDiscountEligible: false,
     displayOrder: 8,
   },
 ];
