@@ -21,6 +21,33 @@ describe('toKstDateString', () => {
   });
 });
 
+describe('toKstDateString month/year rollover (daysInMonth)', () => {
+  it('rolls into next month at a 31-day month-end', () => {
+    // 2026-07-31T15:00:00Z = 2026-08-01 KST
+    expect(toKstDateString(new Date('2026-07-31T15:00:00Z'))).toBe('2026-08-01');
+  });
+  it('rolls into next month from a 30-day month', () => {
+    // 2026-04-30T15:00:00Z = 2026-05-01 KST
+    expect(toKstDateString(new Date('2026-04-30T15:00:00Z'))).toBe('2026-05-01');
+  });
+  it('rolls into next year at Dec 31', () => {
+    // 2026-12-31T15:00:00Z = 2027-01-01 KST
+    expect(toKstDateString(new Date('2026-12-31T15:00:00Z'))).toBe('2027-01-01');
+  });
+  it('non-leap February ends at 28 (2026)', () => {
+    // 2026-02-28T15:00:00Z = 2026-03-01 KST
+    expect(toKstDateString(new Date('2026-02-28T15:00:00Z'))).toBe('2026-03-01');
+  });
+  it('leap February keeps Feb 29 (2028)', () => {
+    // 2028-02-28T15:00:00Z = 2028-02-29 KST
+    expect(toKstDateString(new Date('2028-02-28T15:00:00Z'))).toBe('2028-02-29');
+  });
+  it('leap February rolls to March at Feb 29 (2028)', () => {
+    // 2028-02-29T15:00:00Z = 2028-03-01 KST
+    expect(toKstDateString(new Date('2028-02-29T15:00:00Z'))).toBe('2028-03-01');
+  });
+});
+
 describe('toKstTimeString', () => {
   it('formats single-digit hours and minutes with leading zeros', () => {
     expect(toKstTimeString(9, 0)).toBe('09:00:00');
