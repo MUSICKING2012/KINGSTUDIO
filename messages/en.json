@@ -363,6 +363,72 @@
       "timezoneNote": "Times shown in KST (Asia/Seoul)",
       "selectedLabel": "Selected",
       "continueCta": "Continue"
+    },
+    "step3": {
+      "title": "Options & consent",
+      "subtitle": "Choose your song and party details, then confirm the required consents.",
+      "back": "Back to date & time",
+      "missingSlot": "No date/time selected. Please pick a slot in the previous step first.",
+      "backToSchedule": "Go to date & time",
+      "headcount": {
+        "label": "Party size",
+        "hint": "Choose within the package's allowed range."
+      },
+      "song": {
+        "label": "Song",
+        "placeholder": "Select a song",
+        "rentalNote": "Rental packages: you bring your own MR, so no song selection is needed."
+      },
+      "reservant": {
+        "title": "Booker details",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "nationality": "Nationality",
+        "passportName": "Name as on passport",
+        "hint": "Used for payment and your booking confirmation."
+      },
+      "participants": {
+        "title": "Participant dates of birth",
+        "dobLabel": "Participant {n} — date of birth",
+        "hint": "Enter the date of birth for every participant. If anyone is under 16, guardian consent is required."
+      },
+      "guardian": {
+        "title": "Guardian consent",
+        "notice": "A participant is under 16. Legal-guardian details and consent are required; checkout is blocked until complete.",
+        "name": "Guardian name",
+        "relation": "Relationship",
+        "contact": "Contact",
+        "email": "Email",
+        "consentLabel": "As the legal guardian, I consent to the above minor's booking and participation."
+      },
+      "consent": {
+        "requiredTitle": "Required consents",
+        "optionalTitle": "Optional consents (marketing)",
+        "items": {
+          "tos": "I agree to the Terms of Service.",
+          "privacy": "I agree to the collection and use of personal data (items, purpose, retention period).",
+          "usage_scope": "I understand that personal, non-commercial social sharing is free, but commercial use (advertising, monetization, resale, etc.) requires a separate license from the original rights holder, which KING STUDIO does not guarantee.",
+          "korean_only": "I confirm I can communicate comfortably in Korean. (Rental only)",
+          "license_self_brought": "I agree that the usage rights of any MR/audio I bring are mine, and I am responsible for any copyright disputes arising from its use."
+        },
+        "marketing": {
+          "note": "Optional. Usage period is 3 years from the date of consent.",
+          "basic": "I agree to basic use (our website, official social media, press releases).",
+          "ads": "I agree to use in paid digital advertising.",
+          "outdoor": "I agree to use in outdoor advertising and print.",
+          "broadcast": "I agree to use on TV, OTT, and broadcast.",
+          "email": "I agree to receive marketing emails.",
+          "sms": "I agree to receive marketing SMS."
+        }
+      },
+      "errors": {
+        "dob_missing": "Enter a date of birth for every participant.",
+        "reservant_missing": "Enter the booker's name and email.",
+        "guardian_incomplete": "Complete all guardian details and consent.",
+        "consent_missing": "Check all required consent items."
+      },
+      "continueCta": "Continue to payment"
     }
   }
 }
