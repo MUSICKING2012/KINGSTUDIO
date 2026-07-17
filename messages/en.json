@@ -198,13 +198,21 @@
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "Group career exploration program (10–15 people)",
-        "includes": ["Music industry career exploration", "2-hour program", "Korean only"]
+        "includes": [
+          "Music industry career exploration",
+          "2-hour program",
+          "Korean only"
+        ]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "Group workshop program (5–15 people)",
-        "includes": ["Customised workshop format", "2-hour program", "Korean only"]
+        "includes": [
+          "Customised workshop format",
+          "2-hour program",
+          "Korean only"
+        ]
       }
     }
   },
@@ -224,5 +232,107 @@
       "mr_distribution": "MR distribution",
       "lyrics": "Lyrics"
     }
+  },
+  "about": {
+    "metaTitle": "About KING STUDIO — A real K-pop recording studio in Seoul",
+    "metaDescription": "KING STUDIO has run K-pop recording sessions for visitors in Seoul since 2017 — a direct, studio-first experience featured in The New York Times.",
+    "hero": {
+      "eyebrow": "OUR STORY",
+      "title": "A real studio. Your own K-pop track.",
+      "subtitle": "Since 2017, KING STUDIO has welcomed visitors from around the world into a professional Seoul recording studio — to sing, record, and take home something that is truly theirs."
+    },
+    "story": {
+      "heading": "Studio-first, direct",
+      "body1": "We started KING STUDIO in Seongsu, Seoul, with one idea: give visitors the real thing — a professional booth, a vocal director, and a recording that is yours to keep. Over the years we have hosted thousands of sessions, first through travel platforms and now directly through our own site.",
+      "body2": "Going direct means fairer prices, a booking made for you, and a relationship that continues after your session — not a listing lost in an OTA marketplace."
+    },
+    "points": {
+      "heading": "What makes it different",
+      "studio": {
+        "title": "A real recording studio",
+        "body": "Not a photo set or a costume booth — a professional room with engineers and a vocal director."
+      },
+      "takeaway": {
+        "title": "Take home your own work",
+        "body": "Your recorded audio, studio photos, and a CD — delivered by a secure link after your session."
+      },
+      "direct": {
+        "title": "Booked directly with us",
+        "body": "No middleman. Book, pay, and get help straight from the studio."
+      }
+    },
+    "nyt": {
+      "label": "In the press",
+      "title": "Featured in The New York Times",
+      "body": "In November 2024, The New York Times wrote about recording K-pop in Seoul — and the experience KING STUDIO offers visitors.",
+      "cta": "Read the article"
+    },
+    "cta": {
+      "heading": "Come record with us",
+      "sub": "Choose a package and start your session in Seoul.",
+      "button": "See packages"
+    }
+  },
+  "faq": {
+    "metaTitle": "KING STUDIO — Frequently asked questions",
+    "metaDescription": "Answers about KING STUDIO's K-pop recording experience in Seoul: what's included, languages, booking, what you take home, and cancellations.",
+    "eyebrow": "HELP",
+    "heading": "Frequently asked questions",
+    "sub": "Everything you need to know before you book your session.",
+    "items": {
+      "q1": {
+        "q": "What is KING STUDIO?",
+        "a": "A real recording studio in Seoul where you sing a K-pop song with a professional vocal director and take home your own audio and photos."
+      },
+      "q2": {
+        "q": "Do I need to be a good singer?",
+        "a": "Not at all. A vocal director guides you through every take — the experience is made for beginners and fans, not just singers."
+      },
+      "q3": {
+        "q": "What languages can I book in?",
+        "a": "The site is available in Korean, English, Japanese, and Chinese (Traditional), and sessions are guided in English for international visitors."
+      },
+      "q4": {
+        "q": "What is included in each package?",
+        "a": "It depends on the tier — Gold, Diamond, or Premium. All experience packages include studio photos and a CD; Diamond and Premium add a full mix and master, and Premium adds a music video. See Packages for details."
+      },
+      "q5": {
+        "q": "What do I take home?",
+        "a": "Your recorded audio, studio photos, and a CD. Diamond and Premium also include a mixed and mastered version, and Premium a music video. Files are delivered by a secure link after your session."
+      },
+      "q6": {
+        "q": "How long is a session?",
+        "a": "Gold and Diamond run about two hours; Premium about three."
+      },
+      "q7": {
+        "q": "Can I come with friends, family, or a group?",
+        "a": "Yes. Experience packages take up to five people, and our K-Pop Making Class is designed for larger groups. Minors are welcome with a guardian's consent, which we collect at checkout."
+      },
+      "q8": {
+        "q": "When are you open and where are you?",
+        "a": "We are open every day from 10:00 to 22:00 (KST) in Seongsu, Seoul."
+      },
+      "q9": {
+        "q": "How do I book, pay, and cancel?",
+        "a": "Book online — choose your package, slot, and song — and pay in Korean won (foreign cards and PayPal are supported; other currencies are shown for reference). Free cancellation is available up to a few days before your session, with partial refunds closer to the date; the full policy is shown at checkout."
+      }
+    },
+    "cta": {
+      "heading": "Still have a question?",
+      "sub": "Browse packages and songs, or pick a session to get started.",
+      "packages": "See packages",
+      "songs": "Browse songs"
+    }
+  },
+  "footer": {
+    "tagline": "A K-pop recording experience in Seoul — sing, record, and take home your own track.",
+    "exploreHeading": "Explore",
+    "packages": "Packages",
+    "songs": "Songs",
+    "companyHeading": "Company",
+    "about": "About",
+    "faq": "FAQ",
+    "businessInfo": "Business registration details coming soon.",
+    "rights": "All rights reserved."
   }
 }
