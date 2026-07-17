@@ -1,9 +1,9 @@
-import { Decimal } from '@prisma/client/runtime/library';
 import type { DisplayCurrency } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 
 /** 기존 packages 페이지의 로컬 formatKrw를 승격 — 표기 불변("241,840 KRW"). */
 export function formatKrw(amountKrw: number): string {
-  return amountKrw.toLocaleString('ko-KR') + ' KRW';
+  return `${amountKrw.toLocaleString('ko-KR')} KRW`;
 }
 
 /**

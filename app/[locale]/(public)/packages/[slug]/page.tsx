@@ -1,18 +1,18 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
-import Link from 'next/link';
 
+import { Price } from '@/components/price/price';
 import { Surface } from '@/components/ui/surface';
-import { getPackageBySlug } from '@/lib/catalog/queries';
 import { isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
-import { getExchangeRates } from '@/lib/exchange/cache';
+import { getPackageBySlug } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
 import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
-import { Price } from '@/components/price/price';
+import { getExchangeRates } from '@/lib/exchange/cache';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
 
@@ -84,16 +84,10 @@ export default async function PackageDetailPage({
         <div className="grid grid-cols-1 gap-section-gap lg:grid-cols-2">
           {/* 왼쪽: 패키지 정보 */}
           <div>
-            <h1 className="font-display text-headline-xl text-surface-cinematic">
-              {item?.name}
-            </h1>
-            <p className="mt-stack-md text-body-lg text-muted-text">
-              {item?.tagline}
-            </p>
+            <h1 className="font-display text-headline-xl text-surface-cinematic">{item?.name}</h1>
+            <p className="mt-stack-md text-body-lg text-muted-text">{item?.tagline}</p>
 
-            <p className="mt-stack-lg text-body-md text-on-surface">
-              {item?.concept}
-            </p>
+            <p className="mt-stack-lg text-body-md text-on-surface">{item?.concept}</p>
 
             {/* 포함 항목 */}
             <div className="mt-stack-lg">
@@ -101,14 +95,18 @@ export default async function PackageDetailPage({
                 {t('detail.includesTitle')}
               </h2>
               <ul className="space-y-stack-sm">
-                {(item?.includes ?? []).map(
-                  (item: string, i: number) => (
-                    <li key={i} className="flex items-start gap-stack-sm text-body-md text-on-surface">
-                      <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-primary" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ),
-                )}
+                {(item?.includes ?? []).map((item: string) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-stack-sm text-body-md text-on-surface"
+                  >
+                    <span
+                      className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-primary"
+                      aria-hidden="true"
+                    />
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -141,7 +139,12 @@ export default async function PackageDetailPage({
                           {t('detail.perHeadcount', { n })}
                         </td>
                         <td className="py-stack-sm text-right font-semibold text-surface-cinematic">
-                          <Price amountKrw={result.totalKrw} currency={currency} intlLocale={locale} rates={rates} />
+                          <Price
+                            amountKrw={result.totalKrw}
+                            currency={currency}
+                            intlLocale={locale}
+                            rates={rates}
+                          />
                         </td>
                       </tr>
                     );
