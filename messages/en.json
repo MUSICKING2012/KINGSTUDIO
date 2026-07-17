@@ -429,6 +429,56 @@
         "consent_missing": "Check all required consent items."
       },
       "continueCta": "Continue to payment"
+    },
+    "step4": {
+      "back": "Back to options & consent",
+      "title": "Payment",
+      "subtitle": "Review your booking, agree to the payment terms, and complete your payment.",
+      "missingDraft": "No booking details found. Please complete the options step first.",
+      "backToDetails": "Go to options",
+      "summary": {
+        "title": "Booking summary",
+        "package": "Package",
+        "dateTime": "Date & time",
+        "headcount": "Party size",
+        "subtotal": "Amount",
+        "discount": "Returning discount",
+        "total": "Total",
+        "cdNote": "Your CD (the day’s session master) is handed over on-site at the studio when your session ends."
+      },
+      "currencyNotice": "You are billed in KRW. The amount converted to your home currency depends on your card issuer’s exchange rate, and the PG fee is included in the charge.",
+      "pg": {
+        "title": "Payment method",
+        "inicis": "Domestic (KG Inicis)",
+        "paypal": "International (PayPal)",
+        "feeInicis": "Local cards · Naver Pay · Kakao Pay · PG fee approx. 3.0%",
+        "feePaypal": "PayPal · Visa/Master/Amex/JCB · PG fee approx. 4.4% + ₩560"
+      },
+      "consent": {
+        "title": "Pre-payment consent",
+        "payment": "I agree to the payment terms (KRW billing, card-issuer FX difference, PG fee included) and the refund policy. (required)"
+      },
+      "payCta": "Pay now",
+      "processing": "Processing…",
+      "errors": {
+        "invalid_params": "Some details are invalid. Please review the previous steps.",
+        "headcount_mismatch": "Party size and dates of birth do not match.",
+        "out_of_window": "That date is outside the bookable window.",
+        "package_not_available": "This package is not bookable in the current language.",
+        "not_slot_bookable": "This package cannot be booked by slot.",
+        "headcount_out_of_range": "Party size is out of the allowed range.",
+        "minor_guardian_required": "A guardian consent and guardian details are required when a participant under 16 is present. Please complete the previous step.",
+        "consent_invalid": "A required consent is missing. Please review.",
+        "slot_unavailable": "That time just sold out. Please pick another slot.",
+        "payment_failed": "Payment failed. Please try again.",
+        "concurrent_booking_lost": "The slot was taken by a concurrent booking. Your payment has been automatically refunded — please pick another time.",
+        "internal_error": "A temporary error occurred. Please try again shortly."
+      },
+      "success": {
+        "title": "Your booking is confirmed",
+        "refLabel": "Booking reference",
+        "message": "We’ll email you the confirmation and receipt."
+      }
     }
   }
 }
