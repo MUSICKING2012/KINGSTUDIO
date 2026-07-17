@@ -3,12 +3,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
-import { listPackages } from '@/lib/catalog/queries';
+import { Price } from '@/components/price/price';
 import { computePackageTotal } from '@/lib/catalog/pricing';
-import { getExchangeRates } from '@/lib/exchange/cache';
+import { listPackages } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
 import { CURRENCY_COOKIE, parseCurrencyOverride } from '@/lib/currency/cookie';
-import { Price } from '@/components/price/price';
+import { getExchangeRates } from '@/lib/exchange/cache';
 import { toPrismaLocale } from '@/lib/i18n/locale';
 import type { Locale } from '@/lib/i18n/routing';
 import type { PackageCategory } from '@prisma/client';
@@ -67,9 +67,7 @@ export default async function PackageCatalogPage({
       <main className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop py-section-gap">
         {/* 헤더 */}
         <div className="mb-stack-lg text-center">
-          <h1 className="font-display text-headline-xl text-foreground">
-            {t('catalog.title')}
-          </h1>
+          <h1 className="font-display text-headline-xl text-foreground">{t('catalog.title')}</h1>
           <p className="mt-stack-md text-body-lg text-muted-foreground">{t('catalog.subtitle')}</p>
         </div>
 
@@ -100,9 +98,7 @@ export default async function PackageCatalogPage({
                         </p>
 
                         <div className="mt-stack-md flex flex-wrap gap-stack-sm text-label-sm text-muted-foreground">
-                          <span>
-                            {t('catalog.durationLabel', { minutes: pkg.slotMinutes })}
-                          </span>
+                          <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
                           <span>·</span>
                           <span>
                             {t('catalog.headcountLabel', {
@@ -113,7 +109,12 @@ export default async function PackageCatalogPage({
                         </div>
 
                         <p className="mt-stack-md text-body-md font-semibold text-foreground">
-                          <Price amountKrw={fromPrice} currency={currency} intlLocale={locale} rates={rates} />{' '}
+                          <Price
+                            amountKrw={fromPrice}
+                            currency={currency}
+                            intlLocale={locale}
+                            rates={rates}
+                          />{' '}
                           <span className="text-label-sm font-normal text-muted-foreground">
                             {t('catalog.fromLabel')}
                           </span>

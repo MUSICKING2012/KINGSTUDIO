@@ -1,5 +1,5 @@
-import type { DisplayCurrency } from '@prisma/client';
 import type { Locale } from '@/lib/i18n/routing';
+import type { DisplayCurrency } from '@prisma/client';
 
 /**
  * PRD §통화 정책 / C14: 로케일 → 기본 표시통화.

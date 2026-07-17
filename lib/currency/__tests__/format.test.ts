@@ -1,8 +1,8 @@
+import { locales } from '@/lib/i18n/routing';
 import { Decimal } from '@prisma/client/runtime/library';
 import { describe, expect, it } from 'vitest';
 import { LOCALE_DEFAULT_CURRENCY } from '../config';
 import { formatApprox, formatKrw } from '../format';
-import { locales } from '@/lib/i18n/routing';
 
 describe('LOCALE_DEFAULT_CURRENCY', () => {
   it('routing.locales 5개 전부에 매핑이 존재한다 (C14)', () => {

@@ -38,15 +38,18 @@ describe('withSlotLock', () => {
   it('releases lock even when fn throws', async () => {
     mockSet.mockResolvedValue('OK');
     await expect(
-      withSlotLock('room-A', '2026-07-01', async () => { throw new Error('boom'); }),
+      withSlotLock('room-A', '2026-07-01', async () => {
+        throw new Error('boom');
+      }),
     ).rejects.toThrow('boom');
     expect(mockEval).toHaveBeenCalledOnce();
   });
 
   it('throws SlotLockError when lock is already held (set returns null)', async () => {
     mockSet.mockResolvedValue(null);
-    await expect(withSlotLock('room-A', '2026-07-01', async () => {}))
-      .rejects.toBeInstanceOf(SlotLockError);
+    await expect(withSlotLock('room-A', '2026-07-01', async () => {})).rejects.toBeInstanceOf(
+      SlotLockError,
+    );
   });
 
   it('does not call fn or release when lock acquisition fails', async () => {
@@ -59,7 +62,7 @@ describe('withSlotLock', () => {
 
   it('SlotLockError carries roomId and date', async () => {
     mockSet.mockResolvedValue(null);
-    const err = await withSlotLock('room-A', '2026-07-01', async () => {}).catch(e => e);
+    const err = await withSlotLock('room-A', '2026-07-01', async () => {}).catch((e) => e);
     expect(err).toBeInstanceOf(SlotLockError);
     expect(err.roomId).toBe('room-A');
     expect(err.date).toBe('2026-07-01');

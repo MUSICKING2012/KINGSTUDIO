@@ -1,7 +1,7 @@
 import type { DisplayCurrency } from '@prisma/client';
 
-import type { ExchangeRates } from '@/lib/exchange/cache';
 import { formatApprox, formatKrw } from '@/lib/currency/format';
+import type { ExchangeRates } from '@/lib/exchange/cache';
 
 type PriceProps = {
   amountKrw: number;

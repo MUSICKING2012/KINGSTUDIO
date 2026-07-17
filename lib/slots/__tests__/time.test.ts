@@ -71,13 +71,10 @@ describe('assertDateString', () => {
     expect(() => assertDateString('2026-06-26')).not.toThrow();
   });
 
-  it.each([
-    '2026-6-26',
-    '2026-06-26T00:00:00',
-    '2026/06/26',
-    '',
-    '  2026-06-26',
-  ])('rejects %j with InvalidDateInputError', (bad) => {
-    expect(() => assertDateString(bad)).toThrowError(InvalidDateInputError);
-  });
+  it.each(['2026-6-26', '2026-06-26T00:00:00', '2026/06/26', '', '  2026-06-26'])(
+    'rejects %j with InvalidDateInputError',
+    (bad) => {
+      expect(() => assertDateString(bad)).toThrowError(InvalidDateInputError);
+    },
+  );
 });

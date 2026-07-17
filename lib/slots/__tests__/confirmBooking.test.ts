@@ -1,22 +1,25 @@
 import { Prisma } from '@prisma/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SlotLockError } from '../../redis/slotLock';
 import { BookingUnavailableError, SlotConflictError, confirmBooking } from '../confirmBooking';
 import type { ConfirmBookingInput } from '../confirmBooking';
-import { SlotLockError } from '../../redis/slotLock';
 
 const {
-  mockGetAvailability, mockWithSlotLock, mockBookingCreate,
-  mockPaymentCreate, mockTransaction, mockPackageFindUniqueOrThrow,
-} =
-  vi.hoisted(() => ({
-    mockGetAvailability: vi.fn(),
-    mockWithSlotLock: vi.fn(),
-    mockBookingCreate: vi.fn(),
-    mockPaymentCreate: vi.fn(),
-    mockTransaction: vi.fn(),
-    mockPackageFindUniqueOrThrow: vi.fn(),
-  }));
+  mockGetAvailability,
+  mockWithSlotLock,
+  mockBookingCreate,
+  mockPaymentCreate,
+  mockTransaction,
+  mockPackageFindUniqueOrThrow,
+} = vi.hoisted(() => ({
+  mockGetAvailability: vi.fn(),
+  mockWithSlotLock: vi.fn(),
+  mockBookingCreate: vi.fn(),
+  mockPaymentCreate: vi.fn(),
+  mockTransaction: vi.fn(),
+  mockPackageFindUniqueOrThrow: vi.fn(),
+}));
 
 vi.mock('../availability', () => ({
   getAvailability: mockGetAvailability,
@@ -60,7 +63,9 @@ const BASE_INPUT: ConfirmBookingInput = {
 beforeEach(() => {
   vi.resetAllMocks();
   // Default: lock acquired → execute callback
-  mockWithSlotLock.mockImplementation((_roomId: string, _date: string, fn: () => Promise<unknown>) => fn());
+  mockWithSlotLock.mockImplementation(
+    (_roomId: string, _date: string, fn: () => Promise<unknown>) => fn(),
+  );
   mockPackageFindUniqueOrThrow.mockResolvedValue({ name: 'Gold' });
   mockGetAvailability.mockResolvedValue(GOLD_SLOTS);
   mockBookingCreate.mockResolvedValue({ id: 'booking-abc' });
