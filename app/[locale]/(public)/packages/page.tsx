@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
-import { Surface } from '@/components/ui/surface';
 import { listPackages } from '@/lib/catalog/queries';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getExchangeRates } from '@/lib/exchange/cache';
@@ -64,14 +63,14 @@ export default async function PackageCatalogPage({
   };
 
   return (
-    <Surface tone="warm">
+    <section>
       <main className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop py-section-gap">
         {/* 헤더 */}
         <div className="mb-stack-lg text-center">
-          <h1 className="font-display text-headline-xl text-surface-cinematic">
+          <h1 className="font-display text-headline-xl text-foreground">
             {t('catalog.title')}
           </h1>
-          <p className="mt-stack-md text-body-lg text-muted-text">{t('catalog.subtitle')}</p>
+          <p className="mt-stack-md text-body-lg text-muted-foreground">{t('catalog.subtitle')}</p>
         </div>
 
         {/* 카테고리별 섹션 */}
@@ -80,7 +79,7 @@ export default async function PackageCatalogPage({
           if (pkgs.length === 0) return null;
           return (
             <section key={cat} className="mb-section-gap">
-              <h2 className="mb-stack-lg border-l-4 border-brand-primary pl-4 text-body-lg font-bold text-surface-cinematic">
+              <h2 className="mb-stack-lg border-l-4 border-primary pl-4 text-body-lg font-bold text-foreground">
                 {sectionLabel[cat]}
               </h2>
               <div className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
@@ -90,17 +89,17 @@ export default async function PackageCatalogPage({
                   return (
                     <article
                       key={pkg.id}
-                      className="flex flex-col rounded-brand-card bg-white shadow-sm border border-outline/20 overflow-hidden"
+                      className="flex flex-col rounded-brand-card bg-white shadow-sm border border-border/20 overflow-hidden"
                     >
                       <div className="flex-1 p-stack-lg">
-                        <h3 className="text-body-lg font-bold text-surface-cinematic">
+                        <h3 className="text-body-lg font-bold text-foreground">
                           {pkgItems[slug]?.name}
                         </h3>
-                        <p className="mt-stack-sm text-body-md text-muted-text">
+                        <p className="mt-stack-sm text-body-md text-muted-foreground">
                           {pkgItems[slug]?.tagline}
                         </p>
 
-                        <div className="mt-stack-md flex flex-wrap gap-stack-sm text-label-sm text-muted-text">
+                        <div className="mt-stack-md flex flex-wrap gap-stack-sm text-label-sm text-muted-foreground">
                           <span>
                             {t('catalog.durationLabel', { minutes: pkg.slotMinutes })}
                           </span>
@@ -113,18 +112,18 @@ export default async function PackageCatalogPage({
                           </span>
                         </div>
 
-                        <p className="mt-stack-md text-body-md font-semibold text-surface-cinematic">
+                        <p className="mt-stack-md text-body-md font-semibold text-foreground">
                           <Price amountKrw={fromPrice} currency={currency} intlLocale={locale} rates={rates} />{' '}
-                          <span className="text-label-sm font-normal text-muted-text">
+                          <span className="text-label-sm font-normal text-muted-foreground">
                             {t('catalog.fromLabel')}
                           </span>
                         </p>
                       </div>
 
-                      <div className="border-t border-outline/20 p-stack-md">
+                      <div className="border-t border-border/20 p-stack-md">
                         <Link
                           href={`/${locale}/packages/${slug}`}
-                          className="block w-full rounded-brand-input bg-brand-primary py-2 text-center text-label-sm font-bold text-white hover:opacity-90 transition-opacity"
+                          className="block w-full rounded-lg bg-foreground py-2 text-center text-label-sm font-bold text-background hover:opacity-90 transition-opacity"
                         >
                           {t('catalog.viewDetail')}
                         </Link>
@@ -137,6 +136,6 @@ export default async function PackageCatalogPage({
           );
         })}
       </main>
-    </Surface>
+    </section>
   );
 }

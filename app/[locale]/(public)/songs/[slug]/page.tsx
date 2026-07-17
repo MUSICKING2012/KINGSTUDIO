@@ -3,7 +3,6 @@ import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
-import { Surface } from '@/components/ui/surface';
 import { getSongBySlug } from '@/lib/catalog/song-queries';
 import { isSongPubliclyVisible } from '@/lib/catalog/song-visibility';
 import { toPrismaLocale } from '@/lib/i18n/locale';
@@ -62,24 +61,23 @@ export default async function SongDetailPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       ) : null}
-      {/* Cinematic surface (§7.2): artist eyebrow uses the on-dark primary variant (#ffb4a9,
-          10.88:1 — #e83528 would fail AA at label size); the display-size title may use
-          brand-primary (#e83528 on #181214 = 4.38:1 → passes AA-large ≥3:1). */}
-      <Surface tone="cinematic" className="px-margin-mobile py-section-gap md:px-margin-desktop">
+      {/* Editorial hero (§7.2): large headline = ink (text-foreground), small eyebrow =
+          text-muted-foreground — accent (#F5461E) is a fill/spot color only, never small text. */}
+      <section className="px-margin-mobile py-section-gap md:px-margin-desktop">
         <div className="mx-auto max-w-container-max">
-          <p className="font-label-sm text-label-sm uppercase tracking-widest text-brand-primary-on-dark">
+          <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
             {song.artist}
           </p>
-          <h1 className="mt-stack-md font-display text-display-lg-mobile uppercase leading-none text-brand-primary md:text-display-lg">
+          <h1 className="mt-stack-md font-display text-display-lg-mobile uppercase leading-none text-foreground md:text-display-lg">
             {song.title}
           </h1>
           {song.description ? (
-            <p className="mt-stack-md max-w-2xl font-sans text-body-lg text-on-surface-variant">
+            <p className="mt-stack-md max-w-2xl font-sans text-body-lg text-muted-foreground">
               {song.description}
             </p>
           ) : null}
         </div>
-      </Surface>
+      </section>
     </main>
   );
 }

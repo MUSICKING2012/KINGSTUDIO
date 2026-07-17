@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 import { Price } from '@/components/price/price';
-import { Surface } from '@/components/ui/surface';
 import { isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getPackageBySlug } from '@/lib/catalog/queries';
@@ -71,12 +70,12 @@ export default async function PackageDetailPage({
   );
 
   return (
-    <Surface tone="warm">
+    <section>
       <main className="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop py-section-gap">
         {/* 뒤로가기 */}
         <Link
           href={`/${locale}/packages`}
-          className="mb-stack-lg inline-flex items-center gap-stack-sm text-label-sm text-muted-text hover:text-surface-cinematic transition-colors"
+          className="mb-stack-lg inline-flex items-center gap-stack-sm text-label-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           ← {t('catalog.title')}
         </Link>
@@ -84,24 +83,24 @@ export default async function PackageDetailPage({
         <div className="grid grid-cols-1 gap-section-gap lg:grid-cols-2">
           {/* 왼쪽: 패키지 정보 */}
           <div>
-            <h1 className="font-display text-headline-xl text-surface-cinematic">{item?.name}</h1>
-            <p className="mt-stack-md text-body-lg text-muted-text">{item?.tagline}</p>
+            <h1 className="font-display text-headline-xl text-foreground">{item?.name}</h1>
+            <p className="mt-stack-md text-body-lg text-muted-foreground">{item?.tagline}</p>
 
-            <p className="mt-stack-lg text-body-md text-on-surface">{item?.concept}</p>
+            <p className="mt-stack-lg text-body-md text-foreground">{item?.concept}</p>
 
             {/* 포함 항목 */}
             <div className="mt-stack-lg">
-              <h2 className="mb-stack-md border-l-4 border-brand-primary pl-4 text-body-lg font-bold text-surface-cinematic">
+              <h2 className="mb-stack-md border-l-4 border-primary pl-4 text-body-lg font-bold text-foreground">
                 {t('detail.includesTitle')}
               </h2>
               <ul className="space-y-stack-sm">
                 {(item?.includes ?? []).map((item: string) => (
                   <li
                     key={item}
-                    className="flex items-start gap-stack-sm text-body-md text-on-surface"
+                    className="flex items-start gap-stack-sm text-body-md text-foreground"
                   >
                     <span
-                      className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-primary"
+                      className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary"
                       aria-hidden="true"
                     />
                     {item}
@@ -111,7 +110,7 @@ export default async function PackageDetailPage({
             </div>
 
             {/* 소요 시간 / 인원 */}
-            <div className="mt-stack-lg flex gap-stack-lg text-body-md text-muted-text">
+            <div className="mt-stack-lg flex gap-stack-lg text-body-md text-muted-foreground">
               <span>{t('catalog.durationLabel', { minutes: pkg.slotMinutes })}</span>
               <span>
                 {t('catalog.headcountLabel', {
@@ -124,8 +123,8 @@ export default async function PackageDetailPage({
 
           {/* 오른쪽: 요금 + CTA */}
           <div>
-            <div className="rounded-brand-card border border-outline/20 bg-white p-stack-lg shadow-sm">
-              <h2 className="mb-stack-md text-body-lg font-bold text-surface-cinematic">
+            <div className="rounded-brand-card border border-border/20 bg-white p-stack-lg shadow-sm">
+              <h2 className="mb-stack-md text-body-lg font-bold text-foreground">
                 {t('detail.priceTableTitle')}
               </h2>
 
@@ -134,11 +133,11 @@ export default async function PackageDetailPage({
                   {headcounts.map((n) => {
                     const result = computePackageTotal(pkg, n);
                     return (
-                      <tr key={n} className="border-b border-outline/10 last:border-0">
-                        <td className="py-stack-sm text-muted-text">
+                      <tr key={n} className="border-b border-border/10 last:border-0">
+                        <td className="py-stack-sm text-muted-foreground">
                           {t('detail.perHeadcount', { n })}
                         </td>
-                        <td className="py-stack-sm text-right font-semibold text-surface-cinematic">
+                        <td className="py-stack-sm text-right font-semibold text-foreground">
                           <Price
                             amountKrw={result.totalKrw}
                             currency={currency}
@@ -154,7 +153,7 @@ export default async function PackageDetailPage({
 
               <Link
                 href={`/${locale}/booking?package=${slug}`}
-                className="mt-stack-lg block w-full rounded-brand-input bg-brand-primary py-3 text-center text-body-md font-bold text-white hover:opacity-90 transition-opacity"
+                className="mt-stack-lg block w-full rounded-lg bg-foreground py-3 text-center text-body-md font-bold text-background hover:opacity-90 transition-opacity"
               >
                 {t('detail.bookCta')}
               </Link>
@@ -162,6 +161,6 @@ export default async function PackageDetailPage({
           </div>
         </div>
       </main>
-    </Surface>
+    </section>
   );
 }

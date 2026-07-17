@@ -23,7 +23,7 @@ export function Price({ amountKrw, currency, intlLocale, rates, krwOnly = false 
   if (!approx) return <>{krw}</>;
   return (
     <>
-      {krw} <span className="text-label-sm font-normal text-muted-text">({approx})</span>
+      {krw} <span className="text-label-sm font-normal text-muted-foreground">({approx})</span>
     </>
   );
 }
