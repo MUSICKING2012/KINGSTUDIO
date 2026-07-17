@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { SiteFooter } from '@/components/footer/site-footer';
 import { SiteHeader } from '@/components/header/site-header';
 import { type Locale, locales, routing } from '@/lib/i18n/routing';
 import type { Metadata } from 'next';
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <SiteHeader />
           {children}
+          <SiteFooter />
         </NextIntlClientProvider>
       </body>
     </html>
