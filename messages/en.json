@@ -198,21 +198,13 @@
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "Group career exploration program (10–15 people)",
-        "includes": [
-          "Music industry career exploration",
-          "2-hour program",
-          "Korean only"
-        ]
+        "includes": ["Music industry career exploration", "2-hour program", "Korean only"]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "Group workshop program (5–15 people)",
-        "includes": [
-          "Customised workshop format",
-          "2-hour program",
-          "Korean only"
-        ]
+        "includes": ["Customised workshop format", "2-hour program", "Korean only"]
       }
     }
   },
@@ -254,7 +246,7 @@
       },
       "takeaway": {
         "title": "Take home your own work",
-        "body": "Your recorded audio, studio photos, and a CD — delivered by a secure link after your session."
+        "body": "Your recorded audio and studio photos, delivered by a secure link after your session — plus a physical CD handed to you in the studio that day."
       },
       "direct": {
         "title": "Booked directly with us",
@@ -298,7 +290,7 @@
       },
       "q5": {
         "q": "What do I take home?",
-        "a": "Your recorded audio, studio photos, and a CD. Diamond and Premium also include a mixed and mastered version, and Premium a music video. Files are delivered by a secure link after your session."
+        "a": "Your recorded audio, studio photos, and a CD. Diamond and Premium also include a mixed and mastered version, and Premium a music video. Digital files arrive by a secure link after your session; the CD is handed to you in the studio that day."
       },
       "q6": {
         "q": "How long is a session?",

@@ -448,6 +448,8 @@ model Package {
   languagesAvailable     Locale[]        @map("languages_available")
   bookingFlow            BookingFlow     @default(instant_payment) @map("booking_flow")
   friendReferralEligible Boolean         @default(false) @map("friend_referral_eligible") // Diamond/Premium/group only (CLAUDE.md §6)
+  returningDiscountEligible Boolean      @default(false) @map("returning_discount_eligible") // experience Gold/Diamond/Premium only (PRD §5.9 returning-member 10%)
+  cdIncluded             Boolean         @default(false) @map("cd_included") // physical CD handed on-site: Gold/Diamond/Premium (PRD §5.2/§5.6, Reconciliation §6)
   isActive               Boolean         @default(true) @map("is_active")
   displayOrder           Int             @default(0) @map("display_order")
   createdAt              DateTime        @default(now()) @map("created_at")
@@ -502,6 +504,7 @@ model Booking {
   pricingSnapshot      Json @map("pricing_snapshot") // {basis, unitPrice, headcount, multiplier(1.5 for 2p), discounts, computedTotal}
   refundPolicySnapshot Json @map("refund_policy_snapshot") // 3-tier refund policy frozen at payment time
   packageSnapshot      Json @map("package_snapshot") // {name, category, slotMinutes, durationLabel} at booking time
+  returningDiscountKrw Int? @map("returning_discount_krw") // §5.9 returning-member 10% (cap ₩50,000) applied INLINE (like referral invitee, not a coupon); null = not applied. Customer discount channels = returning + referral only (max 1, checkout-enforced). Frozen at payment (§3.2).
 
   // --- provenance ---
   externalRef String? @map("external_ref") // OTA/external channel booking id (KLOOK/KKday/Airbnb…)
@@ -769,6 +772,12 @@ model Checkin {
   bookingId   String   @unique @map("booking_id")
   checkedInAt DateTime @map("checked_in_at")
   checkedInBy String?  @map("checked_in_by") // logical ref to admin_users.id
+  // Physical CD handover (PRD §5.6 / Reconciliation §6). CD is NOT a download deliverable: engineer
+  // burns the day's session takes to CD-R and hands it over on-site at session end (no shipping/
+  // address). Mirrors checkedIn*; nullable = not yet handed over. Only bookings whose package has
+  // cdIncluded=true get a CD.
+  cdHandedOverAt DateTime? @map("cd_handed_over_at")
+  cdHandedOverBy String?   @map("cd_handed_over_by") // logical ref to admin_users.id
   memo        String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
