@@ -53,14 +53,14 @@ export function validateBlackoutInput(raw: unknown): BlackoutInputNormalized {
 
   const scope = r.scope as string;
   if (!VALID_SCOPES.has(scope)) {
-    throw new BlackoutValidationError('scope', `scope must be one of: slot, full_day, recurring`);
+    throw new BlackoutValidationError('scope', 'scope must be one of: slot, full_day, recurring');
   }
 
   const reason = r.reason as string;
   if (!VALID_REASONS.has(reason)) {
     throw new BlackoutValidationError(
       'reason',
-      `reason must be one of: internal_use, maintenance, holiday, external_channel, other`,
+      'reason must be one of: internal_use, maintenance, holiday, external_channel, other',
     );
   }
 

@@ -31,7 +31,7 @@ function isLeapYear(y: number): boolean {
 
 function daysInMonth(y: number, mo: number): number {
   if (mo === 2) return isLeapYear(y) ? 29 : 28;
-  return [0, 31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo]!;
+  return [0, 31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo];
 }
 
 // Converts a JS Date to the KST wall-clock date string for the `date` column.

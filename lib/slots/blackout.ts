@@ -32,7 +32,7 @@ export function assertValidWeeklyRule(rule: string): void {
 function weeklyRuleMatches(rule: string, dateStr: string): boolean {
   assertValidWeeklyRule(rule);
   const parts = Object.fromEntries(rule.split(';').map((p) => p.split('=') as [string, string]));
-  const days = parts.BYDAY.split(',').map((tok) => BYDAY[tok]!);
+  const days = parts.BYDAY.split(',').map((tok) => BYDAY[tok]);
   return days.includes(kstWeekday(dateStr));
 }
 

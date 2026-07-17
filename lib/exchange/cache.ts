@@ -1,8 +1,8 @@
+import { prisma } from '@/lib/db/prisma';
+import { getRedis } from '@/lib/redis/client';
+import type { DisplayCurrency } from '@prisma/client';
 // lib/exchange/cache.ts
 import { Decimal } from '@prisma/client/runtime/library';
-import { DisplayCurrency } from '@prisma/client';
-import { getRedis } from '@/lib/redis/client';
-import { prisma } from '@/lib/db/prisma';
 import { fetchLatestRates } from './client';
 
 const CACHE_TTL_SECONDS = 86400; // 24h
@@ -33,7 +33,7 @@ export interface ExchangeRates {
  * 즉 1 외화 = ? KRW → krwPerForeign = rates['KRW'] / rates[외화]
  */
 function toKrwRates(oxrRates: Record<string, number>): Record<DisplayCurrency, Decimal> {
-  const krwPerUsd = oxrRates['KRW'];
+  const krwPerUsd = oxrRates.KRW;
   if (!krwPerUsd) throw new Error('KRW rate missing from OXR response');
 
   return Object.fromEntries(
@@ -43,7 +43,7 @@ function toKrwRates(oxrRates: Record<string, number>): Record<DisplayCurrency, D
       // 1 외화 = ? KRW
       const krwPerForeign = new Decimal(krwPerUsd).div(new Decimal(ratePerUsd));
       return [dc, krwPerForeign];
-    })
+    }),
   ) as Record<DisplayCurrency, Decimal>;
 }
 
@@ -56,8 +56,11 @@ async function refreshRates(): Promise<ExchangeRates> {
   const redis = getRedis();
   await redis.set(
     CACHE_KEY,
-    JSON.stringify({ ...Object.fromEntries(Object.entries(rates).map(([k, v]) => [k, v.toString()])), fetchedAt }),
-    { ex: CACHE_TTL_SECONDS }
+    JSON.stringify({
+      ...Object.fromEntries(Object.entries(rates).map(([k, v]) => [k, v.toString()])),
+      fetchedAt,
+    }),
+    { ex: CACHE_TTL_SECONDS },
   );
 
   // DB 백업 upsert (currency + fetchedAt 기준 — 같은 날 중복 방지)
@@ -70,8 +73,8 @@ async function refreshRates(): Promise<ExchangeRates> {
         where: { currency_fetchedAt: { currency, fetchedAt: today } },
         update: { rateToKrw },
         create: { currency, rateToKrw, fetchedAt: today, source: 'openexchangerates' },
-      })
-    )
+      }),
+    ),
   );
 
   return {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { mockRedisGet, mockRedisSet, mockGetRedis } = vi.hoisted(() => {
   const mockRedisGet = vi.fn().mockResolvedValue(null); // 캐시 미스 기본값
@@ -34,9 +34,9 @@ vi.mock('../client', () => ({
   }),
 }));
 
-import { getExchangeRate, getExchangeRates } from '../cache';
 import { DisplayCurrency } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
+import { getExchangeRate, getExchangeRates } from '../cache';
 
 describe('getExchangeRate', () => {
   it('KRW → 1:1', async () => {
@@ -63,12 +63,16 @@ describe('getExchangeRate', () => {
     mockGetRedis.mockReturnValueOnce({
       get: vi.fn().mockResolvedValue(
         JSON.stringify({
-          KRW: '1', USD: '1350', JPY: '8.709', TWD: '42.1', HKD: '173.0',
+          KRW: '1',
+          USD: '1350',
+          JPY: '8.709',
+          TWD: '42.1',
+          HKD: '173.0',
           fetchedAt: new Date().toISOString(),
-        })
+        }),
       ),
       set: vi.fn(),
-    } as any);
+    } as ReturnType<typeof mockGetRedis>);
 
     await getExchangeRates();
     expect(fetchLatestRates).not.toHaveBeenCalled();

@@ -16,10 +16,7 @@ export default async function globalSetup() {
 
   if (body.app !== EXPECTED_APP) {
     throw new Error(
-      `E2E identity gate FAILED: GET ${HEALTH_URL} returned app=${JSON.stringify(body.app)} ` +
-        `(full body: ${JSON.stringify(body)}). Expected app='${EXPECTED_APP}'. ` +
-        'Port 3100 may be occupied by a different app (cross-app misconnect) — ' +
-        'check what is listening on :3100 before running E2E.',
+      `E2E identity gate FAILED: GET ${HEALTH_URL} returned app=${JSON.stringify(body.app)} (full body: ${JSON.stringify(body)}). Expected app='${EXPECTED_APP}'. Port 3100 may be occupied by a different app (cross-app misconnect) — check what is listening on :3100 before running E2E.`,
     );
   }
 }
