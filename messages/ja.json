@@ -325,5 +325,40 @@
     "faq": "よくある質問",
     "businessInfo": "事業者情報は準備中です。",
     "rights": "無断転載を禁じます。"
+  },
+  "booking": {
+    "progress": {
+      "aria": "{total}ステップ中 {current}ステップ目",
+      "step1": "パッケージ",
+      "step2": "日付・時間",
+      "step3": "情報入力",
+      "step4": "お支払い"
+    },
+    "step1": {
+      "title": "パッケージを選択してください",
+      "subtitle": "予約するレコーディング体験をお選びください。",
+      "durationLabel": "{minutes}分",
+      "headcountLabel": "{min}〜{max}名",
+      "fromLabel": "1名から",
+      "selectCta": "選択",
+      "empty": "現在の言語で予約可能なパッケージはありません。"
+    },
+    "step2": {
+      "title": "日付と時間を選択してください",
+      "subtitle": "すべての時間は韓国標準時(KST)で表示されます。",
+      "backToPackages": "パッケージに戻る",
+      "dateLabel": "日付",
+      "windowHint": "明日から最大90日先まで予約できます。",
+      "pickDatePrompt": "日付を選択すると予約可能な時間が表示されます。",
+      "loading": "予約可能な時間を読み込み中…",
+      "loadError": "時間を読み込めませんでした。もう一度お試しください。",
+      "retry": "再試行",
+      "noSlots": "この日に予約可能な時間はありません。別の日をお選びください。",
+      "available": "予約可能",
+      "soldOut": "満席",
+      "timezoneNote": "時間はKST(Asia/Seoul)表示",
+      "selectedLabel": "選択した時間",
+      "continueCta": "次へ"
+    }
   }
 }

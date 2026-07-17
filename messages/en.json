@@ -329,5 +329,40 @@
     "faq": "FAQ",
     "businessInfo": "Business registration details coming soon.",
     "rights": "All rights reserved."
+  },
+  "booking": {
+    "progress": {
+      "aria": "Step {current} of {total}",
+      "step1": "Package",
+      "step2": "Date & time",
+      "step3": "Details",
+      "step4": "Payment"
+    },
+    "step1": {
+      "title": "Choose your package",
+      "subtitle": "Pick the recording experience you'd like to book.",
+      "durationLabel": "{minutes} min",
+      "headcountLabel": "{min}–{max} people",
+      "fromLabel": "from (1 person)",
+      "selectCta": "Select",
+      "empty": "No bookable packages are available for this language yet."
+    },
+    "step2": {
+      "title": "Pick a date and time",
+      "subtitle": "All times are shown in Korea Standard Time (KST).",
+      "backToPackages": "Back to packages",
+      "dateLabel": "Date",
+      "windowHint": "Bookable from tomorrow up to 90 days ahead.",
+      "pickDatePrompt": "Select a date to see available times.",
+      "loading": "Loading available times…",
+      "loadError": "Couldn't load times. Please try again.",
+      "retry": "Retry",
+      "noSlots": "No open times on this date. Try another day.",
+      "available": "Available",
+      "soldOut": "Sold out",
+      "timezoneNote": "Times shown in KST (Asia/Seoul)",
+      "selectedLabel": "Selected",
+      "continueCta": "Continue"
+    }
   }
 }
