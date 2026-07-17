@@ -1,8 +1,8 @@
 import { adminAuth } from '@/adminAuth';
-import { prisma } from '@/lib/db/prisma';
 import { writeAudit } from '@/lib/admin-auth/audit';
 import { ForbiddenError, requirePermission } from '@/lib/admin-auth/rbac';
 import { validateAdminSession } from '@/lib/admin-auth/session';
+import { prisma } from '@/lib/db/prisma';
 import { BlackoutValidationError, validateBlackoutInput } from '@/lib/slots/blackoutInput';
 import { toDbDate, toTimeDate } from '@/lib/slots/time';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -62,9 +62,9 @@ export async function POST(req: NextRequest) {
 
   const data = {
     scope: v.scope,
-    dateStart: toDbDate(v.dateStart),   // @db.Date carrier
-    dateEnd: toDbDate(v.dateEnd),       // @db.Date carrier
-    timeStart: v.timeStart !== null ? toTimeDate(v.timeStart) : null,  // @db.Time(0) carrier
+    dateStart: toDbDate(v.dateStart), // @db.Date carrier
+    dateEnd: toDbDate(v.dateEnd), // @db.Date carrier
+    timeStart: v.timeStart !== null ? toTimeDate(v.timeStart) : null, // @db.Time(0) carrier
     timeEnd: v.timeEnd !== null ? toTimeDate(v.timeEnd) : null,
     recurringRule: v.recurringRule,
     reason: v.reason,

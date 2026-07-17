@@ -8,7 +8,7 @@ export function getRedis(): Redis {
       throw new Error('UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN env vars missing');
     }
     _redis = new Redis({
-      url:   process.env.UPSTASH_REDIS_REST_URL,
+      url: process.env.UPSTASH_REDIS_REST_URL,
       token: process.env.UPSTASH_REDIS_REST_TOKEN,
     });
   }

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { toDbDate } from '../time';
 import { assertDateString } from '../time';
 

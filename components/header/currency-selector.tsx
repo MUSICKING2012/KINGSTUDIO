@@ -6,11 +6,7 @@ import type { DisplayCurrency } from '@prisma/client';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import {
-  CURRENCY_LABEL,
-  DISPLAY_CURRENCIES,
-  LOCALE_DEFAULT_CURRENCY,
-} from '@/lib/currency/config';
+import { CURRENCY_LABEL, DISPLAY_CURRENCIES, LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
 import {
   CURRENCY_COOKIE,
   CURRENCY_COOKIE_ATTRS,

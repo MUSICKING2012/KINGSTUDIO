@@ -1,3 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
+import { toDbDate, toTimeDate } from '@/lib/slots/time';
 /**
  * S3.4a-2 — 인터랙티브 트랜잭션 안의 23P01 표면 검증.
  * a-1 exclusionSurface는 단일 create였다. a-2는 confirmBooking이 booking+payment를
@@ -9,8 +11,6 @@
  * pgTransactionId=null로 둬 23505(unique)와 23P01을 안 섞는다.
  */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { prisma } from '@/lib/db/prisma';
-import { toDbDate, toTimeDate } from '@/lib/slots/time';
 
 const DATE = '2026-07-26';
 const START = '10:00:00';
@@ -58,7 +58,13 @@ describe('S3.4a-2 트랜잭션 내 23P01 표면', () => {
     await prisma.$transaction(async (tx) => {
       const b = await tx.booking.create({ data: bookingData, select: { id: true } });
       await tx.payment.create({
-        data: { bookingId: b.id, pg: 'inicis', amountKrw: 400_000, status: 'paid', paidAt: new Date() },
+        data: {
+          bookingId: b.id,
+          pg: 'inicis',
+          amountKrw: 400_000,
+          status: 'paid',
+          paidAt: new Date(),
+        },
         select: { id: true },
       });
     });

@@ -41,8 +41,13 @@ test.beforeAll(async () => {
   // Seed Accountant role + user (deny guard for blackout:manage)
   await prisma.adminRole.upsert({
     where: { name: 'Accountant' },
-    update: { permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'] },
-    create: { name: 'Accountant', permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'] },
+    update: {
+      permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'],
+    },
+    create: {
+      name: 'Accountant',
+      permissions: ['revenue:read', 'revenue:export', 'refund:process', 'taxinvoice:issue'],
+    },
   });
   await prisma.adminUser.upsert({
     where: { email: ACCT },
@@ -67,11 +72,7 @@ test.beforeAll(async () => {
   await prisma.$disconnect();
 });
 
-async function login(
-  page: import('@playwright/test').Page,
-  email: string,
-  secret = SECRET,
-) {
+async function login(page: import('@playwright/test').Page, email: string, secret = SECRET) {
   await page.goto('/admin/login');
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill('correcthorse12');
@@ -118,7 +119,9 @@ test('logout returns to admin login', async ({ page }) => {
   await expect(page).toHaveURL(/\/admin\/login/);
 });
 
-test('🚫 Accountant (no blackout:manage) → POST /api/admin/blackouts returns 403', async ({ page }) => {
+test('🚫 Accountant (no blackout:manage) → POST /api/admin/blackouts returns 403', async ({
+  page,
+}) => {
   await login(page, ACCT, ACCT_SECRET);
   await expect(page).toHaveURL(/\/admin\/dashboard/);
   const res = await page.context().request.post('/api/admin/blackouts', { data: {} });

@@ -110,51 +110,31 @@
         "name": "1Hour",
         "tagline": "Studio hourly rental with an engineer",
         "concept": "附工程師1小時錄音室租用",
-        "includes": [
-          "自備MR音軌",
-          "提供原始檔案（不含混音）",
-          "需具備韓語溝通能力"
-        ]
+        "includes": ["自備MR音軌", "提供原始檔案（不含混音）", "需具備韓語溝通能力"]
       },
       "1pro": {
         "name": "1Pro",
         "tagline": "Studio rental for serious recording",
         "concept": "專業錄音用錄音室3.5小時租用",
-        "includes": [
-          "自備MR音軌",
-          "提供原始檔案（不含混音）",
-          "需具備韓語溝通能力"
-        ]
+        "includes": ["自備MR音軌", "提供原始檔案（不含混音）", "需具備韓語溝通能力"]
       },
       "making-class": {
         "name": "K-Pop Making Class",
         "tagline": "A group K-pop making class",
         "concept": "K-POP製作體驗課程（2〜15人）",
-        "includes": [
-          "K-POP製作流程體驗",
-          "2小時課程",
-          "多語言支援"
-        ]
+        "includes": ["K-POP製作流程體驗", "2小時課程", "多語言支援"]
       },
       "dreampath": {
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "團體職涯探索體驗（10〜15人）",
-        "includes": [
-          "音樂產業職涯探索",
-          "2小時課程",
-          "僅限韓語"
-        ]
+        "includes": ["音樂產業職涯探索", "2小時課程", "僅限韓語"]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "團體工作坊方案（5〜15人）",
-        "includes": [
-          "客製化工作坊形式",
-          "2小時課程",
-          "僅限韓語"
-        ]
+        "includes": ["客製化工作坊形式", "2小時課程", "僅限韓語"]
       }
     }
   },

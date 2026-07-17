@@ -23,9 +23,9 @@ describe('validateBlackoutInput — slot', () => {
   });
 
   it('slot dateStart !== dateEnd → BlackoutValidationError', () => {
-    expect(() =>
-      validateBlackoutInput({ ...slotBase, dateEnd: '2026-07-11' }),
-    ).toThrow(BlackoutValidationError);
+    expect(() => validateBlackoutInput({ ...slotBase, dateEnd: '2026-07-11' })).toThrow(
+      BlackoutValidationError,
+    );
   });
 
   it('slot with recurringRule → BlackoutValidationError', () => {
@@ -47,15 +47,15 @@ describe('validateBlackoutInput — slot', () => {
   });
 
   it('h out of range (h=24) → BlackoutValidationError', () => {
-    expect(() =>
-      validateBlackoutInput({ ...slotBase, timeStart: { h: 24, m: 0 } }),
-    ).toThrow(BlackoutValidationError);
+    expect(() => validateBlackoutInput({ ...slotBase, timeStart: { h: 24, m: 0 } })).toThrow(
+      BlackoutValidationError,
+    );
   });
 
   it('m out of range (m=60) → BlackoutValidationError', () => {
-    expect(() =>
-      validateBlackoutInput({ ...slotBase, timeStart: { h: 10, m: 60 } }),
-    ).toThrow(BlackoutValidationError);
+    expect(() => validateBlackoutInput({ ...slotBase, timeStart: { h: 10, m: 60 } })).toThrow(
+      BlackoutValidationError,
+    );
   });
 
   it('invalid dateStart format → BlackoutValidationError', () => {
@@ -120,8 +120,8 @@ describe('validateBlackoutInput — recurring', () => {
   });
 
   it('recurring missing BYDAY → BlackoutValidationError', () => {
-    expect(() =>
-      validateBlackoutInput({ ...recBase, recurringRule: 'FREQ=WEEKLY' }),
-    ).toThrow(BlackoutValidationError);
+    expect(() => validateBlackoutInput({ ...recBase, recurringRule: 'FREQ=WEEKLY' })).toThrow(
+      BlackoutValidationError,
+    );
   });
 });

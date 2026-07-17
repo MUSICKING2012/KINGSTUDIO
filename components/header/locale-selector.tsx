@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { LOCALE_LABEL } from '@/lib/currency/config';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
-import { locales, type Locale } from '@/lib/i18n/routing';
+import { type Locale, locales } from '@/lib/i18n/routing';
 
 /** 언어 셀렉터 (④-b 미니멀 바). 라벨은 자기표기 상수 — 번역 키 아님. */
 export function LocaleSelector() {

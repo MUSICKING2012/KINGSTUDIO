@@ -140,21 +140,13 @@
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "Group career exploration program (10–15 people)",
-        "includes": [
-          "Music industry career exploration",
-          "2-hour program",
-          "Korean only"
-        ]
+        "includes": ["Music industry career exploration", "2-hour program", "Korean only"]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "Group workshop program (5–15 people)",
-        "includes": [
-          "Customised workshop format",
-          "2-hour program",
-          "Korean only"
-        ]
+        "includes": ["Customised workshop format", "2-hour program", "Korean only"]
       }
     }
   },

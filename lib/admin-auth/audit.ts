@@ -1,5 +1,5 @@
-import type { AuditAction, Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
+import type { AuditAction, Prisma } from '@prisma/client';
 
 export async function writeAudit(input: {
   actorAdminUserId: string | null;

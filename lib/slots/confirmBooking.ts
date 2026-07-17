@@ -1,7 +1,7 @@
+import { prisma } from '@/lib/db/prisma';
 import { withSlotLock } from '@/lib/redis/slotLock';
 import { Prisma } from '@prisma/client';
-import type { Pg, DisplayCurrency } from '@prisma/client';
-import { prisma } from '@/lib/db/prisma';
+import type { DisplayCurrency, Pg } from '@prisma/client';
 import { getAvailability } from './availability';
 import type { PackageTier } from './constants';
 import { assertDateString, toDbDate, toTimeDate } from './time';
@@ -34,12 +34,12 @@ export class SlotConflictError extends Error {
 
 export type ConfirmBookingInput = {
   roomId: string;
-  date: string;           // "YYYY-MM-DD" KST 벽시계 (호출자가 보장)
-  startTime: string;      // "HH:MM:00" KST — 사용자가 선택한 슬롯 (spec 누락, 필수 추가)
+  date: string; // "YYYY-MM-DD" KST 벽시계 (호출자가 보장)
+  startTime: string; // "HH:MM:00" KST — 사용자가 선택한 슬롯 (spec 누락, 필수 추가)
   packageId: string;
   headcount: number;
-  customerEmail: string;  // NOT NULL in schema (spec 누락, 필수 추가)
-  unitPriceKrw: number;   // NOT NULL in schema (spec 누락, 필수 추가)
+  customerEmail: string; // NOT NULL in schema (spec 누락, 필수 추가)
+  unitPriceKrw: number; // NOT NULL in schema (spec 누락, 필수 추가)
   priceTotalKrw: number;
   pricingSnapshot: object;
   packageSnapshot: object;
@@ -50,33 +50,45 @@ export type ConfirmBookingInput = {
   payment: {
     pg: Pg;
     amountKrw: number;
-    pgFeeKrw?: number;                 // default 0
-    pgTransactionId?: string | null;   // @@unique; null 허용
+    pgFeeKrw?: number; // default 0
+    pgTransactionId?: string | null; // @@unique; null 허용
   };
 };
 
 export type ConfirmBookingResult = {
   bookingId: string;
   paymentId: string;
-  startTime: string;  // "HH:MM:00"
-  endTime: string;    // "HH:MM:00"
+  startTime: string; // "HH:MM:00"
+  endTime: string; // "HH:MM:00"
 };
 
 export async function confirmBooking(input: ConfirmBookingInput): Promise<ConfirmBookingResult> {
   assertDateString(input.date);
   const {
-    roomId, date, startTime, packageId,
-    headcount, customerEmail, unitPriceKrw, priceTotalKrw,
-    pricingSnapshot, packageSnapshot, refundPolicySnapshot, payment,
+    roomId,
+    date,
+    startTime,
+    packageId,
+    headcount,
+    customerEmail,
+    unitPriceKrw,
+    priceTotalKrw,
+    pricingSnapshot,
+    packageSnapshot,
+    refundPolicySnapshot,
+    payment,
   } = input;
 
   return withSlotLock(roomId, date, async () => {
     // Resolve packageTier from DB so slot matching is by (startTime + tier), not startTime alone.
-    const pkg = await prisma.package.findUniqueOrThrow({ where: { id: packageId }, select: { name: true } });
+    const pkg = await prisma.package.findUniqueOrThrow({
+      where: { id: packageId },
+      select: { name: true },
+    });
     const packageTier = pkg.name as PackageTier;
 
     const available = await getAvailability(roomId, date);
-    const slot = available.find(s => s.startTime === startTime && s.packageTier === packageTier);
+    const slot = available.find((s) => s.startTime === startTime && s.packageTier === packageTier);
 
     if (!slot) {
       throw new BookingUnavailableError(roomId, date, packageId);
@@ -92,9 +104,9 @@ export async function confirmBooking(input: ConfirmBookingInput): Promise<Confir
         const booking = await tx.booking.create({
           data: {
             roomId,
-            date: toDbDate(date),              // @db.Date carrier
+            date: toDbDate(date), // @db.Date carrier
             startTime: toTimeDate(slot.startTime),
-            endTime:   toTimeDate(slot.endTime),
+            endTime: toTimeDate(slot.endTime),
             packageId,
             headcount,
             customerEmail,
@@ -137,7 +149,7 @@ export async function confirmBooking(input: ConfirmBookingInput): Promise<Confir
       bookingId: result.bookingId,
       paymentId: result.paymentId,
       startTime: slot.startTime,
-      endTime:   slot.endTime,
+      endTime: slot.endTime,
     };
   });
 }

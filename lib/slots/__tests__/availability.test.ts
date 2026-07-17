@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAvailability } from '../availability';
-import { InvalidDateInputError } from '../time';
 import type { AvailableSlot } from '../availability';
 import type { PackageTier } from '../constants';
+import { InvalidDateInputError } from '../time';
 import { toKstTimeString } from '../time';
 
 // vi.hoisted: vi.mock factory is hoisted before variable declarations
@@ -30,7 +30,7 @@ const stdHours = { key: 'operating_hours', value: { open: '10:00', close: '22:00
 
 // Checks whether the result contains a specific package+start slot.
 const has = (slots: AvailableSlot[], pkg: PackageTier, h: number, m = 0) =>
-  slots.some(s => s.packageTier === pkg && s.startTime === toKstTimeString(h, m));
+  slots.some((s) => s.packageTier === pkg && s.startTime === toKstTimeString(h, m));
 
 beforeEach(() => {
   mockSettingFindUnique.mockReset();
@@ -54,9 +54,9 @@ describe('getAvailability', () => {
     // Blocked: all packages starting at 10:00 overlap [10:00, 12:00)
     expect(has(slots, 'Gold', 10)).toBe(false);
     expect(has(slots, 'Diamond', 10)).toBe(false);
-    expect(has(slots, 'Premium', 10)).toBe(false);   // [10:00, 13:00) ∩ [10:00, 12:00)
-    expect(has(slots, '1Hour', 10)).toBe(false);     // [10:00, 11:00) ∩ [10:00, 12:00)
-    expect(has(slots, '1Pro', 10)).toBe(false);      // [10:00, 13:30) ∩ [10:00, 12:00)
+    expect(has(slots, 'Premium', 10)).toBe(false); // [10:00, 13:00) ∩ [10:00, 12:00)
+    expect(has(slots, '1Hour', 10)).toBe(false); // [10:00, 11:00) ∩ [10:00, 12:00)
+    expect(has(slots, '1Pro', 10)).toBe(false); // [10:00, 13:30) ∩ [10:00, 12:00)
 
     // Not blocked: Gold 12:00 [12:00, 14:00) — booking ends where this slot starts
     expect(has(slots, 'Gold', 12)).toBe(true);
@@ -79,8 +79,8 @@ describe('getAvailability', () => {
     const slots = await getAvailability('room-A', '2026-07-01');
 
     // Fully contained within booking → blocked
-    expect(has(slots, '1Hour', 12)).toBe(false);   // [12:00, 13:00) ⊂ [12:00, 14:00)
-    expect(has(slots, 'Gold', 12)).toBe(false);    // [12:00, 14:00) = booking exactly
+    expect(has(slots, '1Hour', 12)).toBe(false); // [12:00, 13:00) ⊂ [12:00, 14:00)
+    expect(has(slots, 'Gold', 12)).toBe(false); // [12:00, 14:00) = booking exactly
 
     // Adjacent before booking: Gold [10:00, 12:00) ends where booking starts → not blocked
     expect(has(slots, 'Gold', 10)).toBe(true);
@@ -94,16 +94,13 @@ describe('getAvailability', () => {
     expect(slots).toHaveLength(23);
   });
 
-  it.each([
-    '2026-6-26',
-    '2026-06-26T00:00:00',
-    '2026/06/26',
-    '',
-    '  2026-06-26',
-  ])('오염 입력 %j → prisma 호출 0회, InvalidDateInputError throw', async (bad) => {
-    await expect(getAvailability('room-A', bad)).rejects.toThrow(InvalidDateInputError);
-    expect(mockSettingFindUnique).not.toHaveBeenCalled();
-    expect(mockBookingFindMany).not.toHaveBeenCalled();
-    expect(mockBlackoutFindMany).not.toHaveBeenCalled();
-  });
+  it.each(['2026-6-26', '2026-06-26T00:00:00', '2026/06/26', '', '  2026-06-26'])(
+    '오염 입력 %j → prisma 호출 0회, InvalidDateInputError throw',
+    async (bad) => {
+      await expect(getAvailability('room-A', bad)).rejects.toThrow(InvalidDateInputError);
+      expect(mockSettingFindUnique).not.toHaveBeenCalled();
+      expect(mockBookingFindMany).not.toHaveBeenCalled();
+      expect(mockBlackoutFindMany).not.toHaveBeenCalled();
+    },
+  );
 });

@@ -130,31 +130,19 @@
         "name": "K-Pop Making Class",
         "tagline": "A group K-pop making class",
         "concept": "グループK-POPメイキングクラス（2〜15名）",
-        "includes": [
-          "K-POP制作プロセス体験",
-          "2時間プログラム",
-          "多言語サポートあり"
-        ]
+        "includes": ["K-POP制作プロセス体験", "2時間プログラム", "多言語サポートあり"]
       },
       "dreampath": {
         "name": "Dreampath",
         "tagline": "A group program",
         "concept": "グループ進路体験プログラム（10〜15名）",
-        "includes": [
-          "音楽業界キャリア探索",
-          "2時間プログラム",
-          "韓国語のみ"
-        ]
+        "includes": ["音楽業界キャリア探索", "2時間プログラム", "韓国語のみ"]
       },
       "workshop": {
         "name": "Workshop",
         "tagline": "A group workshop program",
         "concept": "グループワークショッププログラム（5〜15名）",
-        "includes": [
-          "カスタムワークショップ形式",
-          "2時間プログラム",
-          "韓国語のみ"
-        ]
+        "includes": ["カスタムワークショップ形式", "2時間プログラム", "韓国語のみ"]
       }
     }
   },

@@ -1,3 +1,5 @@
+import { prisma } from '@/lib/db/prisma';
+import { toDbDate, toTimeDate } from '@/lib/slots/time';
 /**
  * S3.4a — DB exclusion 에러 표면 계약 (§5.3 ② 안전망).
  * confirmBooking의 23P01 변환기가 매칭하는 리터럴을 grounding한다. Prisma는
@@ -9,8 +11,6 @@
  * create 전에 막으므로). 직접 insert로 raw 제약 위반을 강제한다.
  */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { prisma } from '@/lib/db/prisma';
-import { toDbDate, toTimeDate } from '@/lib/slots/time';
 
 const DATE = '2026-07-25';
 const START = '10:00:00';
