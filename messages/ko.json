@@ -317,5 +317,40 @@
     "faq": "자주 묻는 질문",
     "businessInfo": "사업자 정보 준비 중입니다.",
     "rights": "모든 권리 보유."
+  },
+  "booking": {
+    "progress": {
+      "aria": "{total}단계 중 {current}단계",
+      "step1": "패키지",
+      "step2": "날짜·시간",
+      "step3": "정보 입력",
+      "step4": "결제"
+    },
+    "step1": {
+      "title": "패키지를 선택하세요",
+      "subtitle": "예약할 녹음 체험을 골라주세요.",
+      "durationLabel": "{minutes}분",
+      "headcountLabel": "{min}~{max}인",
+      "fromLabel": "1인 기준",
+      "selectCta": "선택",
+      "empty": "현재 언어로 예약 가능한 패키지가 없습니다."
+    },
+    "step2": {
+      "title": "날짜와 시간을 선택하세요",
+      "subtitle": "모든 시간은 한국 표준시(KST) 기준입니다.",
+      "backToPackages": "패키지로 돌아가기",
+      "dateLabel": "날짜",
+      "windowHint": "내일부터 최대 90일 후까지 예약할 수 있습니다.",
+      "pickDatePrompt": "날짜를 선택하면 예약 가능한 시간이 표시됩니다.",
+      "loading": "예약 가능 시간을 불러오는 중…",
+      "loadError": "시간을 불러오지 못했습니다. 다시 시도해 주세요.",
+      "retry": "다시 시도",
+      "noSlots": "이 날짜에는 예약 가능한 시간이 없습니다. 다른 날짜를 선택해 주세요.",
+      "available": "예약 가능",
+      "soldOut": "마감",
+      "timezoneNote": "시간 표기: KST (Asia/Seoul)",
+      "selectedLabel": "선택한 시간",
+      "continueCta": "다음"
+    }
   }
 }

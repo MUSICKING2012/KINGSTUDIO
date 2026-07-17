@@ -317,5 +317,40 @@
     "faq": "常見問題",
     "businessInfo": "商業登記資訊即將提供。",
     "rights": "版權所有。"
+  },
+  "booking": {
+    "progress": {
+      "aria": "第 {current} 步，共 {total} 步",
+      "step1": "方案",
+      "step2": "日期與時間",
+      "step3": "填寫資料",
+      "step4": "付款"
+    },
+    "step1": {
+      "title": "請選擇方案",
+      "subtitle": "請選擇您想預約的錄音體驗。",
+      "durationLabel": "{minutes} 分鐘",
+      "headcountLabel": "{min}–{max} 人",
+      "fromLabel": "1 人起",
+      "selectCta": "選擇",
+      "empty": "目前語言尚無可預約的方案。"
+    },
+    "step2": {
+      "title": "請選擇日期與時間",
+      "subtitle": "所有時間均以韓國標準時間（KST）顯示。",
+      "backToPackages": "返回方案",
+      "dateLabel": "日期",
+      "windowHint": "可預約範圍為明天起至 90 天內。",
+      "pickDatePrompt": "選擇日期後即可查看可預約時段。",
+      "loading": "正在載入可預約時段…",
+      "loadError": "無法載入時段，請再試一次。",
+      "retry": "重試",
+      "noSlots": "這一天沒有可預約的時段，請選擇其他日期。",
+      "available": "可預約",
+      "soldOut": "已額滿",
+      "timezoneNote": "時間以 KST（Asia/Seoul）顯示",
+      "selectedLabel": "已選時段",
+      "continueCta": "下一步"
+    }
   }
 }
