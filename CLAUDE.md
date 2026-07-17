@@ -13,7 +13,7 @@ NYT 보도 자산 보유. kingstudio.co.kr 신규 구축(greenfield). 풀스택 
 
 상위 기획 문서:
 - `KING_STUDIO_PRD_v0.2.md` — 제품 요구사항 (제품 결정의 단일 진실 공급원)
-- `KING_STUDIO_DESIGN.md` — Stitch 화면 디자인 프롬프트 (21개 화면)
+- `KING_STUDIO_DESIGN.md` — 에디토리얼 디자인 시스템 명세 (디자인 SoT; 구 Stitch Cinematic 대체)
 - `KING_STUDIO_Pricing_Model.xlsx` — 가격·단위경제 모델
 
 PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가격 모델(C10·C11 정정 반영본)이 최신이다.
@@ -194,10 +194,11 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 
 1. **한 번에 한 마일스톤.** PRD 9.3의 M1~M11 순서를 따른다. 현재 마일스톤의 게이트를 통과하기 전 다음으로 넘어가지 않는다. (번아웃·범위 폭주 방지 — PRD R1·R6)
 2. **작업 시작 전 PRD 관련 절을 읽는다.** 예: 예약 엔진 작업 → PRD 5.3. 컨텍스트를 추측하지 말고 문서에서 확인.
-   - **화면 작업의 디자인 소스 = 두 가지를 함께 본다:** (a) **`stitch_king_studio_design_system_v2/king_studio_cinematic/DESIGN.md`** — 색상·타이포·spacing·rounded·컴포넌트 규칙(시스템 명세) + 해당 화면이 있으면 그 `code.html`(비주얼 참고), (b) **코드에 이식된 brand 토큰** — `tailwind.config.ts` `theme.extend`의 stitch 네임스페이스(2b-0 파운데이션). 이 둘이 합쳐져 "DESIGN.md를 읽어라"가 코드상 실행 가능해진다.
-   - **이식 토큰 위치·네임스페이스 (다음 화면이 어디서 토큰을 찾는지):** 모두 `tailwind.config.ts` `theme.extend`에 hex 직접(shadcn `hsl(var())` 토큰은 불변·별개). 색상 `brand-primary`(#e83528, 단일)·`brand-primary-on-dark`(#ffb4a9, 다크 surface 위 primary 텍스트용)·`surface-cinematic`(#181214)·`surface-warm`(#FBF9F7)·`on-surface`·`outline`·`brand-violet`·`brand-pink`·`success`·`muted-text` 등(stitch 원명, shadcn과 겹치는 primary·secondary·background만 리네임). 타이포 `text-/font-{display-lg,headline-xl/lg,body-lg/md,label-sm}`(Anton 헤드라인·Pretendard 본문, `next/font` 자가호스팅). spacing `gap-gutter`·`stack-sm/md/lg`·`section-gap`·`max-w-container-max`. 반경 `rounded-{xl,brand-card,brand-input}`(shadcn `sm/md/lg`는 불변). **듀얼 surface는 `components/ui/surface.tsx`의 `<Surface tone="cinematic|warm">`로 섹션별 선택**(전역 토글·shadcn `.dark` 아님).
-   - **`brand-primary`(#e83528) 텍스트 대비 제약 (§3.9 WCAG AA — 2b-0 실측):** #e83528를 **소형 본문/라벨 텍스트색으로 쓰지 말 것** — 다크(#181214) 4.38:1·라이트(#FBF9F7) 4.02:1로 AA(4.5) 미달(AA-large 3:1만 통과). 규칙: ① 텍스트·아이콘은 **다크 surface = `text-brand-primary-on-dark`(#ffb4a9, 10.88:1)**, 라이트 surface = 본문색(`text-surface-cinematic`); ② #e83528은 **fill(버튼·배지 배경)·보더·대형 헤드라인(≥24px 또는 ≥18.66px 볼드)**에만; ③ 버튼 라벨 white-on-#e83528 = 4.22:1 → **대형/볼드 라벨만**(소형은 대비 보강). 색만으로 정보 전달 금지(§3.9)는 별개로 항상 적용.
-   - **DESIGN.md에 전용 레이아웃이 없는 화면(곡 카탈로그 등)은** stitch **비주얼 프리미티브로 구성**한다 — 타이포 스케일·인풋 스타일(`bg-surface-container-lowest border border-outline-variant/30 focus:border-brand-primary`)·그리드(`grid ... gap-gutter`)·배지(필 보더 `rounded-full border border-brand-primary`; 라벨 텍스트는 위 대비 제약 — 다크 surface면 `text-brand-primary-on-dark`, fill 배지면 `bg-brand-primary text-white` 대형/볼드)·섹션 헤더(`border-l-4 border-brand-primary pl-4`). 새 레이아웃을 임의 창작하지 말고 기존 stitch 화면의 패턴을 재사용.
+   - 화면 작업의 디자인 소스 = 두 가지를 함께 본다: (a) `KING_STUDIO_DESIGN.md`(에디토리얼) — 색상·타이포·spacing·radius·서피스·컴포넌트 규칙(시스템 명세), (b) 코드에 이식된 토큰 — `app/globals.css`의 `:root` shadcn CSS 변수(에디토리얼 팔레트로 재설정: primary=accent #F5461E, background=paper #F0EEE9, foreground=ink #141210 등) + `tailwind.config.ts`의 유틸리티 스케일. 이 둘이 합쳐져 "DESIGN.md를 읽어라"가 코드상 실행 가능해진다.
+   - 토큰 위치·규칙: 색상의 단일 출처는 `app/globals.css` `:root` shadcn 변수다(컴포넌트가 자동 반영). Stitch B-namespace(`brand-primary`·`surface-cinematic`·`on-surface` 등)·Anton·듀얼 서피스는 폐기한다. 유지 토큰: tailwind `spacing`(gutter·stack·section-gap 80px)·`maxWidth.container-max`(1280)·`fontSize` 스케일(display-lg 등)·`radius`(brand-card 18px). 서체는 Pretendard 단일(`font-sans`), 헤드라인도 Pretendard 대형·라이트.
+   - accent #F5461E 텍스트 대비 제약 (§3.9 WCAG AA): #F5461E + 흰 텍스트 ≈ 3.4:1 → AA(4.5) 미달, AA-large(3:1)만 통과. 규칙: ① 소형 본문/라벨 텍스트·아이콘은 잉크(#141210) 사용(accent를 텍스트색으로 금지); ② #F5461E는 fill(버튼·배지 배경)·보더·포커스 링·대형 헤드라인 스팟에만; ③ 버튼 라벨 white-on-#F5461E는 대형/볼드(≥16px 볼드 또는 ≥18.66px)만. 색만으로 정보 전달 금지(§3.9)는 별개로 항상 적용.
+   - 서피스: 라이트 단일 서피스 — paper(#F0EEE9) 배경 + white 카드 2층. Stitch 시네마틱 다크·전역 다크 토글은 폐기, 다크모드는 현재 범위 밖.
+   - DESIGN.md에 전용 레이아웃이 없는 화면은 에디토리얼 비주얼 프리미티브로 구성한다 — 타이포 스케일 + white 카드(radius 18px, soft shadow) + paper 배경 + `gap-gutter` 그리드 + accent 스팟. 입력은 white·border·focus 링 accent, 섹션 간 `section-gap`(80px), 배지는 `rounded-full`. 새 레이아웃을 임의 창작하지 말고 DESIGN.md 프리미티브·기존 화면 패턴을 재사용.
 3. **마이그레이션은 Prisma Migrate로만.** 스키마 변경 시 마이그레이션 파일 생성, 직접 SQL로 프로덕션 변경 금지.
 4. **커밋은 작고 의미 단위로.** Conventional Commits (`feat:`, `fix:`, `chore:` ...). 한 커밋에 여러 기능 섞지 말 것.
 5. **테스트:** 위험 구역(§4)은 테스트 필수. 결제·예약·동의는 Playwright E2E 포함.

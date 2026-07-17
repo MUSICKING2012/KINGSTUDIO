@@ -127,7 +127,7 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
         // Stitch radii — only non-colliding names (shadcn owns sm/md/lg above).
         xl: '1.5rem',
-        'brand-card': '1rem', // stitch `lg` — large containers / package cards
+        'brand-card': '1.125rem', // 18px — editorial large cards / panels
         'brand-input': '0.5rem', // stitch DEFAULT — inputs / small buttons
       },
       // Stitch spacing scale (named keys; feed gap-*, p*-*, m*-*).
@@ -158,12 +158,12 @@ const config: Config = {
       // Per-scale keys let stitch's `font-headline-lg` / `font-display-lg` / `font-body-md` work.
       fontFamily: {
         sans: ['var(--font-pretendard)', 'Pretendard', 'system-ui', 'sans-serif'],
-        headline: ['var(--font-anton)', 'sans-serif'],
-        display: ['var(--font-anton)', 'sans-serif'],
-        'display-lg': ['var(--font-anton)', 'sans-serif'],
-        'display-lg-mobile': ['var(--font-anton)', 'sans-serif'],
-        'headline-xl': ['var(--font-anton)', 'sans-serif'],
-        'headline-lg': ['var(--font-anton)', 'sans-serif'],
+        headline: ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
+        display: ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
+        'display-lg': ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
+        'display-lg-mobile': ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
+        'headline-xl': ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
+        'headline-lg': ['var(--font-pretendard)', 'Pretendard', 'sans-serif'],
         'body-lg': ['var(--font-pretendard)', 'sans-serif'],
         'body-md': ['var(--font-pretendard)', 'sans-serif'],
         'label-sm': ['var(--font-pretendard)', 'sans-serif'],
