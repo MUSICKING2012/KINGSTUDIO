@@ -5,7 +5,65 @@
   },
   "home": {
     "title": "KING STUDIO",
-    "subtitle": "서울에서 즐기는 K-POP 녹음 체험."
+    "subtitle": "서울의 K-POP 녹음 체험.",
+    "metaTitle": "KING STUDIO — 서울에서 나만의 K-POP 음원을 녹음하세요",
+    "metaDescription": "실제 서울 녹음실에서 보컬 디렉터와 함께 K-POP을 녹음하고, 나만의 음원과 사진을 가져가는 체험. The New York Times 소개.",
+    "hero": {
+      "eyebrow": "서울 · 성수 · 2017년부터",
+      "title": "실제 서울 녹음실에서 나만의 K-POP 음원을 녹음하세요.",
+      "subtitle": "보컬 디렉터와 함께 트레이닝하고, 프로 부스에서 노래하고, 세션의 음원과 사진을 가져가세요 — The New York Times가 소개한 그 체험.",
+      "ctaPrimary": "패키지 보기",
+      "ctaSecondary": "곡 둘러보기"
+    },
+    "nyt": {
+      "label": "언론 보도",
+      "source": "The New York Times · 2024년 11월",
+      "cta": "기사 읽기"
+    },
+    "steps": {
+      "heading": "세션은 이렇게 진행돼요",
+      "step1": {
+        "title": "보컬 트레이닝",
+        "body": "프로 보컬 디렉터와 함께 워밍업하고 나만의 사운드를 찾습니다."
+      },
+      "step2": {
+        "title": "녹음 & 믹싱",
+        "body": "실제 부스에서 노래하고, 엔지니어가 믹싱·마스터링합니다."
+      },
+      "step3": {
+        "title": "가져가기",
+        "body": "나만의 음원과 스튜디오 사진을 받아 갑니다."
+      }
+    },
+    "experience": {
+      "heading": "세션을 골라보세요",
+      "sub": "집중 보컬 녹음부터 뮤직비디오 풀패키지까지.",
+      "tiers": {
+        "gold": {
+          "name": "GOLD",
+          "hook": "프로듀서 보컬 트레이닝과 녹음, 스튜디오 사진과 CD 포함."
+        },
+        "diamond": {
+          "name": "DIAMOND",
+          "hook": "풀 믹스·마스터링, 스튜디오 사진과 CD 포함."
+        },
+        "premium": {
+          "name": "PREMIUM",
+          "hook": "다이아몬드 전 구성에 시네마틱 뮤직비디오까지."
+        }
+      },
+      "cta": "전체 패키지 비교"
+    },
+    "songs": {
+      "heading": "좋아하는 곡을 부르세요",
+      "sub": "방문 전에 카탈로그에서 부를 곡을 골라보세요.",
+      "cta": "곡 둘러보기"
+    },
+    "finalCta": {
+      "heading": "서울에서 녹음할 준비 되셨나요?",
+      "sub": "패키지를 고르고 세션을 시작하세요.",
+      "cta": "패키지 보기"
+    }
   },
   "notFound": {
     "title": "페이지를 찾을 수 없습니다",
