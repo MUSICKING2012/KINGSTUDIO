@@ -32,7 +32,11 @@ const FAILURE_STATUS: Record<Extract<SubmitReviewResult, { ok: false }>['reason'
 };
 
 export async function POST(request: Request): Promise<Response> {
-  // 1. Per-IP throttle (PRD §5.9 5/5min) — before any parsing or DB access.
+  // 1. Per-IP throttle — before any parsing or DB access.
+  // NOTE: §5.9 mandates no per-IP review limit. Its only stated posture is that writing a
+  // review is optional and downloads are unconditional. The applicable written rule is the
+  // global "API 100req/min/IP" security baseline; 5/5min is a stricter implementation
+  // judgement (see lib/review/rateLimit.ts), queued for a §5.9 amendment.
   const ip = clientIp(request);
   const rate = await checkReviewRateLimit(ip);
   if (!rate.allowed) {

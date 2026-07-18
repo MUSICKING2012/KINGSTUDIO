@@ -1,4 +1,8 @@
 // Review submission abuse guard: 5 submissions / 5 minutes per IP → temporary auto-block.
+// PROVENANCE: this threshold is NOT from the PRD. Unlike the E1 download limit (PRD §5.6,
+// "5분 내 50회"), §5.9 states no review-submission limit; the number was chosen by analogy
+// with the login-failure lockout (§5.8, 5회/5분) and is stricter than the global API ceiling
+// (100req/min/IP). Open item: reconcile in a §5.9 amendment before launch.
 // Deliberate clone of lib/download/rateLimit.ts (E1) — that file is frozen (verified risk zone) and
 // must not grow a second consumer; generalizing the two into one module is queued as debt for when
 // a third consumer appears. Fixed-window counter on Redis (Upstash). The INCR + first-hit EXPIRE
