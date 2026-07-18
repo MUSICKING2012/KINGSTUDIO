@@ -128,7 +128,8 @@
       "perHeadcount": "{n}人",
       "includesTitle": "包含項目",
       "bookCta": "預約此套餐",
-      "b2bInquiryCta": "團體・B2B洽詢"
+      "b2bInquiryCta": "團體・B2B洽詢",
+      "b2bInquirySubject": "[B2B] {name} 洽詢"
     },
     "items": {
       "gold": {

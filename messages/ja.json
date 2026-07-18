@@ -128,7 +128,8 @@
       "perHeadcount": "{n}名",
       "includesTitle": "含まれるもの",
       "bookCta": "このパッケージを予約",
-      "b2bInquiryCta": "団体・B2Bのお問い合わせ"
+      "b2bInquiryCta": "団体・B2Bのお問い合わせ",
+      "b2bInquirySubject": "[B2B] {name} お問い合わせ"
     },
     "items": {
       "gold": {
