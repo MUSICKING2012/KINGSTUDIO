@@ -417,6 +417,56 @@
         "consent_missing": "請勾選所有必要同意項目。"
       },
       "continueCta": "前往付款"
+    },
+    "step4": {
+      "back": "返回選項與同意",
+      "title": "付款",
+      "subtitle": "確認您的預約內容，同意付款條款後完成付款。",
+      "missingDraft": "找不到預約資料。請先於上一步填寫選項。",
+      "backToDetails": "前往選項",
+      "summary": {
+        "title": "預約摘要",
+        "package": "方案",
+        "dateTime": "日期與時間",
+        "headcount": "人數",
+        "subtotal": "付款金額",
+        "discount": "回訪折扣",
+        "total": "總計",
+        "cdNote": "CD（當日錄音原檔）將於課堂結束時在錄音室現場交付。"
+      },
+      "currencyNotice": "款項以韓圜（KRW）計費。換算為您本地貨幣的金額視乎發卡機構匯率而定，PG 手續費已包含於扣款金額內。",
+      "pg": {
+        "title": "付款方式",
+        "inicis": "本地付款（KG Inicis）",
+        "paypal": "海外付款（PayPal）",
+        "feeInicis": "本地卡・Naver Pay・Kakao Pay ・ PG 手續費約 3.0%",
+        "feePaypal": "PayPal・海外卡（Visa/Master/Amex/JCB） ・ PG 手續費約 4.4% + ₩560"
+      },
+      "consent": {
+        "title": "付款前同意",
+        "payment": "本人同意付款條款（以 KRW 計費、發卡機構匯率差異、含 PG 手續費）及退款規定。（必填）"
+      },
+      "payCta": "立即付款",
+      "processing": "處理中…",
+      "errors": {
+        "invalid_params": "部分內容有誤，請檢查前面的步驟。",
+        "headcount_mismatch": "人數與出生日期輸入不一致。",
+        "out_of_window": "該日期已超出可預約範圍。",
+        "package_not_available": "此方案在目前語言下無法預約。",
+        "not_slot_bookable": "此方案無法以時段預約。",
+        "headcount_out_of_range": "人數超出允許範圍。",
+        "minor_guardian_required": "有未滿 16 歲同行者時，需要監護人同意及監護人資料。請於上一步完成。",
+        "consent_invalid": "缺少必要的同意項目，請確認。",
+        "slot_unavailable": "該時段剛剛滿額，請選擇其他時段。",
+        "payment_failed": "付款失敗，請再試一次。",
+        "concurrent_booking_lost": "因同時預約競爭而未能取得時段。款項將自動退還，請選擇其他時間。",
+        "internal_error": "發生暫時性錯誤，請稍後再試。"
+      },
+      "success": {
+        "title": "您的預約已確認",
+        "refLabel": "預約編號",
+        "message": "我們將以電郵寄送確認與收據。"
+      }
     }
   }
 }

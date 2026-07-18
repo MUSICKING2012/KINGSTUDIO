@@ -417,6 +417,56 @@
         "consent_missing": "필수 동의 항목을 모두 체크하세요."
       },
       "continueCta": "결제로 진행"
+    },
+    "step4": {
+      "back": "옵션·동의로 돌아가기",
+      "title": "결제",
+      "subtitle": "예약 내용을 확인하고 결제 약관에 동의한 뒤 결제를 진행하세요.",
+      "missingDraft": "예약 정보가 없습니다. 이전 단계에서 옵션을 먼저 입력해 주세요.",
+      "backToDetails": "옵션 단계로 이동",
+      "summary": {
+        "title": "예약 요약",
+        "package": "패키지",
+        "dateTime": "일시",
+        "headcount": "인원",
+        "subtotal": "결제 금액",
+        "discount": "재방문 할인",
+        "total": "최종 결제 금액",
+        "cdNote": "CD 앨범(당일 세션 원본)은 세션 종료 시 스튜디오에서 현장 전달됩니다."
+      },
+      "currencyNotice": "결제는 KRW로 청구됩니다. 카드사 자국 통화 환산액은 카드사 환율에 따라 달라질 수 있으며, PG 수수료가 청구액에 포함됩니다.",
+      "pg": {
+        "title": "결제 수단",
+        "inicis": "국내 결제 (KG이니시스)",
+        "paypal": "해외 결제 (PayPal)",
+        "feeInicis": "신용/체크카드·네이버페이·카카오페이 · PG 수수료 약 3.0%",
+        "feePaypal": "PayPal·해외 카드(Visa/Master/Amex/JCB) · PG 수수료 약 4.4% + ₩560"
+      },
+      "consent": {
+        "title": "결제 직전 동의",
+        "payment": "결제 약관(KRW 청구·카드사 환율 차이·PG 수수료 포함)과 환불 규정에 동의합니다. (필수)"
+      },
+      "payCta": "결제하기",
+      "processing": "결제 처리 중…",
+      "errors": {
+        "invalid_params": "입력값이 올바르지 않습니다. 이전 단계를 다시 확인해 주세요.",
+        "headcount_mismatch": "인원 수와 생년월일 입력이 일치하지 않습니다.",
+        "out_of_window": "예약 가능 기간을 벗어난 날짜입니다.",
+        "package_not_available": "현재 언어에서 예약할 수 없는 패키지입니다.",
+        "not_slot_bookable": "슬롯 예약이 불가한 패키지입니다.",
+        "headcount_out_of_range": "허용 인원 범위를 벗어났습니다.",
+        "minor_guardian_required": "만 16세 미만 동반 시 보호자 동의와 보호자 정보가 필요합니다. 이전 단계에서 완료해 주세요.",
+        "consent_invalid": "필수 동의 항목이 누락되었습니다. 다시 확인해 주세요.",
+        "slot_unavailable": "선택하신 시간이 방금 마감되었습니다. 다른 시간을 선택해 주세요.",
+        "payment_failed": "결제에 실패했습니다. 다시 시도해 주세요.",
+        "concurrent_booking_lost": "동시 예약 경합으로 슬롯을 확보하지 못했습니다. 결제는 자동 환불되며, 다른 시간을 선택해 주세요.",
+        "internal_error": "일시적인 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      },
+      "success": {
+        "title": "예약이 확정되었습니다",
+        "refLabel": "예약 번호",
+        "message": "확정 안내와 영수증을 이메일로 보내드립니다."
+      }
     }
   }
 }

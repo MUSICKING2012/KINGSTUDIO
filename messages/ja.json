@@ -425,6 +425,56 @@
         "consent_missing": "必須同意項目をすべてチェックしてください。"
       },
       "continueCta": "決済へ進む"
+    },
+    "step4": {
+      "back": "オプション・同意に戻る",
+      "title": "お支払い",
+      "subtitle": "ご予約内容を確認し、決済規約に同意のうえお支払いへお進みください。",
+      "missingDraft": "予約情報が見つかりません。前のステップでオプションを入力してください。",
+      "backToDetails": "オプションへ移動",
+      "summary": {
+        "title": "ご予約内容",
+        "package": "パッケージ",
+        "dateTime": "日時",
+        "headcount": "人数",
+        "subtotal": "お支払い金額",
+        "discount": "リピーター割引",
+        "total": "合計",
+        "cdNote": "CD（当日セッションの原本）はセッション終了時にスタジオで直接お渡しします。"
+      },
+      "currencyNotice": "お支払いはKRWで請求されます。自国通貨への換算額はカード会社の為替レートにより異なり、PG手数料が請求額に含まれます。",
+      "pg": {
+        "title": "決済方法",
+        "inicis": "国内決済（KG이니시스）",
+        "paypal": "海外決済（PayPal）",
+        "feeInicis": "国内カード・Naver Pay・Kakao Pay ・ PG手数料 約3.0%",
+        "feePaypal": "PayPal・海外カード（Visa/Master/Amex/JCB） ・ PG手数料 約4.4% + ₩560"
+      },
+      "consent": {
+        "title": "お支払い前の同意",
+        "payment": "決済規約（KRW請求・カード会社の為替差・PG手数料含む）および返金規定に同意します。（必須）"
+      },
+      "payCta": "支払う",
+      "processing": "処理中…",
+      "errors": {
+        "invalid_params": "入力内容に誤りがあります。前のステップをご確認ください。",
+        "headcount_mismatch": "人数と生年月日の入力が一致しません。",
+        "out_of_window": "予約可能期間外の日付です。",
+        "package_not_available": "現在の言語では予約できないパッケージです。",
+        "not_slot_bookable": "スロット予約ができないパッケージです。",
+        "headcount_out_of_range": "許容人数の範囲を超えています。",
+        "minor_guardian_required": "16歳未満が同伴する場合、保護者の同意と保護者情報が必要です。前のステップで完了してください。",
+        "consent_invalid": "必須の同意項目が不足しています。ご確認ください。",
+        "slot_unavailable": "ただ今この時間が満席になりました。別の時間をお選びください。",
+        "payment_failed": "決済に失敗しました。もう一度お試しください。",
+        "concurrent_booking_lost": "同時予約の競合によりスロットを確保できませんでした。お支払いは自動返金されます。別の時間をお選びください。",
+        "internal_error": "一時的なエラーが発生しました。しばらくして再度お試しください。"
+      },
+      "success": {
+        "title": "ご予約が確定しました",
+        "refLabel": "予約番号",
+        "message": "確認とレシートをメールでお送りします。"
+      }
     }
   }
 }
