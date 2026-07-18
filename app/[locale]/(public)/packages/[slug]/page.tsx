@@ -6,7 +6,7 @@ import { cache } from 'react';
 
 import { Price } from '@/components/price/price';
 import { Button } from '@/components/ui/button';
-import { isPackageViewable } from '@/lib/catalog/package-visibility';
+import { isPackageBookableOnline, isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getPackageBySlug } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
@@ -153,13 +153,31 @@ export default async function PackageDetailPage({
               </tbody>
             </table>
 
-            <Button
-              asChild
-              size="lg"
-              className="mt-stack-lg w-full bg-foreground text-background hover:bg-foreground/90"
-            >
-              <Link href={`/booking?package=${slug}`}>{t('detail.bookCta')}</Link>
-            </Button>
+            {isPackageBookableOnline(pkg) ? (
+              <Button
+                asChild
+                size="lg"
+                className="mt-stack-lg w-full bg-foreground text-background hover:bg-foreground/90"
+              >
+                <Link href={`/booking?package=${slug}`}>{t('detail.bookCta')}</Link>
+              </Button>
+            ) : (
+              // b2b_quote (PRD §5.3 group exception): no self-serve booking — route to B2B
+              // inquiry email instead (§5.8-A③ quote flow). Interim mailto CTA until the
+              // dedicated B2B inquiry page (PRD IA) ships; subject uses the canonical DB name
+              // for staff-side inbox filtering.
+              <Button
+                asChild
+                size="lg"
+                className="mt-stack-lg w-full bg-foreground text-background hover:bg-foreground/90"
+              >
+                <a
+                  href={`mailto:join@kingstudio.co.kr?subject=${encodeURIComponent(`[B2B] ${pkg.name}`)}`}
+                >
+                  {t('detail.b2bInquiryCta')}
+                </a>
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -127,7 +127,8 @@
       "priceTableTitle": "인원별 요금",
       "perHeadcount": "{n}인",
       "includesTitle": "포함 항목",
-      "bookCta": "지금 예약하기"
+      "bookCta": "지금 예약하기",
+      "b2bInquiryCta": "단체·B2B 문의"
     },
     "items": {
       "gold": {

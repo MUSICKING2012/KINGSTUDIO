@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 
 import { BookingProgress } from '@/components/booking/booking-progress';
 import { Price } from '@/components/price/price';
+import { isPackageBookableOnline } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { listPackages } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
@@ -15,9 +16,11 @@ import type { Locale } from '@/lib/i18n/routing';
 import { resolvePackageTier } from '@/lib/slots/publicAvailability';
 
 // Booking Step 1 — package selection (PRD §5.3 4-step flow). Read-only. Only self-serve
-// slot-grid packages are bookable here: listPackages already applies the languagesAvailable
-// gate (C11, ko-only rental hides abroad), then we drop group/b2b packages that have no slot
-// grid (resolvePackageTier → null). Copy (name/tagline) reuses the packages namespace so there
+// packages are bookable here: listPackages already applies the languagesAvailable gate (C11,
+// ko-only rental hides abroad), then bookingFlow=instant_payment is the authoritative gate
+// (b2b_quote = B2B inquiry → admin quote §5.8-A③), with the name-based slot-grid check
+// (resolvePackageTier → null) kept as a structural fallback.
+// Copy (name/tagline) reuses the packages namespace so there
 // is a single translation source; money/duration/headcount come from the DB row.
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +44,7 @@ export default async function BookingStep1Page({
 
   const prismaLocale = toPrismaLocale(locale as Locale);
   const bookable = (await listPackages({ locale: prismaLocale })).filter(
-    (p) => resolvePackageTier(p.name) !== null,
+    (p) => isPackageBookableOnline(p) && resolvePackageTier(p.name) !== null,
   );
 
   // Display-only FX (same pattern as the packages catalog). Failure → KRW-only, never fatal.
