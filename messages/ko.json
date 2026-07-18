@@ -128,7 +128,8 @@
       "perHeadcount": "{n}인",
       "includesTitle": "포함 항목",
       "bookCta": "지금 예약하기",
-      "b2bInquiryCta": "단체·B2B 문의"
+      "b2bInquiryCta": "단체·B2B 문의",
+      "b2bInquirySubject": "[B2B] {name} 문의"
     },
     "items": {
       "gold": {

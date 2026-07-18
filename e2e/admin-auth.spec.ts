@@ -129,3 +129,25 @@ test('🚫 Accountant (no blackout:manage) → POST /api/admin/blackouts returns
   const body = await res.json();
   expect(body).toEqual({ error: 'forbidden' });
 });
+
+test('🚫 Accountant (no magiclink:reissue) → POST /api/admin/magic-links/reissue returns 403 (Stage E2 §4 route-level denial)', async ({
+  page,
+}) => {
+  await login(page, ACCT, ACCT_SECRET);
+  await expect(page).toHaveURL(/\/admin\/dashboard/);
+  const res = await page
+    .context()
+    .request.post('/api/admin/magic-links/reissue', { data: { bookingId: 'irrelevant' } });
+  expect(res.status()).toBe(403); // permission guard fires BEFORE any booking lookup
+  const body = await res.json();
+  expect(body).toEqual({ error: 'forbidden' });
+});
+
+test('🚫 unauthenticated → POST /api/admin/magic-links/reissue returns 401', async ({
+  request,
+}) => {
+  const res = await request.post('/api/admin/magic-links/reissue', {
+    data: { bookingId: 'irrelevant' },
+  });
+  expect(res.status()).toBe(401);
+});

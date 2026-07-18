@@ -164,15 +164,18 @@ export default async function PackageDetailPage({
             ) : (
               // b2b_quote (PRD §5.3 group exception): no self-serve booking — route to B2B
               // inquiry email instead (§5.8-A③ quote flow). Interim mailto CTA until the
-              // dedicated B2B inquiry page (PRD IA) ships; subject uses the canonical DB name
-              // for staff-side inbox filtering.
+              // dedicated B2B inquiry page (PRD IA) ships. Subject is localized (CLAUDE.md §5 —
+              // PR #19 CodeRabbit follow-up) but every locale value keeps the literal "[B2B]"
+              // prefix + canonical DB name param, so staff-side inbox filtering stays stable.
               <Button
                 asChild
                 size="lg"
                 className="mt-stack-lg w-full bg-foreground text-background hover:bg-foreground/90"
               >
                 <a
-                  href={`mailto:join@kingstudio.co.kr?subject=${encodeURIComponent(`[B2B] ${pkg.name}`)}`}
+                  href={`mailto:join@kingstudio.co.kr?subject=${encodeURIComponent(
+                    t('detail.b2bInquirySubject', { name: pkg.name }),
+                  )}`}
                 >
                   {t('detail.b2bInquiryCta')}
                 </a>

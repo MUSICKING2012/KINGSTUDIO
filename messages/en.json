@@ -128,7 +128,8 @@
       "perHeadcount": "{n} people",
       "includesTitle": "What's included",
       "bookCta": "Book this package",
-      "b2bInquiryCta": "Group & B2B inquiry"
+      "b2bInquiryCta": "Group & B2B inquiry",
+      "b2bInquirySubject": "[B2B] {name} inquiry"
     },
     "items": {
       "gold": {
