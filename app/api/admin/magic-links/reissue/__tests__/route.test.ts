@@ -11,6 +11,7 @@ const {
   mockRequirePermission,
   mockReissueMagicLink,
   mockAuditLogCreate,
+  mockTransaction,
 } = vi.hoisted(() => ({
   mockAdminAuth: vi.fn(),
   mockValidateAdminSession: vi.fn(),
@@ -18,6 +19,7 @@ const {
   mockRequirePermission: vi.fn(),
   mockReissueMagicLink: vi.fn(),
   mockAuditLogCreate: vi.fn(),
+  mockTransaction: vi.fn(),
 }));
 
 vi.mock('@/adminAuth', () => ({ adminAuth: mockAdminAuth }));
@@ -30,10 +32,14 @@ vi.mock('@/lib/download/magicLink', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/lib/download/magicLink')>();
   return { ...actual, reissueMagicLink: mockReissueMagicLink };
 });
+// $transaction executes its callback with a tx client whose auditLog.create is observable —
+// the route's reissue+audit atomic unit (PR #20 review) runs through here. Real rollback
+// semantics belong to prisma; what we CAN assert is that an audit failure fails the whole
+// request (nothing returned to the caller) and that both writes go through one transaction.
 vi.mock('@/lib/db/prisma', () => ({
   prisma: {
     adminUser: { findUnique: mockAdminUserFindUnique },
-    auditLog: { create: mockAuditLogCreate },
+    $transaction: mockTransaction,
   },
 }));
 
@@ -67,6 +73,12 @@ beforeEach(() => {
   vi.resetAllMocks();
   mockReissueMagicLink.mockResolvedValue(ISSUED);
   mockAuditLogCreate.mockResolvedValue({});
+  // Re-armed every test: vi.resetAllMocks() strips even a vi.fn()-constructor-time
+  // implementation, so this must be re-set here (not just at module init) or every test
+  // after the first would see $transaction resolve to undefined.
+  mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) =>
+    fn({ auditLog: { create: mockAuditLogCreate } }),
+  );
 });
 
 describe('POST /api/admin/magic-links/reissue — auth chain (S2.5b-0)', () => {
@@ -116,9 +128,9 @@ describe('POST /api/admin/magic-links/reissue — input + outcome', () => {
     expect(res.status).toBe(400);
   });
 
-  it('400 when bookingId is missing or not a string', async () => {
+  it('400 when bookingId is missing, not a string, empty, or whitespace-only (Zod trim)', async () => {
     passAuth();
-    for (const body of [{}, { bookingId: 42 }, { bookingId: '' }]) {
+    for (const body of [{}, { bookingId: 42 }, { bookingId: '' }, { bookingId: '   ' }]) {
       const res = await POST(makeReq(body));
       expect(res.status).toBe(400);
     }
@@ -142,7 +154,8 @@ describe('POST /api/admin/magic-links/reissue — input + outcome', () => {
     expect(body.ok).toBe(true);
     expect(body.magicLinkId).toBe('ml-new-001');
     expect(body.rawToken).toBe(RAW_TOKEN);
-    expect(mockReissueMagicLink).toHaveBeenCalledWith(BOOKING_ID);
+    // Composed into the SAME transaction as the audit write (atomicity — PR #20 review)
+    expect(mockReissueMagicLink).toHaveBeenCalledWith(BOOKING_ID, expect.anything());
 
     // Audit: action + booking target + magic_link PK — and NEVER the raw token (하드제약 #6).
     expect(mockAuditLogCreate).toHaveBeenCalledTimes(1);
@@ -152,5 +165,14 @@ describe('POST /api/admin/magic-links/reissue — input + outcome', () => {
     expect(auditArg.data.targetType).toBe('booking');
     expect(auditArg.data.targetId).toBe(BOOKING_ID);
     expect(JSON.stringify(auditArg.data)).not.toContain(RAW_TOKEN);
+  });
+
+  it('audit-write failure fails the whole request — no un-audited reissue escapes (regression, PR #20 review)', async () => {
+    passAuth();
+    mockAuditLogCreate.mockRejectedValue(new Error('audit insert failed'));
+    // The transaction callback rejects → $transaction rejects (prisma would roll the reissue
+    // back) → the route surfaces the failure instead of returning a token without its audit row.
+    await expect(POST(makeReq({ bookingId: BOOKING_ID }))).rejects.toThrow('audit insert failed');
+    expect(mockReissueMagicLink).toHaveBeenCalledTimes(1);
   });
 });
