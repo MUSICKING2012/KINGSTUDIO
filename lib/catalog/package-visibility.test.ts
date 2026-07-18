@@ -15,6 +15,8 @@ const base: Omit<Package, 'languagesAvailable'> = {
   headcountMax: 2,
   bookingFlow: BookingFlow.instant_payment,
   friendReferralEligible: false,
+  returningDiscountEligible: false,
+  cdIncluded: false,
   isActive: true,
   displayOrder: 0,
   createdAt: new Date(),

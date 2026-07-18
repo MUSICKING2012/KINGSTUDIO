@@ -480,5 +480,41 @@
         "message": "We’ll email you the confirmation and receipt."
       }
     }
+  },
+  "download": {
+    "title": "Your recordings",
+    "subtitle": "Files from your session on {date}.",
+    "linkExpires": "This download link is valid until {date}.",
+    "empty": "Your files are still being prepared. We will email you as soon as they are ready.",
+    "invalid": {
+      "title": "Link not found",
+      "body": "This download link is not valid. Please check the latest email from KING STUDIO, or contact us and we will send you a new link."
+    },
+    "expired": {
+      "title": "Link expired",
+      "body": "This download link has expired. Contact us and we will reissue a new link for your session files."
+    },
+    "revoked": {
+      "title": "Link replaced",
+      "body": "A newer download link has been issued for this booking. Please use the most recent email from KING STUDIO, or contact us for help."
+    },
+    "list": {
+      "version": "v{version}",
+      "sizeMb": "{size} MB",
+      "download": "Download",
+      "downloading": "Preparing…",
+      "errorGone": "This link is no longer valid. Please contact us for a new one.",
+      "errorRateLimited": "Too many downloads in a short time. Please wait a few minutes and try again.",
+      "errorGeneric": "Download failed. Please try again.",
+      "types": {
+        "raw_wav": "Raw recording (WAV)",
+        "raw_mp3": "Raw recording (MP3)",
+        "master_wav": "Mixed & mastered (WAV)",
+        "master_mp3": "Mixed & mastered (MP3)",
+        "photos": "Session photos",
+        "mv_horizontal": "Music video (1080p)",
+        "highlight_vertical": "Vertical highlight (9:16)"
+      }
+    }
   }
 }

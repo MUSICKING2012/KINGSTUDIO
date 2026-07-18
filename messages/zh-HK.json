@@ -468,5 +468,41 @@
         "message": "我們將以電郵寄送確認與收據。"
       }
     }
+  },
+  "download": {
+    "title": "我的錄音檔案",
+    "subtitle": "{date} 錄音時段的成果檔案。",
+    "linkExpires": "此下載連結有效期至 {date}。",
+    "empty": "檔案正在準備中，完成後我們會立即以電郵通知您。",
+    "invalid": {
+      "title": "找不到連結",
+      "body": "此下載連結無效。請查看 KING STUDIO 發送給您的最新電郵，或與我們聯絡，我們會發送新的連結。"
+    },
+    "expired": {
+      "title": "連結已過期",
+      "body": "此下載連結已過期。請與我們聯絡，我們會為您重新發出新的連結。"
+    },
+    "revoked": {
+      "title": "已更換為新連結",
+      "body": "此預約已發出較新的下載連結。請使用 KING STUDIO 最近發送的電郵，或與我們聯絡尋求協助。"
+    },
+    "list": {
+      "version": "v{version}",
+      "sizeMb": "{size} MB",
+      "download": "下載",
+      "downloading": "準備中…",
+      "errorGone": "此連結已失效。請與我們聯絡以取得新的連結。",
+      "errorRateLimited": "短時間內下載次數過多，請稍候幾分鐘再試。",
+      "errorGeneric": "下載失敗，請再試一次。",
+      "types": {
+        "raw_wav": "原始錄音 (WAV)",
+        "raw_mp3": "原始錄音 (MP3)",
+        "master_wav": "混音＆母帶處理 (WAV)",
+        "master_mp3": "混音＆母帶處理 (MP3)",
+        "photos": "錄音時段照片",
+        "mv_horizontal": "音樂錄影帶 (1080p)",
+        "highlight_vertical": "直式精華影片 (9:16)"
+      }
+    }
   }
 }
