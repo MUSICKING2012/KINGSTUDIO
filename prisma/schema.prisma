@@ -232,7 +232,7 @@ enum ReauthActionType {
   account_delete // delete or deactivate an account
   bulk_export // ≥100 records
   terms_publish // new ToS / privacy-policy version
-  retention_change // S3 Object Lock retention change
+  retention_change // consent-bucket retention/policy change (was S3 Object Lock — infra pivot 2026-07-18)
   custom_script // SEO custom_script slot (§5.8-A ①)
 }
 
@@ -788,13 +788,13 @@ model Checkin {
 }
 
 /// Generated PayPal Dispute Evidence Pack record (PRD §5.5). ⚠ §4 danger zone — the generated
-/// PDF's data accuracy must be verified. Stores the GCS object key (signed URL on demand, §3.5
-/// — C13: was pdf_url/S3). generatedBy = admin (logical ref).
+/// PDF's data accuracy must be verified. Stores the storage object key (signed URL on demand,
+/// §3.5 — was pdf_url/S3). generatedBy = admin (logical ref).
 model DisputeEvidence {
   id            String   @id @default(cuid())
   bookingId     String   @map("booking_id")
   generatedAt   DateTime @map("generated_at")
-  pdfStorageKey String?  @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_url)
+  pdfStorageKey String?  @map("pdf_storage_key") // storage object key (rename of PRD pdf_url)
   generatedBy   String?  @map("generated_by") // logical ref to admin_users.id
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
@@ -824,7 +824,7 @@ model Quote {
   validUntil      DateTime?        @map("valid_until")
   language        Locale
   status          QuoteStatus      @default(draft)
-  pdfStorageKey   String?          @map("pdf_storage_key") // GCS object key (C13 rename of PRD pdf_s3_key)
+  pdfStorageKey   String?          @map("pdf_storage_key") // storage object key (rename of PRD pdf_s3_key)
   issuedBy        String?          @map("issued_by") // logical ref to admin_users.id
   issuedAt        DateTime?        @map("issued_at")
   acceptedAt      DateTime?        @map("accepted_at")
@@ -848,8 +848,8 @@ model Quote {
 //   - Magic-link token (RESOLVED): the 60-day URL token is a crypto-random secret stored ONLY
 //     as a SHA-256 hash (magic_links.token_hash), never raw — consistent with Stage 1 tokens.
 //     PK is cuid(); download_logs FK by that cuid. (PRD §5.6 "raw UUID PK" → correction pending.)
-//   - Signed URL only (§3.5): files are served via GCS/Cloud CDN signed URLs (TTL 10min,
-//     C13 rename of S3/CloudFront). storage_key columns hold the OBJECT KEY, never a public URL.
+//   - Signed URL only (§3.5): files are served via signed URLs (TTL 10min — Supabase Storage,
+//     infra pivot 2026-07-18). storage_key columns hold the OBJECT KEY, never a public URL.
 //   - MR practice-track license gate (§4 / R2): a song's MR/lyrics deliver ONLY when the
 //     matching SongLicense (type=mr_distribution) is verified AND global
 //     settings.mr_predelivery_enabled is on (Stage 5; per-booking BookingAutomation.mrAccessEnabled).
@@ -968,7 +968,7 @@ model SongLicense {
   songId             String      @map("song_id")
   type               LicenseType
   verified           Boolean     @default(false)
-  evidenceStorageKey String?     @map("evidence_storage_key") // GCS object key under Bucket Lock (C13 rename of s3_key)
+  evidenceStorageKey String?     @map("evidence_storage_key") // storage object key, private bucket (rename of s3_key)
   notes              String?
   verifiedAt         DateTime?   @map("verified_at")
   verifiedBy         String?     @map("verified_by") // logical ref to admin_users.id
@@ -984,14 +984,14 @@ model SongLicense {
 }
 
 /// A deliverable file for a booking (PRD §5.6). Versioned via supersedes (self 1:1); only the
-/// latest is downloadable, admin keeps all. storage_key = GCS object key (signed URL on demand).
+/// latest is downloadable, admin keeps all. storage_key = storage object key (signed URL on demand).
 model Deliverable {
   id             String            @id @default(cuid())
   bookingId      String            @map("booking_id")
   type           DeliverableType
   version        Int               @default(1)
   status         DeliverableStatus @default(pending)
-  storageKey     String?           @map("storage_key") // GCS object key (C13 rename of s3_key); null until uploaded
+  storageKey     String?           @map("storage_key") // storage object key (rename of s3_key); null until uploaded
   fileSizeBytes  BigInt?           @map("file_size_bytes")
   uploadedBy     String?           @map("uploaded_by") // logical ref to admin_users.id (engineer/content manager)
   uploadedAt     DateTime?         @map("uploaded_at")
@@ -1082,7 +1082,7 @@ model MvTeam {
 
 /// Premium MV delivery tracking, 1:1 with a booking (PRD §5.6/§5.8). ffprobe spec check on
 /// upload (spec_check_result/spec_passed); on fail → reject + Slack #content. storage keys are
-/// GCS object keys (C13 rename of main/short_file_s3_key).
+/// storage object keys (rename of main/short_file_s3_key).
 model MvDelivery {
   id                   String           @id @default(cuid())
   bookingId            String           @unique @map("booking_id")
@@ -1094,8 +1094,8 @@ model MvDelivery {
   specPassed           Boolean?         @map("spec_passed")
   rejectionCount       Int              @default(0) @map("rejection_count")
   rejectionReasons     Json?            @map("rejection_reasons") // list of reasons across re-deliveries
-  mainFileStorageKey   String?          @map("main_file_storage_key") // GCS key (C13 rename of main_file_s3_key)
-  shortFileStorageKey  String?          @map("short_file_storage_key") // GCS key (C13 rename of short_file_s3_key)
+  mainFileStorageKey   String?          @map("main_file_storage_key") // storage key (rename of main_file_s3_key)
+  shortFileStorageKey  String?          @map("short_file_storage_key") // storage key (rename of short_file_s3_key)
   uploadedBy           String?          @map("uploaded_by") // logical ref to admin_users.id (content manager)
   uploadedAt           DateTime?        @map("uploaded_at")
   sentToCustomerAt     DateTime?        @map("sent_to_customer_at") // session + 28d
@@ -1510,7 +1510,7 @@ model Coupon {
 //
 // ⚠ §5.8 audit_logs is APPEND-ONLY (like consents §3.1): a raw-SQL migration MUST add a trigger
 //   blocking UPDATE/DELETE (model has NO updatedAt). actor is a LOOSE String ref (no FK) so a
-//   parent delete can't mutate immutable rows. Monthly PARTITIONING + GCS archive (Bucket Lock)
+//   parent delete can't mutate immutable rows. Monthly PARTITIONING + storage archive (private)
 //   are added via raw SQL (not expressible in Prisma) — note for the migration. Super Admin
 //   read-only. Same trigger pattern as consents (see Stage 5 header for the SQL).
 // ⚠ §4 / §5.8-A① seo_code_slots is a WHITELIST: only ga4/gtm/verify_* slots for normal admins;
@@ -1677,7 +1677,7 @@ model AdminNotificationLog {
 
 /// Append-only audit log (PRD §5.8 / CLAUDE.md §3 audit). NO updatedAt — immutable. DB trigger
 /// blocks UPDATE/DELETE (see section header). actor is a LOOSE String ref (no FK). To be
-/// monthly-partitioned + GCS-archived via raw SQL. ⚠ §4 — verify trigger + retention.
+/// monthly-partitioned + storage-archived via raw SQL. ⚠ §4 — verify trigger + retention.
 model AuditLog {
   id               String      @id @default(cuid())
   actorAdminUserId String?     @map("actor_admin_user_id") // loose ref; null = system

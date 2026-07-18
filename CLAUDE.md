@@ -22,7 +22,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 
 ## 1. 기술 스택 — 잠금 (변경 금지)
 
-> **인프라 = 단일 GCP (C13, v0.2 전환).** 호스팅 Cloud Run, DB Cloud SQL, 파일 Cloud Storage, CDN Cloud CDN, 트랜스코딩 Cloud Run Jobs, 시크릿 Secret Manager, 리전 asia-northeast3(Seoul). Redis만 Upstash 유지(저트래픽 비용), Cloudflare Free 유지(DNS·보안). PRD 원안 AWS+Vercel은 폐기. 자세한 매핑은 PRD §7.3·7.4·7.7.
+> **인프라 = Supabase + Railway (2026-07-18 피벗 — `Infra_Pivot_Decision_v1.md` 정본).** DB Supabase Postgres, 파일 Supabase Storage(서명 URL), 호스팅·트랜스코딩 worker Railway, 시크릿 Railway 환경변수(서비스 스코프). Redis는 Upstash 유지(저트래픽 비용), Cloudflare Free 유지(DNS·보안). 리전은 프로비저닝 시 확정(Railway 앱 리전과 페어링 — D2). 구 GCP 단일(C13)·PRD 원안 AWS+Vercel은 폐기. **PRD §7.3·7.4·7.7·7.13의 GCP 세부는 피벗 미반영 구본 — 충돌 시 피벗 결정 문서가 우선.**
 
 아래는 PRD 7장에서 확정된 스택이다. **임의로 다른 라이브러리로 대체하지 말 것.**
 대체가 필요하다고 판단되면 먼저 사용자에게 이유를 설명하고 승인을 받는다.
@@ -35,7 +35,7 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | 상태 | Zustand (클라이언트) + TanStack Query (서버 상태) |
 | 다국어 | next-intl (서브경로 /ko /en /ja /zh-TW /zh-HK) |
 | ORM | **Prisma** + Prisma Migrate (Drizzle 아님) |
-| DB | PostgreSQL 16 (GCP Cloud SQL, HA) |
+| DB | PostgreSQL 17 (Supabase) |
 | 캐시·락 | Upstash Redis (Serverless) |
 | 인증 | Auth.js v5 + Prisma Adapter |
 | 큐·cron | Inngest |
@@ -43,9 +43,9 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 | 이메일 | Resend (트랜잭션) — 발신 join@kingstudio.co.kr, 표시명 "KING STUDIO" |
 | SMS·알림톡 | 솔라피(Coolsms) (NHN Toast 아님) |
 | 해외 SMS | Twilio |
-| 트랜스코딩 | GCP Cloud Run Jobs FFmpeg(음원) + Sharp(사진) |
-| 파일 | GCP Cloud Storage(Seoul) + Cloud CDN Signed URL |
-| 호스팅 | GCP Cloud Run + Cloud Build(배포) + Cloudflare Free(DNS·보안) |
+| 트랜스코딩 | Railway worker FFmpeg(음원) + Sharp(사진) |
+| 파일 | Supabase Storage + 서명 URL (비공개 버킷) |
+| 호스팅 | Railway (Next.js) + Cloudflare Free(DNS·보안) |
 | 모니터링 | Sentry + BetterStack + Axiom + PostHog + GA4 |
 | CS | Channel Talk |
 | 캘린더 연동 | Google Calendar API (어드민 운영 캘린더 제한적 양방향) + FullCalendar(어드민 UI) |
@@ -87,13 +87,13 @@ PRD와 이 파일이 충돌하면 PRD가 우선한다. 단, 가격 정책은 가
 
 아래는 법적·금전적 사고로 직결되므로 **어떤 경우에도 어기지 않는다.**
 
-1. **동의 기록은 append-only.** `consents` 테이블에 UPDATE/DELETE 금지(DB 트리거로 차단). 철회는 새 row 삽입. 동의 PDF는 S3 Object Lock COMPLIANCE.
+1. **동의 기록은 append-only.** `consents` 테이블에 UPDATE/DELETE 금지(DB 트리거로 차단). 철회는 새 row 삽입. 동의 PDF는 비공개 버킷(service-role 전용 쓰기) + **PDF SHA-256 해시를 append-only 동의 레코드에 기록**(무결성 증명) + 접근 audit_log — 구 S3 Object Lock COMPLIANCE 대체(피벗 D1, 법무 감수 시 증거 충분성 확인 단서).
 2. **결제는 KRW 단일 청구.** 외화는 참고 표시(approximate)만. 결제 금액·정책은 결제 시점 스냅샷으로 예약 레코드에 저장(소급 변경 금지).
 3. **슬롯 동시성은 Redis 분산락 필수.** 결제 진입 시 `slot_lock:{room_id}:{date}:{start_time}` TTL 900초. 락 없이 슬롯 확정하는 코드 금지.
 4. **미성년자(만 16세 미만) 보호자 동의 없이는 결제 차단.** 우회 경로 만들지 말 것.
-5. **매직링크·다운로드는 서명 URL(CloudFront Signed URL, TTL 10분)로만.** S3 직접 노출 금지.
+5. **매직링크·다운로드는 서명 URL(TTL 10분)로만.** 스토리지 직접 노출 금지 — 공개 버킷·영구 public URL·storage key 응답 노출 전부 금지(벤더 불문).
 6. **PII·비밀번호·결제정보를 로그·에러 메시지에 남기지 말 것.** 비밀번호 bcrypt(12), 결제정보 MVP 미저장.
-7. **환경변수는 GCP Secret Manager로만(Cloud Run 런타임 주입).** Git에 커밋 금지. `.env`는 `.gitignore`.
+7. **환경변수는 Railway 환경변수(서비스별 스코프)로만 주입.** Git에 커밋 금지. `.env`는 `.gitignore`. Supabase `service_role` 키는 **서버 전용** — 클라이언트 번들 유입 금지(`NEXT_PUBLIC_` 접두 금지).
 8. **어드민 민감 액션은 재인증(비번+TOTP) 강제.** 환불·권한변경·대량export·약관발행·계정삭제.
 9. **색상만으로 정보 전달 금지(WCAG AA).** 슬롯 가능/마감은 색+텍스트+아이콘 병기.
 10. **악성·우회 코드 작성 금지.** 친구초대 어뷰즈 차단(IP·디바이스·BIN), 재가입 쿨다운 등 PRD 방어 로직을 무력화하지 말 것.
@@ -222,7 +222,7 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 4. **Stage 종료 시 PRD 대조 요약.** ① 무엇을 했는지 ② PRD와 대조해 누락·모호점 ③ 다음 Stage가 무엇인지를 요약하고 멈춘다. 확인 전 다음 Stage로 넘어가지 않는다.
 5. **파괴적 작업은 검토 후.** `prisma migrate dev`, 프로덕션 변경 등 되돌리기 비싼 작업은 Aiden 검토 전까지 실행 금지. validate까지만 자동.
 6. **문서 정합 동기화.** 스키마·구현이 PRD와 갈리는 결정을 하면(예: user_social_connections → 표준 Account), 즉시 PRD·CLAUDE.md를 정정해 **세 문서(PRD·CLAUDE·코드)가 어긋나지 않게** 한다. 정정을 미루지 않는다 — 미룬 정정은 다음 Stage에서 혼란을 만든다.
-7. **문서 편집은 레포 git main 위에서만 (단일 출처).** PRD·CLAUDE 편집의 유일 경로 = "채팅에서 무엇을·어떻게 바꿀지 결정 → Antigravity가 레포 main 위에서 직접 편집(커밋·태그·푸시는 Aiden 터미널 전담)". 채팅 측 outputs 복사본은 **참조 스냅샷일 뿐 편집 출처가 아니다**(옛 버전 위 편집 = 클로버링 재발). 외부 에디터 직접 편집 지양("편집 전 수동 동기화"는 기억 의존이라 깨진다). 출처를 레포 하나로 수렴시켜 옛 버전 위 편집을 구조적으로 차단한다. (실제 사고: zh-TW/zh-HK 로케일 정정이 옛 복사본 기반 편집으로 2회 퇴행 — a26c45f·04aaded.)
+7. **문서 편집은 레포 git 위에서만 (단일 출처).** PRD·CLAUDE 편집의 유일 경로 = "채팅에서 무엇을·어떻게 바꿀지 결정 → Antigravity가 레포 워킹트리 위에서 직접 편집·**커밋·태그·푸시까지 수행**(2026-07-18 정정 — 구 'Aiden 터미널 전담' 폐기)". 코드 동반 변경은 브랜치/PR 경유(§10 main 직접 수정 금지). 채팅 측 outputs 복사본은 **참조 스냅샷일 뿐 편집 출처가 아니다**(옛 버전 위 편집 = 클로버링 재발). 외부 에디터 직접 편집 지양("편집 전 수동 동기화"는 기억 의존이라 깨진다). 출처를 레포 하나로 수렴시켜 옛 버전 위 편집을 구조적으로 차단한다. (실제 사고: zh-TW/zh-HK 로케일 정정이 옛 복사본 기반 편집으로 2회 퇴행 — a26c45f·04aaded.)
 
 ## 7-B. IDE 자동승인 정책 (Antigravity)
 
@@ -239,7 +239,7 @@ soffice 경로: 맥 `/Applications/LibreOffice.app/Contents/MacOS/soffice`. Wind
 
 **자동승인 금지 (어떤 모드에서도 수동 검토 — §4 위험 구역 연동):**
 - `prisma migrate` (스키마 변경 — §7-A 5번, 되돌리기 가장 비쌈)
-- `gcloud` 및 모든 GCP 인프라 변경 (Cloud Run 배포·Cloud SQL·Storage)
+- Supabase·Railway 인프라 변경 (배포·DB 인스턴스·Storage 버킷·보존 정책)
 - 결제·webhook·환불 / 동의 기록·트리거 / 인증·세션·미성년자 검증
 - 슬롯 락·캘린더 동기화 / `rm`·파일 삭제·덮어쓰기
 
