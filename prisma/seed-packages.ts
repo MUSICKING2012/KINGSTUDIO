@@ -97,10 +97,12 @@ export const PACKAGES: Prisma.PackageCreateInput[] = [
     basePriceKrw: 150_000,
     pricingMode: 'per_head',
     slotMinutes: 120,
-    headcountMin: 2,
+    headcountMin: 3,
     headcountMax: 15,
     languagesAvailable: ALL,
-    bookingFlow: 'instant_payment',
+    // B2B inquiry → quote (2026-07-17 owner decision) — NOT web self-booking. Headcount 3~15
+    // per PRD §5.2. NOTE: bookingFlow is not yet enforced by booking UI / confirm API (follow-up).
+    bookingFlow: 'b2b_quote',
     friendReferralEligible: true,
     cdIncluded: false,
     returningDiscountEligible: false,
