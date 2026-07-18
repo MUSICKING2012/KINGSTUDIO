@@ -127,7 +127,8 @@
       "priceTableTitle": "人数別料金",
       "perHeadcount": "{n}名",
       "includesTitle": "含まれるもの",
-      "bookCta": "このパッケージを予約"
+      "bookCta": "このパッケージを予約",
+      "b2bInquiryCta": "団体・B2Bのお問い合わせ"
     },
     "items": {
       "gold": {

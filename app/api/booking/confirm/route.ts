@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { resolveReturningEligibility } from '@/lib/booking/eligibility';
 import { currentRefundPolicySnapshot } from '@/lib/booking/refundPolicy';
 import { resolveDiscounts } from '@/lib/catalog/discount';
-import { isPackageViewable } from '@/lib/catalog/package-visibility';
+import { isPackageBookableOnline, isPackageViewable } from '@/lib/catalog/package-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { getPackageBySlug } from '@/lib/catalog/queries';
 import { validateBookingConsents } from '@/lib/consent/confirm';
@@ -126,6 +126,13 @@ export async function POST(request: Request): Promise<Response> {
   const pkg = await getPackageBySlug(packageSlug);
   if (!isPackageViewable(pkg, prismaLocale)) {
     return NextResponse.json({ error: 'package_not_available' }, { status: 404 });
+  }
+  // bookingFlow is the AUTHORITATIVE web-bookability gate (PRD §5.3 group exception, 2026-07-17):
+  // b2b_quote (Making Class / 꿈길 / 워크샵) = B2B inquiry → admin quote (§5.8-A③), never web/API
+  // direct payment. Checked before the name-based tier fallback so the semantic field wins even
+  // if a b2b package ever carries a grid-tier name.
+  if (!isPackageBookableOnline(pkg)) {
+    return NextResponse.json({ error: 'not_web_bookable' }, { status: 400 });
   }
   const tier = resolvePackageTier(pkg.name);
   if (!tier) {

@@ -77,6 +77,29 @@ test('happy path — adult booking confirms + returns bookingId', async ({ reque
   expect(body.bookingId).toBeTruthy();
 });
 
+test('bookingFlow gate — b2b_quote package (making-class) is rejected by confirm API (direct-payment bypass attempt)', async ({
+  request,
+}) => {
+  // PRD §5.3 group exception (2026-07-17): Making Class = B2B inquiry → admin quote (§5.8-A③),
+  // never web/API direct payment. The UI never offers it — this drives the API directly to prove
+  // the server gate holds on bookingFlow (not on the name-based grid fallback). Requires seed:
+  // package 'making-class' (bookingFlow=b2b_quote, all locales).
+  const res = await request.post('/api/booking/confirm', {
+    data: {
+      ...bodyFor({
+        date: futureDate(78),
+        startTime: '10:00:00', // a real Making Class operating slot — still must be rejected
+        participantDobs: [ADULT, ADULT, ADULT],
+        consents: REQUIRED,
+      }),
+      package: 'making-class',
+    },
+  });
+  expect(res.status()).toBe(400);
+  const body = (await res.json()) as { error: string };
+  expect(body.error).toBe('not_web_bookable');
+});
+
 test('하드제약 #4 — minor + no guardian consent is blocked, NO booking created (bypass attempt)', async ({
   request,
 }) => {

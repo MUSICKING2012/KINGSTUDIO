@@ -426,8 +426,8 @@ enum PricingMode {
 }
 
 enum BookingFlow {
-  instant_payment // online checkout (experience, rental, Making Class)
-  b2b_quote // quote → invoice flow (꿈길 / 워크샵 — PRD §5.7 / §5.8-A③)
+  instant_payment // online checkout (experience Gold/Diamond/Premium, rental 1Hour/1Pro)
+  b2b_quote // B2B inquiry → quote → invoice (Making Class / 꿈길 / 워크샵 — PRD §5.3 group exception 2026-07-17, §5.8-A③)
 }
 
 /// Bookable product (PRD §5.2 / CLAUDE.md §6 — prices are DB-managed, never hardcoded).

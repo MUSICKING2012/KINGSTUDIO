@@ -127,7 +127,8 @@
       "priceTableTitle": "按人數計費",
       "perHeadcount": "{n}人",
       "includesTitle": "包含項目",
-      "bookCta": "預約此套餐"
+      "bookCta": "預約此套餐",
+      "b2bInquiryCta": "團體・B2B查詢"
     },
     "items": {
       "gold": {
