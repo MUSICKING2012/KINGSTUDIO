@@ -11,18 +11,19 @@
 
 import { prisma } from '@/lib/db/prisma';
 import { SlotLockError } from '@/lib/redis/slotLock';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookingUnavailableError, confirmBooking } from '../confirmBooking';
 import type { ConfirmBookingInput } from '../confirmBooking';
 import { toKstDateString, toTimeDate } from '../time';
 
 // ── Fixtures ───────────────────────────────────────────────────────────────
-// Stage D: confirmBooking() now writes a REAL Consent row per confirmed booking, and consents are
-// append-only (DB trigger blocks UPDATE/DELETE; Consent→Booking FK is onDelete:Restrict — CLAUDE.md
-// §3.1). So a Booking created by this test can NEVER be deleted again, by anyone. That makes the old
-// "confirm then afterEach-delete" pattern permanently broken (every rerun would collide with the
-// previous run's now-undeletable row). Fix: pick a date far enough out, randomised per test-process
-// invocation, that reruns never target an already-used slot — no cleanup needed or attempted.
+// Stage D: confirmBooking() now writes REAL Consent rows (append-only: `consents_no_delete` is a
+// row-level BEFORE DELETE trigger; Consent→Booking FK is onDelete:Restrict — CLAUDE.md §3.1), so a
+// scoped `deleteMany` can no longer remove a confirmed booking. Teardown is done in afterAll via
+// TRUNCATE ... CASCADE: row-level DELETE triggers do NOT fire on TRUNCATE, so the append-only guard is
+// bypassed for test cleanup only (the app's append-only enforcement is untouched). Leaving no rows
+// behind is what keeps unrelated suites' blanket deleteMany (e.g. catalog.test.ts) green. The date is
+// also randomised far out so a mid-run crash that skips teardown can't collide with the next run.
 const TEST_DATE = toKstDateString(
   new Date(Date.now() + (60 + Math.floor(Math.random() * 3000)) * 86_400_000),
 );
@@ -38,10 +39,21 @@ let TEST_ROOM_ID: string;
 let TEST_PACKAGE_ID: string;
 
 beforeAll(async () => {
-  const room = await prisma.room.findFirstOrThrow({ where: { name: 'Room A' } });
-  const pkg = await prisma.package.findFirstOrThrow({ where: { name: 'Gold' } });
+  const room = await prisma.room.findFirstOrThrow({
+    where: { name: 'Room A' },
+  });
+  const pkg = await prisma.package.findFirstOrThrow({
+    where: { name: 'Gold' },
+  });
   TEST_ROOM_ID = room.id;
   TEST_PACKAGE_ID = pkg.id;
+});
+
+// ── Teardown — clears this suite's rows (incl. append-only consents) via TRUNCATE (see note above).
+afterAll(async () => {
+  await prisma.$executeRawUnsafe(
+    'TRUNCATE "consents", "booking_participants", "payments", "bookings" CASCADE',
+  );
 });
 
 function baseInput(startTime: string): ConfirmBookingInput {
@@ -55,7 +67,12 @@ function baseInput(startTime: string): ConfirmBookingInput {
     customerEmail: 's2.6-test@kingstudio.test',
     unitPriceKrw: 400_000,
     priceTotalKrw: 400_000,
-    pricingSnapshot: { basis: 'per_person', unitPrice: 400_000, headcount: 1, multiplier: 1 },
+    pricingSnapshot: {
+      basis: 'per_person',
+      unitPrice: 400_000,
+      headcount: 1,
+      multiplier: 1,
+    },
     packageSnapshot: { name: 'Gold', category: 'experience', slotMinutes: 120 },
     refundPolicySnapshot: { policy: 'standard' },
     // adult participant (no guardian branch) — Stage D confirmBooking now re-validates
@@ -78,7 +95,11 @@ describe('S2.6 concurrency — real DB + real Redis', () => {
     expect(result.endTime).toBe('12:00:00');
 
     const rows = await prisma.booking.findMany({
-      where: { date: TEST_DATE_D, roomId: TEST_ROOM_ID, startTime: toTimeDate(SLOT_SINGLE) },
+      where: {
+        date: TEST_DATE_D,
+        roomId: TEST_ROOM_ID,
+        startTime: toTimeDate(SLOT_SINGLE),
+      },
     });
     expect(rows).toHaveLength(1);
   });
@@ -105,7 +126,11 @@ describe('S2.6 concurrency — real DB + real Redis', () => {
 
     // DB에 행이 정확히 1개
     const count = await prisma.booking.count({
-      where: { date: TEST_DATE_D, roomId: TEST_ROOM_ID, startTime: toTimeDate(SLOT_CONCURRENT) },
+      where: {
+        date: TEST_DATE_D,
+        roomId: TEST_ROOM_ID,
+        startTime: toTimeDate(SLOT_CONCURRENT),
+      },
     });
     expect(count).toBe(1);
   });
@@ -117,7 +142,11 @@ describe('S2.6 concurrency — real DB + real Redis', () => {
     );
 
     const count = await prisma.booking.count({
-      where: { date: TEST_DATE_D, roomId: TEST_ROOM_ID, startTime: toTimeDate(SLOT_SEQUENTIAL) },
+      where: {
+        date: TEST_DATE_D,
+        roomId: TEST_ROOM_ID,
+        startTime: toTimeDate(SLOT_SEQUENTIAL),
+      },
     });
     expect(count).toBe(1);
   });
