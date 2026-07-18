@@ -92,7 +92,8 @@ ALTER TABLE nps_responses ADD CONSTRAINT nps_score_range CHECK (score BETWEEN 0 
 --     up front. That conflicts with Prisma's plain CREATE TABLE, so it needs either a
 --     manual table recreate or a dedicated partition-management migration. Plain table
 --     is fine for MVP volume; partition when audit_logs growth warrants it. Pair with
---     the monthly GCS (Bucket Lock) archive job.
---   • S3/GCS Object-Lock / Bucket-Lock retention for consent PDFs & audit archives is
---     configured on the BUCKET (infra), not in SQL.
+--     the monthly private-bucket archive job (Supabase Storage — infra pivot 2026-07-18).
+--   • Consent-PDF / audit-archive retention lives on the STORAGE side (private bucket,
+--     service-role-only writes + SHA-256 hash recorded in append-only rows — pivot D1),
+--     not in SQL. (Formerly S3/GCS Object-Lock / Bucket-Lock.)
 -- =============================================================================

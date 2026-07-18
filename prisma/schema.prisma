@@ -824,7 +824,7 @@ model Quote {
   validUntil      DateTime?        @map("valid_until")
   language        Locale
   status          QuoteStatus      @default(draft)
-  pdfStorageKey   String?          @map("pdf_storage_key") // storage object key (rename of PRD pdf_s3_key)
+  pdfStorageKey   String?          @map("pdf_storage_key") // storage object key (PRD §5.8-A③ quotes.pdf_storage_key)
   issuedBy        String?          @map("issued_by") // logical ref to admin_users.id
   issuedAt        DateTime?        @map("issued_at")
   acceptedAt      DateTime?        @map("accepted_at")
