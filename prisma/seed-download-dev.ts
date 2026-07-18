@@ -15,6 +15,11 @@ async function main() {
   if (process.env.NODE_ENV === 'production') {
     throw new Error('seed-download-dev is a dev fixture — refusing to run in production');
   }
+  // NODE_ENV can be unset even when DATABASE_URL points at production, so the check above is not
+  // sufficient on its own. Require an explicit opt-in before this mutates any database.
+  if (process.env.ALLOW_DEV_SEED !== '1') {
+    throw new Error('refusing to mutate the database — set ALLOW_DEV_SEED=1 to run this dev seed');
+  }
 
   const room =
     (await prisma.room.findFirst({ where: { isActive: true } })) ??

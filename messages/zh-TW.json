@@ -470,6 +470,7 @@
     }
   },
   "download": {
+    "studioName": "KING STUDIO",
     "title": "我的錄音檔案",
     "subtitle": "{date} 錄音時段的成果檔案。",
     "linkExpires": "此下載連結有效期至 {date}。",

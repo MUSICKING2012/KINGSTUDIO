@@ -482,6 +482,7 @@
     }
   },
   "download": {
+    "studioName": "KING STUDIO",
     "title": "Your recordings",
     "subtitle": "Files from your session on {date}.",
     "linkExpires": "This download link is valid until {date}.",

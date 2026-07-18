@@ -7,7 +7,7 @@
 // changes.
 
 import { createHmac, timingSafeEqual } from 'node:crypto';
-import type { SignedDownloadInput, StorageAdapter, StorageBucket } from './types';
+import { SIGNED_URL_TTL_SECONDS, type SignedDownloadInput, type StorageAdapter } from './types';
 
 // Dev/test-only secret. The mock serving route refuses to run in production regardless, so a
 // baked-in fallback is acceptable here (never do this for a real backend).
@@ -44,10 +44,19 @@ export function verifyMockDownload(
 
 export class MockStorageAdapter implements StorageAdapter {
   async createSignedDownloadUrl(input: SignedDownloadInput): Promise<string> {
+    // Enforce the 10-minute ceiling at the storage boundary itself (하드제약 #5) — a caller must
+    // never be able to mint a longer-lived link, regardless of what it passes.
+    if (
+      !Number.isInteger(input.ttlSeconds) ||
+      input.ttlSeconds <= 0 ||
+      input.ttlSeconds > SIGNED_URL_TTL_SECONDS
+    ) {
+      throw new Error(`ttlSeconds must be an integer in (0, ${SIGNED_URL_TTL_SECONDS}]`);
+    }
     const expiresAtSec = Math.floor(Date.now() / 1000) + input.ttlSeconds;
     const sig = signMockDownload(input.bucket, input.key, expiresAtSec);
     const params = new URLSearchParams({
-      bucket: input.bucket satisfies StorageBucket,
+      bucket: input.bucket,
       key: input.key,
       exp: String(expiresAtSec),
       sig,

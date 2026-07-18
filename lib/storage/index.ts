@@ -8,8 +8,14 @@ import type { StorageAdapter } from './types';
 const mock = new MockStorageAdapter();
 
 export function getStorageAdapter(): StorageAdapter {
+  // The mock's signed URLs point at /api/mock-storage/download, which hard-404s in production.
+  // Returning it in prod would hand customers dead URLs — fail loud instead until the real
+  // adapter is wired.
   // TODO(피벗 D2): return SupabaseStorageAdapter once the project/buckets are provisioned and
   // SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / SUPABASE_BUCKET_* are set (server-only env).
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('storage adapter not configured for production (Infra_Pivot_Decision_v1 D2)');
+  }
   return mock;
 }
 

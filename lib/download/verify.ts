@@ -67,15 +67,20 @@ export async function resolveMagicLink(
 
   const now = new Date();
   if (link.status === 'expired' || link.expiresAt <= now) {
-    if (link.status === 'active') {
-      await prisma.magicLink.update({ where: { id: link.id }, data: { status: 'expired' } });
-    }
+    // Guard the write on status='active' so a link revoked between our read and here is not
+    // flipped back to expired (a concurrent reissue's revoke must win).
+    await prisma.magicLink.updateMany({
+      where: { id: link.id, status: 'active' },
+      data: { status: 'expired' },
+    });
     return { ok: false, reason: 'expired' };
   }
 
   if (opts.touch) {
-    await prisma.magicLink.update({
-      where: { id: link.id },
+    // Only bump access stats while the link is still active — never resurrect activity on a link
+    // that changed state (revoked/expired) after our read.
+    await prisma.magicLink.updateMany({
+      where: { id: link.id, status: 'active' },
       data: { lastAccessedAt: now, accessCount: { increment: 1 } },
     });
   }

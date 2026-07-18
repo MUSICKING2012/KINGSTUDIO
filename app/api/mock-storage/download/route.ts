@@ -35,8 +35,10 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  // Synthetic payload — enough for E2E to assert a successful, attributable download.
-  const body = `KING STUDIO mock deliverable\nbucket=${bucket}\nkey=${key}\n`;
+  // Synthetic payload — enough for E2E to assert a successful download. Does NOT echo the storage
+  // key/bucket into the body (keys stay behind the boundary; the signed URL is the only surface
+  // that carries the object path, as with a real signed URL).
+  const body = 'KING STUDIO mock deliverable\n';
   const fileName = name && /^[\w.\- ]{1,120}$/.test(name) ? name : 'deliverable.bin';
   return new Response(body, {
     status: 200,

@@ -470,6 +470,7 @@
     }
   },
   "download": {
+    "studioName": "KING STUDIO",
     "title": "내 녹음 파일",
     "subtitle": "{date} 세션의 결과물입니다.",
     "linkExpires": "이 다운로드 링크는 {date}까지 유효합니다.",

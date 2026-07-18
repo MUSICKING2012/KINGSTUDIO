@@ -113,6 +113,24 @@ describe('issueMagicLink (C15)', () => {
     expect((await resolveMagicLink(second.rawToken)).ok).toBe(true);
   });
 
+  it('keeps exactly one active row under CONCURRENT reissue (advisory-lock serialization)', async () => {
+    const booking = await createFixtureBooking();
+    await issueMagicLink(booking.id);
+
+    // Fire several reissues simultaneously. The per-booking advisory lock must serialize them so
+    // the revoke+create pairs cannot interleave into multiple active rows.
+    const results = await Promise.all(
+      Array.from({ length: 8 }, () => reissueMagicLink(booking.id)),
+    );
+
+    const active = await prisma.magicLink.findMany({
+      where: { bookingId: booking.id, status: 'active' },
+    });
+    expect(active).toHaveLength(1);
+    // The surviving active row is one the concurrent calls actually returned.
+    expect(results.map((r) => r.magicLink.id)).toContain(active[0]?.id);
+  });
+
   it('rejects unknown bookings', async () => {
     await expect(issueMagicLink('nonexistent-booking-id')).rejects.toBeInstanceOf(
       BookingNotFoundError,

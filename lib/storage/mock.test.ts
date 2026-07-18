@@ -51,7 +51,7 @@ describe('verifyMockDownload', () => {
 });
 
 describe('MockStorageAdapter', () => {
-  it('mints a URL whose params verify, and never embeds beyond the signed triple', async () => {
+  it('mints a URL whose ACTUAL emitted params verify', async () => {
     const url = await new MockStorageAdapter().createSignedDownloadUrl({
       bucket: 'content',
       key: 'bookings/b1/raw.wav',
@@ -59,11 +59,23 @@ describe('MockStorageAdapter', () => {
       downloadFileName: 'raw.wav',
     });
     const parsed = new URL(url, 'http://localhost');
+    // Read what the URL actually carries (not hardcoded values) so a malformed emit can't pass.
+    const bucket = parsed.searchParams.get('bucket') ?? '';
+    const key = parsed.searchParams.get('key') ?? '';
     const exp = Number(parsed.searchParams.get('exp'));
     const sig = parsed.searchParams.get('sig') ?? '';
     expect(parsed.pathname).toBe('/api/mock-storage/download');
-    expect(verifyMockDownload('content', 'bookings/b1/raw.wav', exp, sig, Date.now()).ok).toBe(
-      true,
-    );
+    expect(bucket).toBe('content');
+    expect(key).toBe('bookings/b1/raw.wav');
+    expect(verifyMockDownload(bucket, key, exp, sig, Date.now()).ok).toBe(true);
+  });
+
+  it('rejects a TTL longer than the 10-minute ceiling (하드제약 #5)', async () => {
+    const adapter = new MockStorageAdapter();
+    for (const ttl of [601, 3600, 0, -1, 1.5]) {
+      await expect(
+        adapter.createSignedDownloadUrl({ bucket: 'content', key: 'k', ttlSeconds: ttl }),
+      ).rejects.toThrow(/ttlSeconds/);
+    }
   });
 });

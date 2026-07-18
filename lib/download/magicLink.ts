@@ -26,6 +26,12 @@ async function issueInTx(
   tx: Prisma.TransactionClient,
   bookingId: string,
 ): Promise<IssuedMagicLink> {
+  // Serialize concurrent issue/reissue for the SAME booking so the single-active invariant holds
+  // even under simultaneous calls — revoke + create are two statements, so without this two racing
+  // reissues could each revoke-then-insert and leave two active rows. A transaction-scoped advisory
+  // lock keyed on the booking id auto-releases at commit/rollback; no migration/schema change.
+  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${bookingId}))`;
+
   const booking = await tx.booking.findUnique({ where: { id: bookingId }, select: { id: true } });
   if (!booking) throw new BookingNotFoundError(bookingId);
 

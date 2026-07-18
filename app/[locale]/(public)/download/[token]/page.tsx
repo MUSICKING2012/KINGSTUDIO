@@ -62,7 +62,7 @@ export default async function DownloadPage({
     <main className="mx-auto max-w-container-max px-margin-mobile pb-section-gap md:px-margin-desktop">
       <header className="mt-section-gap max-w-3xl">
         <p className="text-label-sm uppercase text-muted-foreground">
-          {resolved.booking.packageName ?? 'KING STUDIO'}
+          {resolved.booking.packageName ?? t('studioName')}
         </p>
         <h1 className="mt-stack-sm font-display text-headline-xl font-light text-foreground md:text-display-lg-mobile">
           {t('title')}
