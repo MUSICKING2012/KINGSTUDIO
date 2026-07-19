@@ -78,3 +78,33 @@ describe('getExchangeRate', () => {
     expect(fetchLatestRates).not.toHaveBeenCalled();
   });
 });
+
+describe('getExchangeRates 캐시 폴스루', () => {
+  it('캐시 키 누락 시 throw 대신 OXR 갱신', async () => {
+    const { fetchLatestRates } = await import('../client');
+    vi.mocked(fetchLatestRates).mockClear();
+    mockGetRedis.mockReturnValueOnce({
+      get: vi
+        .fn()
+        .mockResolvedValue(
+          JSON.stringify({ KRW: '1', USD: '1350', JPY: '8.7', HKD: '173', fetchedAt: 'x' }),
+        ),
+      set: vi.fn(),
+    } as ReturnType<typeof mockGetRedis>);
+    const rates = await getExchangeRates();
+    expect(fetchLatestRates).toHaveBeenCalled();
+    expect(rates.USD.toNumber()).toBeCloseTo(1350, 0);
+  });
+
+  it('캐시 JSON 파싱 실패 시 OXR 갱신', async () => {
+    const { fetchLatestRates } = await import('../client');
+    vi.mocked(fetchLatestRates).mockClear();
+    mockGetRedis.mockReturnValueOnce({
+      get: vi.fn().mockResolvedValue('{not json'),
+      set: vi.fn(),
+    } as ReturnType<typeof mockGetRedis>);
+    const rates = await getExchangeRates();
+    expect(fetchLatestRates).toHaveBeenCalled();
+    expect(rates.KRW.toNumber()).toBe(1);
+  });
+});

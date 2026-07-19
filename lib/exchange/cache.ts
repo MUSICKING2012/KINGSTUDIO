@@ -3,6 +3,7 @@ import { getRedis } from '@/lib/redis/client';
 import type { DisplayCurrency } from '@prisma/client';
 // lib/exchange/cache.ts
 import { Decimal } from '@prisma/client/runtime/library';
+import { z } from 'zod';
 import { fetchLatestRates } from './client';
 
 const CACHE_TTL_SECONDS = 86400; // 24h
@@ -24,6 +25,45 @@ export interface ExchangeRates {
   HKD: Decimal;
   CNY: Decimal;
   fetchedAt: string; // ISO string
+}
+
+const decimalStr = z.string().refine((s) => {
+  try {
+    return new Decimal(s).isFinite();
+  } catch {
+    return false;
+  }
+}, 'not a decimal string');
+
+const CachedRatesSchema = z.object({
+  KRW: decimalStr,
+  USD: decimalStr,
+  JPY: decimalStr,
+  HKD: decimalStr,
+  CNY: decimalStr,
+  fetchedAt: z.string().min(1),
+});
+
+/** 캐시 역직렬화 + 형태 검증. 실패 시 null 반환 — throw 금지(호출부가 refreshRates로 폴스루). */
+function parseCachedRates(cached: unknown): ExchangeRates | null {
+  let raw: unknown = cached;
+  if (typeof cached === 'string') {
+    try {
+      raw = JSON.parse(cached);
+    } catch {
+      return null;
+    }
+  }
+  const r = CachedRatesSchema.safeParse(raw);
+  if (!r.success) return null;
+  return {
+    KRW: new Decimal(r.data.KRW),
+    USD: new Decimal(r.data.USD),
+    JPY: new Decimal(r.data.JPY),
+    HKD: new Decimal(r.data.HKD),
+    CNY: new Decimal(r.data.CNY),
+    fetchedAt: r.data.fetchedAt,
+  };
 }
 
 /**
@@ -92,15 +132,11 @@ export async function getExchangeRates(): Promise<ExchangeRates> {
   const cached = await redis.get<string>(CACHE_KEY);
 
   if (cached) {
-    const parsed = typeof cached === 'string' ? JSON.parse(cached) : cached;
-    return {
-      KRW: new Decimal(parsed.KRW),
-      USD: new Decimal(parsed.USD),
-      JPY: new Decimal(parsed.JPY),
-      HKD: new Decimal(parsed.HKD),
-      CNY: new Decimal(parsed.CNY),
-      fetchedAt: parsed.fetchedAt,
-    };
+    const validated = parseCachedRates(cached);
+    if (validated) return validated;
+    // 형태 불일치(통화 집합 변경·수동 조작) → KRW-only 강등 대신 갱신으로 자기치유.
+    // 이 폴스루가 CACHE_KEY 수동 버전 bump 관행을 대체한다.
+    console.warn('[exchange] cached rates malformed - refreshing');
   }
 
   return refreshRates();
