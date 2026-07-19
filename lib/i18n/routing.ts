@@ -4,7 +4,7 @@ import { defineRouting } from 'next-intl/routing';
  * i18n routing config — single source of truth for supported locales.
  * PRD §5.1 / CLAUDE.md §5: 5 locales, subpath strategy (/ko /en /ja /zh-HK /zh-CN).
  * Chinese locales split by script: zh-HK (Traditional, HK+Taiwan), zh-CN (Simplified, Mainland).
- * Mainland/Simplified is intentionally not supported (C14). `en` is the required fallback default.
+ * `en` is the required fallback default.
  */
 export const locales = ['ko', 'en', 'ja', 'zh-HK', 'zh-CN'] as const;
 export type Locale = (typeof locales)[number];
