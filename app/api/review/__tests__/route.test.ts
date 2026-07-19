@@ -83,12 +83,12 @@ describe('POST /api/review — throttle + input', () => {
   });
 });
 
-// Prisma enum members are zh_TW / zh_HK (@map to the hyphenated DB values). A form that posts
+// Prisma enum members are zh_HK / zh_CN (@map to the hyphenated DB values). A form that posts
 // the next-intl URL locale verbatim would be rejected — the client must convert - to _.
 describe('POST /api/review — locale enum contract', () => {
   it('rejects the hyphenated locale and accepts the enum member', async () => {
-    expect((await POST(makeReq(validBody({ locale: 'zh-TW' })))).status).toBe(400);
-    expect((await POST(makeReq(validBody({ locale: 'zh_TW' })))).status).toBe(201);
+    expect((await POST(makeReq(validBody({ locale: 'zh-CN' })))).status).toBe(400);
+    expect((await POST(makeReq(validBody({ locale: 'zh_CN' })))).status).toBe(201);
   });
 
   it('never echoes the token in a validation failure (하드제약 #6)', async () => {

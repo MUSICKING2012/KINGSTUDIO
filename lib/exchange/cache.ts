@@ -6,23 +6,23 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { fetchLatestRates } from './client';
 
 const CACHE_TTL_SECONDS = 86400; // 24h
-const CACHE_KEY = 'exchange_rates:krw';
+const CACHE_KEY = 'exchange_rates:krw:v2';
 
 // DisplayCurrency → OpenExchangeRates currency code 매핑
 const CURRENCY_MAP: Record<DisplayCurrency, string> = {
   KRW: 'KRW',
   USD: 'USD',
   JPY: 'JPY',
-  TWD: 'TWD',
   HKD: 'HKD',
+  CNY: 'CNY',
 };
 
 export interface ExchangeRates {
   KRW: Decimal;
   USD: Decimal;
   JPY: Decimal;
-  TWD: Decimal;
   HKD: Decimal;
+  CNY: Decimal;
   fetchedAt: string; // ISO string
 }
 
@@ -81,8 +81,8 @@ async function refreshRates(): Promise<ExchangeRates> {
     KRW: rates.KRW,
     USD: rates.USD,
     JPY: rates.JPY,
-    TWD: rates.TWD,
     HKD: rates.HKD,
+    CNY: rates.CNY,
     fetchedAt,
   };
 }
@@ -97,8 +97,8 @@ export async function getExchangeRates(): Promise<ExchangeRates> {
       KRW: new Decimal(parsed.KRW),
       USD: new Decimal(parsed.USD),
       JPY: new Decimal(parsed.JPY),
-      TWD: new Decimal(parsed.TWD),
       HKD: new Decimal(parsed.HKD),
+      CNY: new Decimal(parsed.CNY),
       fetchedAt: parsed.fetchedAt,
     };
   }

@@ -10,7 +10,7 @@ export const LOCALE_DEFAULT_CURRENCY: Record<Locale, DisplayCurrency> = {
   ko: 'KRW',
   en: 'USD',
   ja: 'JPY',
-  'zh-TW': 'TWD',
+  'zh-CN': 'CNY',
   'zh-HK': 'HKD',
 };
 
@@ -23,7 +23,7 @@ export const DISPLAY_CURRENCIES = [
   'KRW',
   'USD',
   'JPY',
-  'TWD',
+  'CNY',
   'HKD',
 ] as const satisfies readonly DisplayCurrency[];
 
@@ -32,7 +32,7 @@ export const CURRENCY_LABEL: Record<DisplayCurrency, string> = {
   KRW: '₩ KRW',
   USD: '$ USD',
   JPY: '¥ JPY',
-  TWD: 'NT$ TWD',
+  CNY: '¥ CNY',
   HKD: 'HK$ HKD',
 };
 
@@ -41,6 +41,6 @@ export const LOCALE_LABEL: Record<Locale, string> = {
   ko: '한국어',
   en: 'English',
   ja: '日本語',
-  'zh-TW': '繁體中文（台灣）',
-  'zh-HK': '繁體中文（香港）',
+  'zh-CN': '简体中文',
+  'zh-HK': '繁體中文（香港・台灣）',
 };

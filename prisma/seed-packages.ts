@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '../lib/db/prisma';
 
-const ALL: Prisma.PackageCreateInput['languagesAvailable'] = ['ko', 'en', 'ja', 'zh_TW', 'zh_HK'];
+const ALL: Prisma.PackageCreateInput['languagesAvailable'] = ['ko', 'en', 'ja', 'zh_HK', 'zh_CN'];
 const KO: Prisma.PackageCreateInput['languagesAvailable'] = ['ko'];
 
 // PRD §5.2 / §6 exact. displayOrder is global 1..8 in listed order.

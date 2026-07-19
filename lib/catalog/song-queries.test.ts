@@ -51,7 +51,7 @@ describe('song read layer (§5.4 fallback / §5.7 / C16)', () => {
     });
 
     it('falls back to canonical when there is no translation at all (any locale)', async () => {
-      for (const locale of ['ja', 'ko', 'zh_TW', 'zh_HK', 'en'] as const) {
+      for (const locale of ['ja', 'ko', 'zh_HK', 'zh_CN', 'en'] as const) {
         const songs = await listSongs({ locale });
         const jannabi = songs.find((s) => s.id === 'seed_song_jannabi');
         expect(jannabi).toMatchObject({

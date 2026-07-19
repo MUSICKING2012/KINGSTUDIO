@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { CURRENCY_COOKIE_ATTRS, parseCurrencyOverride } from '../cookie';
 
 describe('parseCurrencyOverride — 서버·클라 공용 단일 파서 (④-b)', () => {
-  it.each(['KRW', 'USD', 'JPY', 'TWD', 'HKD'] as const)('유효 통화 %s 통과', (c) => {
+  it.each(['KRW', 'USD', 'JPY', 'HKD', 'CNY'] as const)('유효 통화 %s 통과', (c) => {
     expect(parseCurrencyOverride(c)).toBe(c);
   });
 

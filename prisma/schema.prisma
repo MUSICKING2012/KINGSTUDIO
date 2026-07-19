@@ -37,8 +37,8 @@ enum Locale {
   ko
   en
   ja
-  zh_TW @map("zh-TW") // Traditional, Taiwan (C14)
-  zh_HK @map("zh-HK") // Traditional, Hong Kong (C14)
+  zh_HK @map("zh-HK") // Traditional, Hong Kong + Taiwan (C14)
+  zh_CN @map("zh-CN") // Simplified, Mainland China (C14)
 }
 
 // =========================================================================================
@@ -678,13 +678,13 @@ enum QuoteStatus {
 
 /// Reference-only display currency, fixed per locale page (§3.2 — "approximate"). KRW is
 /// ALWAYS the actually billed currency; this is the parenthetical converted value shown.
-///   ko → KRW · en → USD · ja → JPY · zh-TW → TWD · zh-HK → HKD  (C14)
+///   ko → KRW · en → USD · ja → JPY · zh-HK → HKD · zh-CN → CNY  (C14)
 enum DisplayCurrency {
   KRW
   USD
   JPY
-  TWD
   HKD
+  CNY
 }
 
 /// Daily exchange rate snapshot (PRD §5.5 — OpenExchangeRates → Redis 24h TTL + DB backup).
@@ -1517,7 +1517,7 @@ model Coupon {
 //   custom_script requires Super Admin + re-auth + audit log (requiresReauth=true). No free HTML/JS.
 // NOTE: two distinct notification logs — `notifications_log` (CUSTOMER email/SMS, §5.6) vs
 //   `notification_logs` (ADMIN internal Slack/Kakao, §5.8). Kept as separate models.
-// page_seo / page_schemas are per-locale (zh-TW/zh-HK included, C14).
+// page_seo is per-locale (zh-HK/zh-CN included, C14). page_schemas has NO Locale column.
 
 // ---- enums ----
 enum NotificationChannel {

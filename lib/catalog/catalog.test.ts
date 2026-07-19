@@ -37,7 +37,7 @@ describe('seedPackages', () => {
       bookingFlow: 'instant_payment',
       friendReferralEligible: true,
     });
-    expect([...d.languagesAvailable].sort()).toEqual(['en', 'ja', 'ko', 'zh_HK', 'zh_TW']);
+    expect([...d.languagesAvailable].sort()).toEqual(['en', 'ja', 'ko', 'zh_CN', 'zh_HK']);
   });
   it('ko-only packages (rental + 꿈길 + 워크샵) have only ko', async () => {
     await seedPackages();

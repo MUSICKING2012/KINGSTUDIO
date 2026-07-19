@@ -38,10 +38,10 @@ describe('buildSongMetadata', () => {
     // hreflang: 5 locales + x-default (= en, the default locale).
     const languages = meta.alternates?.languages as Record<string, string>;
     expect(Object.keys(languages).sort()).toEqual(
-      ['en', 'ja', 'ko', 'x-default', 'zh-HK', 'zh-TW'].sort(),
+      ['en', 'ja', 'ko', 'x-default', 'zh-CN', 'zh-HK'].sort(),
     );
     expect(languages.ko).toBe('https://example.test/ko/songs/bts-dynamite');
-    expect(languages['zh-TW']).toBe('https://example.test/zh-TW/songs/bts-dynamite');
+    expect(languages['zh-CN']).toBe('https://example.test/zh-CN/songs/bts-dynamite');
     expect(languages['x-default']).toBe('https://example.test/en/songs/bts-dynamite');
 
     // Basic OpenGraph.

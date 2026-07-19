@@ -1,0 +1,511 @@
+{
+  "header": {
+    "localeAria": "语言",
+    "currencyAria": "显示货币"
+  },
+  "home": {
+    "title": "KING STUDIO",
+    "subtitle": "首尔的K-POP录音体验。",
+    "metaTitle": "KING STUDIO — 在首尔录制属于你的K-POP音源",
+    "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报导。",
+    "hero": {
+      "eyebrow": "首尔 · 圣水 · 自2017年",
+      "title": "在真正的首尔录音室，录制属于你的K-POP音源。",
+      "subtitle": "与声乐总监一起训练，在专业录音间演唱，带走这场录音的音源与照片 — The New York Times报导过的体验。",
+      "ctaPrimary": "查看方案",
+      "ctaSecondary": "浏览歌曲"
+    },
+    "nyt": {
+      "label": "媒体报导",
+      "source": "The New York Times · 2024年11月",
+      "cta": "阅读报导"
+    },
+    "steps": {
+      "heading": "录音流程",
+      "step1": {
+        "title": "声乐训练",
+        "body": "与专业声乐总监一起暖声，找到你的声音。"
+      },
+      "step2": {
+        "title": "录音与混音",
+        "body": "在真正的录音间演唱，工程师为你混音与母带处理。"
+      },
+      "step3": {
+        "title": "带回家",
+        "body": "取得属于你的音源与录音室照片。"
+      }
+    },
+    "experience": {
+      "heading": "选择你的方案",
+      "sub": "从专注的声乐录音到完整的音乐录像带方案。",
+      "tiers": {
+        "gold": {
+          "name": "GOLD",
+          "hook": "制作人声乐训练与录音，含录音室照片与CD。"
+        },
+        "diamond": {
+          "name": "DIAMOND",
+          "hook": "完整混音与母带处理，含录音室照片与CD。"
+        },
+        "premium": {
+          "name": "PREMIUM",
+          "hook": "DIAMOND的全部内容，再加上电影感音乐录像带。"
+        }
+      },
+      "cta": "比较所有方案"
+    },
+    "songs": {
+      "heading": "唱你喜爱的歌",
+      "sub": "抵达前先从歌曲库挑选你的曲目。",
+      "cta": "浏览歌曲"
+    },
+    "finalCta": {
+      "heading": "准备好在首尔录音了吗？",
+      "sub": "选择方案，开始你的录音。",
+      "cta": "查看方案"
+    }
+  },
+  "notFound": {
+    "title": "找不到页面",
+    "description": "您寻找的页面不存在。"
+  },
+  "auth": {
+    "login": {
+      "title": "登录",
+      "email": "电子邮件",
+      "password": "密码",
+      "submit": "登录",
+      "google": "以 Google 继续",
+      "toSignup": "创建帐号",
+      "error": "电子邮件或密码不正确。"
+    },
+    "signup": {
+      "title": "创建帐号",
+      "name": "姓名",
+      "email": "电子邮件",
+      "password": "密码",
+      "submit": "注册",
+      "toLogin": "我已有帐号",
+      "strength": "强度",
+      "errors": {
+        "email_taken": "此电子邮件已被注册。",
+        "password_weak": "请选择更强的密码。",
+        "password_pwned": "此密码曾出现于数据外泄事件，请更换其他密码。"
+      }
+    },
+    "verify": {
+      "successTitle": "电子邮件已验证",
+      "successBody": "感谢您 — 您的电子邮件已确认。",
+      "failTitle": "验证失败",
+      "failBody": "此链接无效或已过期。",
+      "cta": "前往我的页面"
+    },
+    "banner": {
+      "unverified": "请验证您的电子邮件，请查看您的收件匣。",
+      "resend": "重新发送"
+    },
+    "my": {
+      "title": "我的页面",
+      "logout": "注销",
+      "logoutAll": "注销所有设备"
+    }
+  },
+  "packages": {
+    "catalog": {
+      "title": "录音体验套餐",
+      "subtitle": "在首尔市中心像K-POP明星一样录音",
+      "sectionExperience": "K-POP体验",
+      "sectionRental": "录音室租用",
+      "sectionGroup": "团体方案",
+      "fromLabel": "起（1人）",
+      "headcountLabel": "{min}〜{max}人",
+      "durationLabel": "{minutes}分钟",
+      "viewDetail": "查看详情",
+      "cta": "立即预约"
+    },
+    "detail": {
+      "priceTableTitle": "按人数计费",
+      "perHeadcount": "{n}人",
+      "includesTitle": "包含项目",
+      "bookCta": "预约此套餐",
+      "b2bInquiryCta": "团体・B2B洽询",
+      "b2bInquirySubject": "[B2B] {name} 洽询"
+    },
+    "items": {
+      "gold": {
+        "name": "Gold",
+        "tagline": "K-POP vocal training, entry level",
+        "concept": "1对1声乐指导＋精修剪辑（主歌＋副歌）",
+        "includes": [
+          "初学者精选歌曲（20〜30首）",
+          "主歌＋副歌完整音源",
+          "未修图照片约30张",
+          "CD 专辑（当天现场交付）",
+          "多语言支持"
+        ]
+      },
+      "diamond": {
+        "name": "Diamond",
+        "tagline": "A full K-POP recording experience",
+        "concept": "完整录音＋专业混音及母带后期制作",
+        "includes": [
+          "从完整目录中自由选曲",
+          "完整录音＋混音/母带后期",
+          "未修图照片约30张",
+          "CD 专辑（当天现场交付）",
+          "多语言支持"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "tagline": "Recording plus a full music-video package",
+        "concept": "录音＋完整MV套餐",
+        "includes": [
+          "完整目录＋MV推荐曲目",
+          "完整录音＋混音/母带后期",
+          "MV拍摄（专业团队）",
+          "未修图照片约30张",
+          "CD 专辑（当天现场交付）",
+          "多语言支持"
+        ]
+      },
+      "1hour": {
+        "name": "1Hour",
+        "tagline": "Studio hourly rental with an engineer",
+        "concept": "附工程师1小时录音室租用",
+        "includes": ["自备MR音轨", "提供源文件案（不含混音）", "需具备韩语沟通能力"]
+      },
+      "1pro": {
+        "name": "1Pro",
+        "tagline": "Studio rental for serious recording",
+        "concept": "专业录音用录音室3.5小时租用",
+        "includes": ["自备MR音轨", "提供源文件案（不含混音）", "需具备韩语沟通能力"]
+      },
+      "making-class": {
+        "name": "K-Pop Making Class",
+        "tagline": "A group K-pop making class",
+        "concept": "K-POP制作体验课程（2〜15人）",
+        "includes": ["K-POP制作流程体验", "2小时课程", "多语言支持"]
+      },
+      "dreampath": {
+        "name": "Dreampath",
+        "tagline": "A group program",
+        "concept": "团体职涯探索体验（10〜15人）",
+        "includes": ["音乐产业职涯探索", "2小时课程", "仅限韩语"]
+      },
+      "workshop": {
+        "name": "Workshop",
+        "tagline": "A group workshop program",
+        "concept": "团体工作坊方案（5〜15人）",
+        "includes": ["客制化工作坊形式", "2小时课程", "仅限韩语"]
+      }
+    }
+  },
+  "songs": {
+    "catalog": {
+      "title": "歌曲目录",
+      "subtitle": "浏览可在 KING STUDIO 录制的 K-POP 歌曲。",
+      "empty": "目前尚无可选歌曲。"
+    },
+    "filters": {
+      "aria": "歌曲筛选",
+      "all": "全部歌曲",
+      "beginnerCuration": "新手推荐"
+    },
+    "license": {
+      "recording": "录音",
+      "mr_distribution": "MR 发行",
+      "lyrics": "歌词"
+    }
+  },
+  "about": {
+    "metaTitle": "关于KING STUDIO — 首尔真正的K-POP录音室",
+    "metaDescription": "KING STUDIO自2017年起在首尔为访客提供K-POP录音体验 — 获The New York Times报导的直营、以录音室为内核的体验。",
+    "hero": {
+      "eyebrow": "我们的故事",
+      "title": "真正的录音室，属于你的K-POP音源。",
+      "subtitle": "自2017年起，KING STUDIO在首尔的专业录音室迎接世界各地的访客 — 唱歌、录音，带走真正属于自己的作品。"
+    },
+    "story": {
+      "heading": "以录音室为内核，直营",
+      "body1": "我们在首尔圣水创立KING STUDIO，只有一个想法 — 给访客真正的体验：专业录音间、声乐总监，以及属于你的录音。这些年来，我们先通过旅游平台、如今直接通过自家网站，完成了数千场录音。",
+      "body2": "直营意味着更合理的价格、为你而设的预约，以及录音后仍延续的关系 — 而不是淹没在OTA市场中的一则刊登。"
+    },
+    "points": {
+      "heading": "有何不同",
+      "studio": {
+        "title": "真正的录音室",
+        "body": "不是拍照布景或服装间，而是有工程师与声乐总监的专业空间。"
+      },
+      "takeaway": {
+        "title": "带走你的作品",
+        "body": "录音音源与录音室照片于录音后以安全链接送达，CD 则于当天在录音室现场交付。"
+      },
+      "direct": {
+        "title": "直接向我们预约",
+        "body": "没有中间商。预约、付款、咨询都直接与录音室。"
+      }
+    },
+    "nyt": {
+      "label": "媒体报导",
+      "title": "获The New York Times报导",
+      "body": "2024年11月，The New York Times报导了在首尔录制K-POP，以及KING STUDIO为访客提供的体验。",
+      "cta": "阅读报导"
+    },
+    "cta": {
+      "heading": "来和我们一起录音",
+      "sub": "选择方案，在首尔开始你的录音。",
+      "button": "查看方案"
+    }
+  },
+  "faq": {
+    "metaTitle": "KING STUDIO — 常见问题",
+    "metaDescription": "关于首尔KING STUDIO K-POP录音体验：包含内容、语言、预约、可带走的作品与取消。",
+    "eyebrow": "说明",
+    "heading": "常见问题",
+    "sub": "预约前你需要知道的一切。",
+    "items": {
+      "q1": {
+        "q": "KING STUDIO是什么？",
+        "a": "在首尔真正的录音室，与专业声乐总监一起唱K-POP，带走属于自己的音源与照片的体验。"
+      },
+      "q2": {
+        "q": "我一定要很会唱吗？",
+        "a": "完全不用。声乐总监会引导你每一次录音 — 这是为初学者与粉丝而设，而非只给歌手。"
+      },
+      "q3": {
+        "q": "可以用哪些语言预约？",
+        "a": "网站支持韩文、英文、日文与中文（繁体），海外访客的录音以英语进行。"
+      },
+      "q4": {
+        "q": "每个方案包含什么？",
+        "a": "视方案（Gold、Diamond、Premium）而定。所有体验方案都含录音室照片与CD；Diamond与Premium加上完整混音与母带处理，Premium再加音乐录像带。详情见方案。"
+      },
+      "q5": {
+        "q": "我能带走什么？",
+        "a": "录音音源、录音室照片与CD。Diamond与Premium另含混音母带版本，Premium含音乐录像带。数字文件于录音后以安全链接送达，CD 则于当天在录音室现场交付。"
+      },
+      "q6": {
+        "q": "一场录音多长？",
+        "a": "Gold与Diamond约两小时，Premium约三小时。"
+      },
+      "q7": {
+        "q": "可以和朋友、家人或团体一起来吗？",
+        "a": "可以。体验方案最多五人，K-Pop制作课程则为较大团体而设。未成年者在监护人同意下可参加，我们于结帐时收取同意。"
+      },
+      "q8": {
+        "q": "营业时间与地点？",
+        "a": "每天10:00至22:00（KST），位于首尔圣水。"
+      },
+      "q9": {
+        "q": "如何预约、付款与取消？",
+        "a": "在线选择方案、时段与歌曲即可预约，以韩元（KRW）付款（支持海外信用卡与PayPal，其他货币为参考显示）。录音前数天可免费取消，愈接近日期为部分退款，完整政策于结帐页显示。"
+      }
+    },
+    "cta": {
+      "heading": "还有问题吗？",
+      "sub": "浏览方案与歌曲，或选一场录音开始。",
+      "packages": "查看方案",
+      "songs": "浏览歌曲"
+    }
+  },
+  "footer": {
+    "tagline": "首尔的K-POP录音体验 — 唱歌、录音，带走属于你的音源。",
+    "exploreHeading": "探索",
+    "packages": "方案",
+    "songs": "歌曲",
+    "companyHeading": "公司",
+    "about": "关于",
+    "faq": "常见问题",
+    "businessInfo": "商业登记信息即将提供。",
+    "rights": "版权所有。"
+  },
+  "booking": {
+    "progress": {
+      "aria": "第 {current} 步，共 {total} 步",
+      "step1": "方案",
+      "step2": "日期与时间",
+      "step3": "填写数据",
+      "step4": "付款"
+    },
+    "step1": {
+      "title": "请选择方案",
+      "subtitle": "请选择您想预约的录音体验。",
+      "durationLabel": "{minutes} 分钟",
+      "headcountLabel": "{min}–{max} 人",
+      "fromLabel": "1 人起",
+      "selectCta": "选择",
+      "empty": "目前语言尚无可预约的方案。"
+    },
+    "step2": {
+      "title": "请选择日期与时间",
+      "subtitle": "所有时间均以韩国标准时间（KST）显示。",
+      "backToPackages": "返回方案",
+      "dateLabel": "日期",
+      "windowHint": "可预约范围为明天起至 90 天内。",
+      "pickDatePrompt": "选择日期后即可查看可预约时段。",
+      "loading": "正在加载可预约时段…",
+      "loadError": "无法加载时段，请再试一次。",
+      "retry": "重试",
+      "noSlots": "这一天没有可预约的时段，请选择其他日期。",
+      "available": "可预约",
+      "soldOut": "已额满",
+      "timezoneNote": "时间以 KST（Asia/Seoul）显示",
+      "selectedLabel": "已选时段",
+      "continueCta": "下一步"
+    },
+    "step3": {
+      "title": "选项与同意",
+      "subtitle": "填写歌曲、人数与预约者数据，并确认必要同意事项。",
+      "back": "返回日期与时间",
+      "missingSlot": "尚未选择日期与时间，请先于上一步选择时段。",
+      "backToSchedule": "前往日期与时间",
+      "headcount": {
+        "label": "人数",
+        "hint": "请于方案允许范围内选择。"
+      },
+      "song": {
+        "label": "选择歌曲",
+        "placeholder": "请选择歌曲",
+        "rentalNote": "租借方案由顾客自行携带 MR，无需选择歌曲。"
+      },
+      "reservant": {
+        "title": "预约者数据",
+        "name": "姓名",
+        "email": "电子邮件",
+        "phone": "联系电话",
+        "nationality": "国籍",
+        "passportName": "护照英文姓名",
+        "hint": "用于付款与预约确认。"
+      },
+      "participants": {
+        "title": "用户出生日期",
+        "dobLabel": "第 {n} 位用户的出生日期",
+        "hint": "请输入所有用户的出生日期。若有未满 16 岁者，须取得监护人同意。"
+      },
+      "guardian": {
+        "title": "监护人同意",
+        "notice": "用户中包含未满 16 岁者，须提供法定代理人（监护人）数据与同意，未完成前将无法付款。",
+        "name": "监护人姓名",
+        "relation": "关系",
+        "contact": "联系方式",
+        "email": "电子邮件",
+        "consentLabel": "本人以法定代理人身分，同意上述未成年人之预约与使用。"
+      },
+      "consent": {
+        "requiredTitle": "必要同意",
+        "optionalTitle": "选择性同意（行销）",
+        "items": {
+          "tos": "我同意服务条款。",
+          "privacy": "我同意个人数据之搜集与利用（项目、目的、保存期间）。",
+          "usage_scope": "我了解个人、非商业性的社群分享可自由进行，但商业使用（广告、获利、转售等）须取得原曲权利人另行授权，且 KING STUDIO 不予保证。",
+          "korean_only": "我确认能以韩语顺畅沟通。（限租借方案）",
+          "license_self_brought": "我同意自行携带之 MR／音源使用权归本人所有，使用过程中所生之著作权争议由本人负责。"
+        },
+        "marketing": {
+          "note": "为选择性项目。使用期间自同意日起三年。",
+          "basic": "我同意基本使用（自家网站、官方社群、新闻稿）。",
+          "ads": "我同意用于付费数字广告。",
+          "outdoor": "我同意用于户外广告与印刷品。",
+          "broadcast": "我同意用于电视、OTT 与广播。",
+          "email": "我同意接收行销电子邮件。",
+          "sms": "我同意接收行销短信。"
+        }
+      },
+      "errors": {
+        "dob_missing": "请输入所有用户的出生日期。",
+        "reservant_missing": "请输入预约者的姓名与电子邮件。",
+        "guardian_incomplete": "请完整填写监护人数据与同意。",
+        "consent_missing": "请勾选所有必要同意项目。"
+      },
+      "continueCta": "前往付款"
+    },
+    "step4": {
+      "back": "返回选项与同意",
+      "title": "付款",
+      "subtitle": "确认您的预约内容，同意付款条款后完成付款。",
+      "missingDraft": "找不到预约信息。请先于上一步填写选项。",
+      "backToDetails": "前往选项",
+      "summary": {
+        "title": "预约摘要",
+        "package": "方案",
+        "dateTime": "日期与时间",
+        "headcount": "人数",
+        "subtotal": "付款金额",
+        "discount": "回访折扣",
+        "total": "总计",
+        "cdNote": "CD（当日录音原档）将于课程结束时在工作室现场交付。"
+      },
+      "currencyNotice": "款项以韩元（KRW）计费。换算为您本国货币的金额依发卡机构汇率而定，PG 手续费已包含于扣款金额中。",
+      "pg": {
+        "title": "付款方式",
+        "inicis": "国内付款（KG Inicis）",
+        "paypal": "海外付款（PayPal）",
+        "feeInicis": "本地卡・Naver Pay・Kakao Pay ・ PG 手续费约 3.0%",
+        "feePaypal": "PayPal・海外卡（Visa/Master/Amex/JCB） ・ PG 手续费约 4.4% + ₩560"
+      },
+      "consent": {
+        "title": "付款前同意",
+        "payment": "我同意付款条款（以 KRW 计费、发卡机构汇率差异、含 PG 手续费）与退款规定。（必填）"
+      },
+      "payCta": "立即付款",
+      "processing": "处理中…",
+      "errors": {
+        "invalid_params": "部分内容有误，请检查前面的步骤。",
+        "headcount_mismatch": "人数与出生日期输入不一致。",
+        "out_of_window": "该日期已超出可预约范围。",
+        "package_not_available": "此方案在目前语言下无法预约。",
+        "not_slot_bookable": "此方案无法以时段预约。",
+        "headcount_out_of_range": "人数超出允许范围。",
+        "minor_guardian_required": "有未满 16 岁同行者时，需要监护人同意与监护人信息。请于上一步完成。",
+        "consent_invalid": "缺少必要的同意项目，请确认。",
+        "slot_unavailable": "该时段刚刚额满，请选择其他时段。",
+        "payment_failed": "付款失败，请再试一次。",
+        "concurrent_booking_lost": "因同时预约竞争而未能取得时段。款项将自动退还，请选择其他时间。",
+        "internal_error": "发生暂时性错误，请稍后再试。"
+      },
+      "success": {
+        "title": "您的预约已确认",
+        "refLabel": "预约编号",
+        "message": "我们将以电子邮件寄送确认与收据。"
+      }
+    }
+  },
+  "download": {
+    "studioName": "KING STUDIO",
+    "title": "我的录音文件",
+    "subtitle": "{date} 录音时段的成果文件。",
+    "linkExpires": "此下载链接有效期至 {date}。",
+    "empty": "文件正在准备中，完成后我们会立即以电子邮件通知您。",
+    "invalid": {
+      "title": "找不到链接",
+      "body": "此下载链接无效。请确认 KING STUDIO 寄给您的最新邮件，或与我们联系，我们会寄送新的链接。"
+    },
+    "expired": {
+      "title": "链接已过期",
+      "body": "此下载链接已过期。请与我们联系，我们会为您重新核发新的链接。"
+    },
+    "revoked": {
+      "title": "已更换为新链接",
+      "body": "此预约已核发较新的下载链接。请使用 KING STUDIO 最近寄出的邮件，或与我们联系寻求协助。"
+    },
+    "list": {
+      "version": "v{version}",
+      "sizeMb": "{size} MB",
+      "download": "下载",
+      "downloading": "准备中…",
+      "errorGone": "此链接已失效。请与我们联系以取得新的链接。",
+      "errorRateLimited": "短时间内下载次数过多，请稍候几分钟再试。",
+      "errorGeneric": "下载失败，请再试一次。",
+      "types": {
+        "raw_wav": "原始录音 (WAV)",
+        "raw_mp3": "原始录音 (MP3)",
+        "master_wav": "混音＆母带处理 (WAV)",
+        "master_mp3": "混音＆母带处理 (MP3)",
+        "photos": "录音时段照片",
+        "mv_horizontal": "音乐录像带 (1080p)",
+        "highlight_vertical": "直式精华视频 (9:16)"
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@ describe('seo/urls', () => {
   it('localizedPath prefixes the locale; home is the bare locale segment', () => {
     expect(localizedPath('en', '')).toBe('/en');
     expect(localizedPath('en', '/songs')).toBe('/en/songs');
-    expect(localizedPath('zh-TW', '/songs')).toBe('/zh-TW/songs');
+    expect(localizedPath('zh-CN', '/songs')).toBe('/zh-CN/songs');
   });
 
   it('absoluteUrl = site base + localized path', () => {

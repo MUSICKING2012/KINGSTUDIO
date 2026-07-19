@@ -64,7 +64,7 @@ describe('app/sitemap — song URLs (2b-2b-4 / W4)', () => {
       'https://example.test/en/songs/bts-dynamite',
     );
     expect(Object.keys(en?.alternates?.languages ?? {}).sort()).toEqual(
-      ['en', 'ja', 'ko', 'x-default', 'zh-HK', 'zh-TW'].sort(),
+      ['en', 'ja', 'ko', 'x-default', 'zh-CN', 'zh-HK'].sort(),
     );
   });
 

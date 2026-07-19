@@ -36,7 +36,7 @@ describe('isPackageViewable', () => {
       isPackageViewable(
         {
           ...base,
-          languagesAvailable: [Locale.ko, Locale.en, Locale.ja, Locale.zh_TW, Locale.zh_HK],
+          languagesAvailable: [Locale.ko, Locale.en, Locale.ja, Locale.zh_HK, Locale.zh_CN],
         },
         Locale.en,
       ),
