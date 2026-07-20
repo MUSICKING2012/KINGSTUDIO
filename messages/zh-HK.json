@@ -121,7 +121,8 @@
       "headcountLabel": "{min}〜{max}人",
       "durationLabel": "{minutes}分鐘",
       "viewDetail": "查看詳情",
-      "cta": "立即預約"
+      "cta": "立即預約",
+      "krwNotice": "一律以韓圜結算，其他貨幣僅供參考。"
     },
     "detail": {
       "priceTableTitle": "按人數計費",
@@ -199,6 +200,20 @@
         "concept": "團體工作坊方案（5〜15人）",
         "includes": ["客製化工作坊形式", "2小時課程", "僅限韓語"]
       }
+    },
+    "compare": {
+      "title": "套餐比較",
+      "rowRawAudio": "原始音源 (WAV + MP3)",
+      "rowShortMix": "簡易混音 (主歌 + 副歌)",
+      "rowFullMaster": "正式混音及母帶處理",
+      "rowPhotos": "未修圖相片 30 張",
+      "rowVocalReport": "個人聲樂報告",
+      "rowMusicVideo": "音樂錄影帶",
+      "rowVerticalCut": "直向精華片段 (9:16)",
+      "rowCd": "CD (於錄音室領取)",
+      "rowDuration": "錄音時長",
+      "included": "包含",
+      "notIncluded": "不包含"
     }
   },
   "songs": {

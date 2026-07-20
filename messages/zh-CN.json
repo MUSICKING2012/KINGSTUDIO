@@ -121,7 +121,8 @@
       "headcountLabel": "{min}〜{max}人",
       "durationLabel": "{minutes}分钟",
       "viewDetail": "查看详情",
-      "cta": "立即预约"
+      "cta": "立即预约",
+      "krwNotice": "一律以韩元结算，其他货币仅供参考。"
     },
     "detail": {
       "priceTableTitle": "按人数计费",
@@ -199,6 +200,20 @@
         "concept": "团体工作坊方案（5〜15人）",
         "includes": ["客制化工作坊形式", "2小时课程", "仅限韩语"]
       }
+    },
+    "compare": {
+      "title": "方案比较",
+      "rowRawAudio": "原始音源 (WAV + MP3)",
+      "rowShortMix": "简易混音 (主歌 + 副歌)",
+      "rowFullMaster": "正式混音及母带处理",
+      "rowPhotos": "未修图照片 30 张",
+      "rowVocalReport": "个人声乐报告",
+      "rowMusicVideo": "音乐录影带",
+      "rowVerticalCut": "竖版精华片段 (9:16)",
+      "rowCd": "CD (于录音室领取)",
+      "rowDuration": "录音时长",
+      "included": "包含",
+      "notIncluded": "不包含"
     }
   },
   "songs": {

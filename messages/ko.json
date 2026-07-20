@@ -121,7 +121,8 @@
       "headcountLabel": "{min}~{max}명",
       "durationLabel": "{minutes}분",
       "viewDetail": "자세히 보기",
-      "cta": "예약하기"
+      "cta": "예약하기",
+      "krwNotice": "결제는 원화로 진행되며, 그 외 통화는 참고용입니다."
     },
     "detail": {
       "priceTableTitle": "인원별 요금",
@@ -199,6 +200,20 @@
         "concept": "단체 워크샵 프로그램 (5~15명)",
         "includes": ["맞춤형 워크샵 구성", "2시간 프로그램", "한국어 전용"]
       }
+    },
+    "compare": {
+      "title": "패키지 비교",
+      "rowRawAudio": "원본 음원 (WAV + MP3)",
+      "rowShortMix": "간이 믹스 (1절 + 후렴)",
+      "rowFullMaster": "정식 믹스·마스터링",
+      "rowPhotos": "무보정 사진 30컷",
+      "rowVocalReport": "개인 보컬 리포트",
+      "rowMusicVideo": "뮤직비디오",
+      "rowVerticalCut": "세로형 하이라이트 (9:16)",
+      "rowCd": "CD (현장 수령)",
+      "rowDuration": "세션 시간",
+      "included": "포함",
+      "notIncluded": "미포함"
     }
   },
   "songs": {

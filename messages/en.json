@@ -121,7 +121,8 @@
       "headcountLabel": "{min}–{max} people",
       "durationLabel": "{minutes} min",
       "viewDetail": "View details",
-      "cta": "Book now"
+      "cta": "Book now",
+      "krwNotice": "Charged in KRW. Other currencies are for reference."
     },
     "detail": {
       "priceTableTitle": "Pricing by group size",
@@ -211,6 +212,20 @@
         "concept": "Group workshop program (5–15 people)",
         "includes": ["Customised workshop format", "2-hour program", "Korean only"]
       }
+    },
+    "compare": {
+      "title": "Compare packages",
+      "rowRawAudio": "Raw audio (WAV + MP3)",
+      "rowShortMix": "Short mix (verse + chorus)",
+      "rowFullMaster": "Full mix & master",
+      "rowPhotos": "30 unretouched photos",
+      "rowVocalReport": "Personal vocal report",
+      "rowMusicVideo": "Music video",
+      "rowVerticalCut": "Vertical highlight (9:16)",
+      "rowCd": "CD (handed over at the studio)",
+      "rowDuration": "Session length",
+      "included": "Included",
+      "notIncluded": "Not included"
     }
   },
   "songs": {

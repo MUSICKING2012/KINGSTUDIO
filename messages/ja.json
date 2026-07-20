@@ -121,7 +121,8 @@
       "headcountLabel": "{min}〜{max}名",
       "durationLabel": "{minutes}分",
       "viewDetail": "詳細を見る",
-      "cta": "予約する"
+      "cta": "予約する",
+      "krwNotice": "お支払いはウォン建てです。他通貨は参考表示です。"
     },
     "detail": {
       "priceTableTitle": "人数別料金",
@@ -207,6 +208,20 @@
         "concept": "グループワークショッププログラム（5〜15名）",
         "includes": ["カスタムワークショップ形式", "2時間プログラム", "韓国語のみ"]
       }
+    },
+    "compare": {
+      "title": "パッケージ比較",
+      "rowRawAudio": "元音源 (WAV + MP3)",
+      "rowShortMix": "簡易ミックス (1番 + サビ)",
+      "rowFullMaster": "本格ミックス・マスタリング",
+      "rowPhotos": "未加工写真 30カット",
+      "rowVocalReport": "個人ボーカルレポート",
+      "rowMusicVideo": "ミュージックビデオ",
+      "rowVerticalCut": "縦型ハイライト (9:16)",
+      "rowCd": "CD (スタジオでお渡し)",
+      "rowDuration": "セッション時間",
+      "included": "含む",
+      "notIncluded": "含まない"
     }
   },
   "songs": {
