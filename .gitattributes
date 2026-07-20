@@ -11,3 +11,4 @@
 *.mjs text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+.gitattributes text eol=lf
