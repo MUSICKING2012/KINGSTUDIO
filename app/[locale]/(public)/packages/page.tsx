@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { cookies } from 'next/headers';
 
+import { PackageComparison } from '@/components/catalog/package-comparison';
 import { Price } from '@/components/price/price';
 import { Button } from '@/components/ui/button';
+import { buildComparison } from '@/lib/catalog/comparison';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { listPackages } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
@@ -134,6 +136,14 @@ export default async function PackageCatalogPage({
                 );
               })}
             </div>
+            {cat === 'experience' && (
+              <>
+                <PackageComparison locale={locale} columns={buildComparison(pkgs)} />
+                <p className="mt-stack-md text-label-sm text-muted-foreground">
+                  {t('catalog.krwNotice')}
+                </p>
+              </>
+            )}
           </section>
         );
       })}
