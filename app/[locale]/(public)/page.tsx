@@ -49,7 +49,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
             size="lg"
             className="bg-foreground text-background hover:bg-foreground/90"
           >
-            <Link href="/packages">{t('hero.ctaPrimary')}</Link>
+            <Link href="/experience">{t('hero.ctaPrimary')}</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
             <Link href="/songs">{t('hero.ctaSecondary')}</Link>
@@ -125,7 +125,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
           </div>
           <div className="mt-stack-lg">
             <Button asChild className="bg-foreground text-background hover:bg-foreground/90">
-              <Link href="/packages">{t('experience.cta')}</Link>
+              <Link href="/experience">{t('experience.cta')}</Link>
             </Button>
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
               size="lg"
               className="bg-background text-foreground hover:bg-background/90"
             >
-              <Link href="/packages">{t('finalCta.cta')}</Link>
+              <Link href="/experience">{t('finalCta.cta')}</Link>
             </Button>
           </div>
         </div>

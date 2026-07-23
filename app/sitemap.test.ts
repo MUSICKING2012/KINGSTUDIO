@@ -37,13 +37,20 @@ beforeEach(() => {
   vi.mocked(listSongs).mockResolvedValue(SEED_MIX);
 });
 
-describe('app/sitemap — structural routes (infra-A, unchanged)', () => {
-  it('emits home + /songs for every locale', async () => {
+describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
+  it('emits home + /songs + /experience + /group for every locale', async () => {
     const urls = (await sitemap()).map((e) => e.url);
     for (const l of locales) {
       expect(urls).toContain(`https://example.test/${l}`);
       expect(urls).toContain(`https://example.test/${l}/songs`);
+      expect(urls).toContain(`https://example.test/${l}/experience`);
+      expect(urls).toContain(`https://example.test/${l}/group`);
     }
+  });
+
+  it('excludes /rental (ko-only route → non-200 in en/ja/zh-*)', async () => {
+    const urls = (await sitemap()).map((e) => e.url);
+    expect(urls.some((u) => /\/rental$/.test(new URL(u).pathname))).toBe(false);
   });
 
   it('each entry carries hreflang alternates (x-default included)', async () => {
@@ -91,8 +98,8 @@ describe('app/sitemap — song URLs (2b-2b-4 / W4)', () => {
     expect(songDetail).toHaveLength(locales.length);
   });
 
-  it('total = static (locales×2) + song (visible×locales)', async () => {
-    expect(await sitemap()).toHaveLength(locales.length * 2 + 1 * locales.length);
+  it('total = static (locales×4) + song (visible×locales)', async () => {
+    expect(await sitemap()).toHaveLength(locales.length * 4 + 1 * locales.length);
   });
 });
 
