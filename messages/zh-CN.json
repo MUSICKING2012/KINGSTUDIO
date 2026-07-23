@@ -122,7 +122,27 @@
       "durationLabel": "{minutes}分钟",
       "viewDetail": "查看详情",
       "cta": "立即预约",
-      "krwNotice": "一律以韩元结算，其他货币仅供参考。"
+      "krwNotice": "一律以韩元结算，其他货币仅供参考。",
+      "categories": {
+        "experience": {
+          "heading": "K-POP 录音体验",
+          "subtitle": "在首尔市中心，像偶像一样录制 K-POP。",
+          "metaTitle": "首尔 K-POP 录音体验 | KING STUDIO",
+          "metaDescription": "在首尔预约专业 K-POP 录音 — Gold、Diamond、Premium，包含混音、照片及音乐视频选项。"
+        },
+        "rental": {
+          "heading": "录音棚租赁",
+          "subtitle": "含录音师的录音棚时间租赁，正式录音之选。",
+          "metaTitle": "首尔录音棚租赁 | KING STUDIO",
+          "metaDescription": "首尔录音棚按时租赁，含录音师 — 1Hour 和 1Pro。"
+        },
+        "group": {
+          "heading": "团体项目",
+          "subtitle": "为团体和团队打造的 K-POP 录音。",
+          "metaTitle": "首尔 K-POP 团体录音项目 | KING STUDIO",
+          "metaDescription": "首尔团体 K-POP 录音 — 面向团队和旅行团的 K-Pop Making Class。"
+        }
+      }
     },
     "detail": {
       "priceTableTitle": "按人数计费",

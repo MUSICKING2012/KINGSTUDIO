@@ -122,7 +122,27 @@
       "durationLabel": "{minutes}분",
       "viewDetail": "자세히 보기",
       "cta": "예약하기",
-      "krwNotice": "결제는 원화로 진행되며, 그 외 통화는 참고용입니다."
+      "krwNotice": "결제는 원화로 진행되며, 그 외 통화는 참고용입니다.",
+      "categories": {
+        "experience": {
+          "heading": "K-POP 녹음 체험",
+          "subtitle": "서울 한복판에서 아이돌처럼 K-POP을 녹음하세요.",
+          "metaTitle": "서울 K-POP 녹음 체험 | KING STUDIO",
+          "metaDescription": "서울 K-POP 프로 녹음 세션 예약 — Gold·Diamond·Premium, 믹싱·사진·뮤직비디오 옵션."
+        },
+        "rental": {
+          "heading": "스튜디오 대여",
+          "subtitle": "엔지니어와 함께 쓰는 본격 녹음 스튜디오 시간 대여.",
+          "metaTitle": "녹음 스튜디오 대여 | KING STUDIO",
+          "metaDescription": "서울 녹음 스튜디오 시간 대여 — 1Hour·1Pro, 엔지니어 포함."
+        },
+        "group": {
+          "heading": "단체 프로그램",
+          "subtitle": "팀·단체를 위한 K-POP 녹음 프로그램.",
+          "metaTitle": "K-POP 단체 녹음 프로그램 | KING STUDIO",
+          "metaDescription": "서울 단체 K-POP 녹음 — K-Pop Making Class·꿈길·워크샵."
+        }
+      }
     },
     "detail": {
       "priceTableTitle": "인원별 요금",

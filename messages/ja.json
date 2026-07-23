@@ -122,7 +122,27 @@
       "durationLabel": "{minutes}分",
       "viewDetail": "詳細を見る",
       "cta": "予約する",
-      "krwNotice": "お支払いはウォン建てです。他通貨は参考表示です。"
+      "krwNotice": "お支払いはウォン建てです。他通貨は参考表示です。",
+      "categories": {
+        "experience": {
+          "heading": "K-POP レコーディング体験",
+          "subtitle": "ソウルの中心で、アイドルのようにK-POPをレコーディング。",
+          "metaTitle": "ソウルのK-POPレコーディング体験 | KING STUDIO",
+          "metaDescription": "ソウルで本格的なK-POPレコーディングを予約 — Gold・Diamond・Premium、ミキシング・写真・ミュージックビデオのオプション付き。"
+        },
+        "rental": {
+          "heading": "スタジオレンタル",
+          "subtitle": "エンジニア付きで本格レコーディングができるスタジオの時間貸し。",
+          "metaTitle": "ソウルのレコーディングスタジオレンタル | KING STUDIO",
+          "metaDescription": "ソウルのレコーディングスタジオを時間貸し、エンジニア付き — 1Hour・1Pro。"
+        },
+        "group": {
+          "heading": "グループプログラム",
+          "subtitle": "グループ・チームのためのK-POPレコーディング。",
+          "metaTitle": "ソウルのK-POPグループレコーディングプログラム | KING STUDIO",
+          "metaDescription": "ソウルでのグループK-POPレコーディング — チームやツアーグループ向けのK-Pop Making Class。"
+        }
+      }
     },
     "detail": {
       "priceTableTitle": "人数別料金",

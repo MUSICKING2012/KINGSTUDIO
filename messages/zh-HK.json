@@ -122,7 +122,27 @@
       "durationLabel": "{minutes}分鐘",
       "viewDetail": "查看詳情",
       "cta": "立即預約",
-      "krwNotice": "一律以韓圜結算，其他貨幣僅供參考。"
+      "krwNotice": "一律以韓圜結算，其他貨幣僅供參考。",
+      "categories": {
+        "experience": {
+          "heading": "K-POP 錄音體驗",
+          "subtitle": "在首爾市中心，像偶像一樣錄製 K-POP。",
+          "metaTitle": "首爾 K-POP 錄音體驗 | KING STUDIO",
+          "metaDescription": "在首爾預約專業 K-POP 錄音 — Gold、Diamond、Premium，包含混音、相片及音樂錄影帶選項。"
+        },
+        "rental": {
+          "heading": "錄音室租用",
+          "subtitle": "連同錄音師租用錄音室時間，正式錄音之選。",
+          "metaTitle": "首爾錄音室租用 | KING STUDIO",
+          "metaDescription": "首爾錄音室按時租用，連錄音師 — 1Hour 及 1Pro。"
+        },
+        "group": {
+          "heading": "團體課程",
+          "subtitle": "為團體及隊伍而設的 K-POP 錄音。",
+          "metaTitle": "首爾 K-POP 團體錄音課程 | KING STUDIO",
+          "metaDescription": "首爾團體 K-POP 錄音 — 為團隊及旅行團而設的 K-Pop Making Class。"
+        }
+      }
     },
     "detail": {
       "priceTableTitle": "按人數計費",

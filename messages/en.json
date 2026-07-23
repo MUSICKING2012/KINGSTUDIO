@@ -122,7 +122,27 @@
       "durationLabel": "{minutes} min",
       "viewDetail": "View details",
       "cta": "Book now",
-      "krwNotice": "Charged in KRW. Other currencies are for reference."
+      "krwNotice": "Charged in KRW. Other currencies are for reference.",
+      "categories": {
+        "experience": {
+          "heading": "K-POP Recording Experience",
+          "subtitle": "Record a K-POP song like an idol in the heart of Seoul.",
+          "metaTitle": "K-POP Recording Experience in Seoul | KING STUDIO",
+          "metaDescription": "Book a pro K-POP recording session in Seoul — Gold, Diamond, and Premium packages with mixing, photos, and music-video options."
+        },
+        "rental": {
+          "heading": "Studio Rental",
+          "subtitle": "Book studio time with an engineer for serious recording.",
+          "metaTitle": "Recording Studio Rental in Seoul | KING STUDIO",
+          "metaDescription": "Hourly recording studio rental in Seoul with an engineer — 1Hour and 1Pro."
+        },
+        "group": {
+          "heading": "Group Programs",
+          "subtitle": "K-POP recording made for groups and teams.",
+          "metaTitle": "K-POP Group Recording Programs in Seoul | KING STUDIO",
+          "metaDescription": "Group K-POP recording in Seoul — K-Pop Making Class for teams and tour groups."
+        }
+      }
     },
     "detail": {
       "priceTableTitle": "Pricing by group size",
