@@ -1,4 +1,15 @@
 {
+  "nav": {
+    "service": "サービス",
+    "studios": "スタジオ",
+    "product": "商品",
+    "reviews": "レビュー",
+    "blog": "ブログ",
+    "bookNow": "今すぐ予約",
+    "home": "ホーム",
+    "primary": "メインナビゲーション",
+    "comingSoon": "準備中"
+  },
   "header": {
     "localeAria": "言語",
     "currencyAria": "表示通貨"
@@ -360,8 +371,17 @@
     "companyHeading": "会社",
     "about": "紹介",
     "faq": "よくある質問",
-    "businessInfo": "事業者情報は準備中です。",
-    "rights": "無断転載を禁じます。"
+    "rights": "無断転載を禁じます。",
+    "legal": {
+      "company": "{nameKo}（{nameEn}）",
+      "ceo": "代表者",
+      "bizNo": "事業者登録番号",
+      "mailOrderNo": "通信販売業申告番号",
+      "privacyOfficer": "個人情報保護責任者",
+      "address": "住所",
+      "krwNotice": "すべてのお支払いはKRWで請求されます。他の通貨は参考表示であり、最終レートはカード会社が決定します。"
+    },
+    "operatedBy": "KING STUDIOは{company}が運営しています。"
   },
   "booking": {
     "progress": {

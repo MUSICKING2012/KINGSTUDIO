@@ -1,4 +1,15 @@
 {
+  "nav": {
+    "service": "服務",
+    "studios": "錄音室",
+    "product": "產品",
+    "reviews": "評價",
+    "blog": "網誌",
+    "bookNow": "立即預約",
+    "home": "首頁",
+    "primary": "主選單",
+    "comingSoon": "即將推出"
+  },
   "header": {
     "localeAria": "語言",
     "currencyAria": "顯示貨幣"
@@ -352,8 +363,17 @@
     "companyHeading": "公司",
     "about": "關於",
     "faq": "常見問題",
-    "businessInfo": "商業登記資訊即將提供。",
-    "rights": "版權所有。"
+    "rights": "版權所有。",
+    "legal": {
+      "company": "{nameKo}（{nameEn}）",
+      "ceo": "代表",
+      "bizNo": "營業執照號碼",
+      "mailOrderNo": "郵購業申報號碼",
+      "privacyOfficer": "個人資料保護負責人",
+      "address": "地址",
+      "krwNotice": "所有付款均以韓元（KRW）結算。其他貨幣僅供參考，最終匯率由發卡機構決定。"
+    },
+    "operatedBy": "KING STUDIO 由 {company} 營運。"
   },
   "booking": {
     "progress": {

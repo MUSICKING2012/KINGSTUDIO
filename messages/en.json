@@ -1,4 +1,15 @@
 {
+  "nav": {
+    "service": "SERVICE",
+    "studios": "STUDIOS",
+    "product": "PRODUCT",
+    "reviews": "REVIEW",
+    "blog": "BLOG",
+    "bookNow": "Book now",
+    "home": "Home",
+    "primary": "Main navigation",
+    "comingSoon": "Coming soon"
+  },
   "header": {
     "localeAria": "Language",
     "currencyAria": "Display currency"
@@ -364,8 +375,17 @@
     "companyHeading": "Company",
     "about": "About",
     "faq": "FAQ",
-    "businessInfo": "Business registration details coming soon.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "legal": {
+      "company": "{nameKo} ({nameEn})",
+      "ceo": "CEO",
+      "bizNo": "Business reg. no.",
+      "mailOrderNo": "Mail-order business reg. no.",
+      "privacyOfficer": "Privacy officer",
+      "address": "Address",
+      "krwNotice": "All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer."
+    },
+    "operatedBy": "KING STUDIO is operated by {company}."
   },
   "booking": {
     "progress": {
