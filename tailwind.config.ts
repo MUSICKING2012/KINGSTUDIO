@@ -93,6 +93,15 @@ const config: Config = {
         'body-md': ['var(--font-pretendard)', 'sans-serif'],
         'label-sm': ['var(--font-pretendard)', 'sans-serif'],
       },
+      keyframes: {
+        ksMarquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        'ks-marquee': 'ksMarquee 24s linear infinite',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

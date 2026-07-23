@@ -60,3 +60,44 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Editorial display type (Design_Reconciliation C17).
+     Size is intentionally NOT set here — pass an arbitrary value per section,
+     e.g. text-[clamp(58px,14.5vw,200px)]. */
+  .ks-display {
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  /* Emphasis tier (accent headline, category labels, wordmark, price). */
+  .ks-display-strong {
+    font-weight: 900;
+  }
+  /* Paper grid, 46px — measured from KING STUDIO Editorial.dc.html. */
+  .ks-grid-bg {
+    background-color: hsl(var(--background));
+    background-image: linear-gradient(rgba(20, 18, 16, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 18, 16, 0.045) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+}
+
+/* --- Unlayered: must win over utilities. Keep at end of file. --- */
+
+/* CJK display correction (C17-2). line-height .86 clips CJK ascenders/descenders.
+   Specificity (0,2,0) intentionally overrides per-element leading-[] utilities. */
+:lang(ko) .ks-display,
+:lang(ja) .ks-display,
+:lang(zh) .ks-display {
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ks-marquee {
+    animation: none;
+  }
+}
