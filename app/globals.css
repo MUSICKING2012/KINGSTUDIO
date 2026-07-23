@@ -60,3 +60,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Editorial redesign v3 (Tailwind_Token_Spec_v1 §3) — 46px ink grid for paper wrappers.
+     Dark sections carry no grid. Alpha not tokenized (spec §0.3). */
+  .bg-grid-ink {
+    background-image: linear-gradient(rgba(20, 18, 16, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 18, 16, 0.045) 1px, transparent 1px);
+    background-size: 46px 46px;
+  }
+}
