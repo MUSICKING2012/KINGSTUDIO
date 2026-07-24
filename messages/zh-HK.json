@@ -3,6 +3,15 @@
     "localeAria": "語言",
     "currencyAria": "顯示貨幣"
   },
+  "nav": {
+    "service": "服務",
+    "studios": "錄音室",
+    "product": "產品",
+    "review": "評價",
+    "blog": "網誌",
+    "myPage": "我的頁面",
+    "bookNow": "立即預約"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "首爾的K-POP錄音體驗。",
@@ -345,13 +354,9 @@
     }
   },
   "footer": {
-    "tagline": "首爾的K-POP錄音體驗 — 唱歌、錄音，帶走屬於你的音源。",
-    "exploreHeading": "探索",
-    "packages": "套餐",
-    "songs": "歌曲",
-    "companyHeading": "公司",
     "about": "關於",
-    "faq": "常見問題",
+    "contacts": "聯絡",
+    "krwNotice": "所有付款均以韓元(KRW)結算，其他幣別僅供參考。",
     "businessInfo": "商業登記資訊即將提供。",
     "rights": "版權所有。"
   },

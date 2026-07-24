@@ -3,6 +3,15 @@
     "localeAria": "言語",
     "currencyAria": "表示通貨"
   },
+  "nav": {
+    "service": "サービス",
+    "studios": "スタジオ",
+    "product": "商品",
+    "review": "レビュー",
+    "blog": "ブログ",
+    "myPage": "マイページ",
+    "bookNow": "今すぐ予約"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "ソウルのK-POP録音体験。",
@@ -353,13 +362,9 @@
     }
   },
   "footer": {
-    "tagline": "ソウルのK-POP録音体験 — 歌って、録音して、自分だけの音源を持ち帰る。",
-    "exploreHeading": "見る",
-    "packages": "パッケージ",
-    "songs": "曲",
-    "companyHeading": "会社",
     "about": "紹介",
-    "faq": "よくある質問",
+    "contacts": "連絡先",
+    "krwNotice": "すべての決済はKRWで請求されます。他通貨は参考表示です。",
     "businessInfo": "事業者情報は準備中です。",
     "rights": "無断転載を禁じます。"
   },

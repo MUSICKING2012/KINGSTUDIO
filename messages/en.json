@@ -3,6 +3,15 @@
     "localeAria": "Language",
     "currencyAria": "Display currency"
   },
+  "nav": {
+    "service": "SERVICE",
+    "studios": "STUDIOS",
+    "product": "PRODUCT",
+    "review": "REVIEW",
+    "blog": "BLOG",
+    "myPage": "My Page",
+    "bookNow": "Book now"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "K-POP recording experience in Seoul.",
@@ -357,13 +366,9 @@
     }
   },
   "footer": {
-    "tagline": "A K-pop recording experience in Seoul — sing, record, and take home your own track.",
-    "exploreHeading": "Explore",
-    "packages": "Packages",
-    "songs": "Songs",
-    "companyHeading": "Company",
     "about": "About",
-    "faq": "FAQ",
+    "contacts": "Contacts",
+    "krwNotice": "All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer.",
     "businessInfo": "Business registration details coming soon.",
     "rights": "All rights reserved."
   },

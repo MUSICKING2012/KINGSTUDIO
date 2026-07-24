@@ -3,6 +3,15 @@
     "localeAria": "语言",
     "currencyAria": "显示货币"
   },
+  "nav": {
+    "service": "服务",
+    "studios": "录音室",
+    "product": "产品",
+    "review": "评价",
+    "blog": "博客",
+    "myPage": "我的页面",
+    "bookNow": "立即预约"
+  },
   "home": {
     "title": "KING STUDIO",
     "subtitle": "首尔的K-POP录音体验。",
@@ -345,13 +354,9 @@
     }
   },
   "footer": {
-    "tagline": "首尔的K-POP录音体验 — 唱歌、录音，带走属于你的音源。",
-    "exploreHeading": "探索",
-    "packages": "方案",
-    "songs": "歌曲",
-    "companyHeading": "公司",
     "about": "关于",
-    "faq": "常见问题",
+    "contacts": "联系",
+    "krwNotice": "所有付款均以韩元(KRW)结算，其他货币仅供参考。",
     "businessInfo": "商业登记信息即将提供。",
     "rights": "版权所有。"
   },

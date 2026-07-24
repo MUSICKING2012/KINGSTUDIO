@@ -2,51 +2,43 @@ import { useTranslations } from 'next-intl';
 
 import { Link } from '@/lib/i18n/navigation';
 
-// Editorial footer (KING_STUDIO_DESIGN.md §Footer: paper/ink, shared, business info). Links the
-// public pages so About/FAQ are reachable. Business-registration line is a FILL-IN placeholder
-// (전자상거래법 requires 상호·대표자·사업자등록번호·주소·통신판매업신고 — CLAUDE.md §9 pre-flight).
+// Editorial footer (Nav_Footer_Slice_Spec_v1 §2, ks-footer.js measured). Ink-footer surface,
+// paper text at low opacity. Contact line is a KEPT placeholder (real values await Aiden, §6).
+// Terms/Privacy/Refund intentionally NOT rendered (pages absent + legal pending, §7-④).
+
+// Footer link config (like NAV_ITEMS). Contacts points to /about temporarily — the design links
+// it to Service; the Service slice will repoint it (§2).
+const FOOTER_LINKS = [
+  { key: 'about', href: '/about' },
+  { key: 'contacts', href: '/about' },
+] as const;
 
 export function SiteFooter() {
   const t = useTranslations('footer');
 
   return (
-    <footer className="mt-section-gap border-t border-border bg-card">
-      <div className="mx-auto max-w-container-max px-margin-mobile py-section-gap md:px-margin-desktop">
-        <div className="flex flex-col gap-stack-lg md:flex-row md:justify-between">
-          <div className="max-w-sm">
-            <p className="font-display text-headline-lg text-foreground">KING STUDIO</p>
-            <p className="mt-stack-sm text-body-md text-muted-foreground">{t('tagline')}</p>
+    <footer className="bg-ink-footer text-paper/70">
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-5 px-6 py-[34px]">
+        <div className="flex flex-wrap items-start justify-between gap-5">
+          <div>
+            <p className="text-[18px] font-black text-paper">KING STUDIO</p>
+            {/* Placeholder contact — do not replace with real values before Aiden confirms (§2/§6). */}
+            <p className="text-[12px]">hello@kingstudio.co.kr · +82 2 000 0000</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-gutter">
-            <nav aria-label={t('exploreHeading')} className="flex flex-col gap-stack-sm">
-              <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
-                {t('exploreHeading')}
-              </p>
-              <Link href="/packages" className="text-body-md text-foreground hover:text-primary">
-                {t('packages')}
+          <nav className="flex gap-5 text-[12px] font-bold tracking-[.04em] text-paper/80">
+            {FOOTER_LINKS.map((link) => (
+              <Link key={link.key} href={link.href} className="hover:text-paper">
+                {t(link.key)}
               </Link>
-              <Link href="/songs" className="text-body-md text-foreground hover:text-primary">
-                {t('songs')}
-              </Link>
-            </nav>
-            <nav aria-label={t('companyHeading')} className="flex flex-col gap-stack-sm">
-              <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
-                {t('companyHeading')}
-              </p>
-              <Link href="/about" className="text-body-md text-foreground hover:text-primary">
-                {t('about')}
-              </Link>
-              <Link href="/faq" className="text-body-md text-foreground hover:text-primary">
-                {t('faq')}
-              </Link>
-            </nav>
-          </div>
+            ))}
+          </nav>
         </div>
 
-        <div className="mt-section-gap flex flex-col gap-stack-sm border-t border-border pt-stack-lg text-label-sm text-muted-foreground">
+        <div className="flex flex-col gap-[5px] border-t border-paper/[0.12] pt-4 text-[11.5px] leading-[1.7] text-paper/50">
           <p>{t('businessInfo')}</p>
-          <p>© 2026 KING STUDIO. {t('rights')}</p>
+          <p>{t('krwNotice')}</p>
+          <p className="text-paper/[0.32]">© 2026 KING STUDIO. {t('rights')}</p>
         </div>
       </div>
     </footer>
