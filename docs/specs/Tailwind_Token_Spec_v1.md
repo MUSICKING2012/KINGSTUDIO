@@ -109,10 +109,11 @@ animation: {
 - `isFull()` = 데모용 가짜 해시. 실제 슬롯 API 사용.
 - NYT 링크 placeholder(`#nyt-article-url`) — 실제 기사 URL 필요(기존 follow-up).
 
-## 9. C17 — 로케일 세트 (✅ 결정됨, Aiden 2026-07-23)
-- **결정: 디자인 채택 — zh-TW → zh-CN(간체) 교체.** 최종 5로케일 = `ko / en / ja / zh-HK / zh-CN`,
-  통화 기본 zh-CN→CNY. (디자인 실측과 일치. 구 zh-TW 카피는 기계번역 미감수 상태라 폐기 비용 낮음.)
-- 마이그레이션 = **시퀀스 2.5**(이 토큰 스펙 구현 후, 홈 슬라이스 전) — 별도 스펙으로 진행. 이 토큰 스펙의
-  구현 범위와는 무관(로케일 파일 건드리지 않음).
-- 영향 범위(2.5 스펙에서 상세화): messages zh-TW→zh-CN, next-intl 라우팅, LOCALE_DEFAULT_CURRENCY(CNY),
-  hreflang/sitemap, 기존 페이지 카피. 정본 기록 = `Session_Handoff.md` §0.
+## 9. C17 — 로케일 세트 (⚠ v1.2 정정: 허위 충돌로 판명 — 마이그레이션 불필요, 시퀀스 2.5 취소)
+- 07-24 레포 실측: `lib/i18n/routing.ts` = `['ko','en','ja','zh-HK','zh-CN']`(PRD §5.1/CLAUDE §5 명시),
+  `messages/zh-CN.json` = 실제 간체 / `zh-HK.json` = 번체, zh-TW.json 부존재,
+  `lib/currency/config.ts` LOCALE_DEFAULT_CURRENCY = ko KRW/en USD/ja JPY/zh-CN CNY/zh-HK HKD.
+  → **디자인의 로케일·통화 매핑과 완전 일치. 작업 없음.** (화해문서 row 10 통화 대조도 이걸로 종결.)
+- v1.0~1.1 §9의 "충돌"은 구 Session_Handoff의 로케일 오기("zh-TW/zh-HK 모두 번체")를 레포 검증 없이
+  인용해 생긴 허위였다. 이에 근거했던 07-23 "zh-TW→zh-CN 교체 결정"도 무의미(이미 그 상태).
+- 교훈: 로케일·라우팅 등 구조 사실은 문서 인용이 아니라 **레포 실측**으로 검증 후 스펙에 쓴다.
