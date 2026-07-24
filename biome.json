@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": [".next", "node_modules", "coverage", "prisma/migrations"]
+    "ignore": [".next", "node_modules", "coverage", "prisma/migrations", "design"]
   },
   "formatter": {
     "enabled": true,
