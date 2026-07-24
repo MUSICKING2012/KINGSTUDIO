@@ -1,16 +1,19 @@
 {
-  "header": {
-    "localeAria": "言語",
-    "currencyAria": "表示通貨"
-  },
   "nav": {
     "service": "サービス",
     "studios": "スタジオ",
     "product": "商品",
-    "review": "レビュー",
+    "reviews": "レビュー",
     "blog": "ブログ",
     "myPage": "マイページ",
-    "bookNow": "今すぐ予約"
+    "bookNow": "今すぐ予約",
+    "home": "ホーム",
+    "primary": "メインナビゲーション",
+    "comingSoon": "準備中"
+  },
+  "header": {
+    "localeAria": "言語",
+    "currencyAria": "表示通貨"
   },
   "home": {
     "title": "KING STUDIO",
@@ -362,11 +365,24 @@
     }
   },
   "footer": {
+    "tagline": "ソウルのK-POP録音体験 — 歌って、録音して、自分だけの音源を持ち帰る。",
+    "exploreHeading": "見る",
+    "packages": "パッケージ",
+    "songs": "曲",
+    "companyHeading": "会社",
     "about": "紹介",
-    "contacts": "連絡先",
-    "krwNotice": "すべての決済はKRWで請求されます。他通貨は参考表示です。",
-    "businessInfo": "事業者情報は準備中です。",
-    "rights": "無断転載を禁じます。"
+    "faq": "よくある質問",
+    "rights": "無断転載を禁じます。",
+    "legal": {
+      "company": "{nameKo}（{nameEn}）",
+      "ceo": "代表者",
+      "bizNo": "事業者登録番号",
+      "mailOrderNo": "通信販売業申告番号",
+      "privacyOfficer": "個人情報保護責任者",
+      "address": "住所",
+      "krwNotice": "すべてのお支払いはKRWで請求されます。他の通貨は参考表示であり、最終レートはカード会社が決定します。"
+    },
+    "operatedBy": "KING STUDIOは{company}が運営しています。"
   },
   "booking": {
     "progress": {

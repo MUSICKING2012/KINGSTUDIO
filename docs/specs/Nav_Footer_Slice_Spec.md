@@ -7,7 +7,7 @@
 ## 0. 범위 (엄격)
 **수정 허용:**
 - `components/header/site-header.tsx` — 전면 재작성(미니멀 바 → 디자인 nav).
-- `components/header/nav-items.ts` — **신규**(nav 항목 config).
+- `lib/nav/items.ts` — 단일 nav config(nav 항목). 병합 후 유일한 nav config 모듈 — 구 중복 `components/header/nav-items.ts`는 병합에서 삭제됨.
 - `components/header/my-page-nav-item.tsx` — **신규**(클라이언트 게이팅, §1-D).
 - `components/footer/site-footer.tsx` — 전면 재작성(에디토리얼 footer).
 - `messages/{ko,en,ja,zh-HK,zh-CN}.json` — `nav` 네임스페이스 신설 + `footer` 키 교체(§3). **파이썬
@@ -28,7 +28,7 @@
 ### C. 중앙 nav + 우측 컨트롤
 - 중앙: `flex gap-6 flex-1 justify-center min-w-0 overflow-x-auto`(모바일 = 가로 스크롤, 디자인 그대로 —
   햄버거 없음). 링크: `text-[16px] font-semibold text-ink whitespace-nowrap` (en 카피 자체가 대문자).
-- **NAV_ITEMS config(`nav-items.ts`)** — 항목별 `{ key, href, enabled }`:
+- **NAV_ITEMS config(`lib/nav/items.ts` — 단일 nav config; 구 `components/header/nav-items.ts`는 병합에서 삭제됨)** — 항목별 `{ key, href, enabled }`:
 
 | key | 라벨 키 | href(현재) | enabled | 비고 |
 |---|---|---|---|---|
@@ -38,8 +38,10 @@
 | review | nav.review | `/reviews` | **false** | REVIEW 슬라이스가 켬 |
 | blog | nav.blog | `/blog` | **false** | BLOG 슬라이스가 켬 |
 
-  `enabled: false` = 렌더 안 함(죽은 링크 금지). **라우트 리네임은 이 슬라이스에서 하지 않는다** — nav는
-  config만 소유, 각 페이지 슬라이스가 자기 항목의 href/enabled를 갱신(결정 §7-①).
+  `enabled: false` = 비활성 항목도 **렌더한다** — 링크가 아닌 비인터랙티브 `<span>`으로, `text-ink/40`(foreground/40)
+  스타일 + sr-only "coming soon" 주석. 디자인이 5개 탭을 전부 노출하므로 숨기지 않는다(링크가 아니므로 죽은 링크도 아님).
+  **라우트 리네임은 이 슬라이스에서 하지 않는다** — nav는 config만 소유, 각 페이지 슬라이스가 자기 항목의 href/enabled를
+  갱신(결정 §7-①).
 - 우측(`flex items-center gap-2`): 기존 LocaleSelector·CurrencySelector 재사용 — className만 pill로:
   `rounded-full border border-ink/[0.16] bg-white px-2.5 py-2 text-[12px] font-semibold text-ink`.
   Book now 버튼: `Link` href="/booking" → `rounded-full bg-primary px-[18px] py-2.5 text-[13px] font-bold
@@ -102,7 +104,7 @@ contacts: en `Contacts` / ko `연락처` / ja `連絡先` / zh-HK `聯絡` / zh-
 
 ## 5. 이식 금지·주의
 - 디자인 nav의 `Service.dc.html` 등 `.dc.html` href를 그대로 옮기지 말 것 — §1-C config의 라우트만.
-- 마퀴·격자·히어로 등 홈 콘텐츠 구현 금지(홈 슬라이스). layout.tsx의 `.bg-grid-ink` 적용도 홈 슬라이스에서.
+- 마퀴·격자·히어로 등 홈 콘텐츠 구현 금지(홈 슬라이스). layout.tsx의 `.ks-grid-bg`(구 `.bg-grid-ink` — 토큰 스펙 §3에서 supersede) 적용도 홈 슬라이스에서.
 - 연락처 실값·사업자 정보 임의 기입 금지(§2 placeholder 유지).
 - git add/commit/push 금지(Aiden 전담). 의존성 추가 금지.
 
@@ -114,7 +116,7 @@ contacts: en `Contacts` / ko `연락처` / ja `連絡先` / zh-HK `聯絡` / zh-
 
 ## 7. 결정 로그 (아키텍트 판단, Aiden 거부권)
 ① **라우트 리네임 연기**: nav는 임시 href(`/experience`·`/rental`) — 리네임+redirect+sitemap은 각 페이지
-  슬라이스로(diff 최소화, 죽은 링크 0 원칙). ② SERVICE/REVIEW/BLOG는 **숨김**(coming-soon 스텁 없음) — 해당
-  슬라이스가 켬. ③ 기존 footer의 Explore/Company 컬럼 제거 — 디자인 SoT(단 /packages·/songs 내부 링크가
+  슬라이스로(diff 최소화, 죽은 링크 0 원칙). ② SERVICE/REVIEW/BLOG는 **비활성 `<span>`으로 렌더**(`text-ink/40`
+  + sr-only "coming soon"; 디자인이 5탭 전부 노출 — 숨기지 않음). 링크 활성화는 해당 슬라이스가 함. ③ 기존 footer의 Explore/Company 컬럼 제거 — 디자인 SoT(단 /packages·/songs 내부 링크가
   일시적으로 footer에서 사라짐, 페이지 내 동선은 유지됨). ④ legal 링크 미렌더(죽은 링크 금지).
 ⑤ accent = `primary` 확정(§1-C). ⑥ My Page 게이팅 = 클라이언트 쿠키 read(정적 렌더 보존).

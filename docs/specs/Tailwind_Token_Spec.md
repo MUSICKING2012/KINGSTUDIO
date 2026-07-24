@@ -51,6 +51,10 @@ fontSize 튜플 형식으로 lineHeight/letterSpacing/fontWeight 동봉(`['clamp
 전부 uppercase로 쓰이지만 uppercase는 토큰이 아니라 사용처 클래스(`uppercase`)로. 보조 실측(토큰화 안 함,
 arbitrary로): 브래킷 글리프 clamp(50px,9vw,120px) w400, 마퀴 19px w800.
 
+**타이포 공존 노트:** 컴포넌트는 C17 arbitrary 값 + `.ks-display`/`.ks-display-strong` 티어를 사용하고, `edi-*`
+fontSize 스케일은 페이지 슬라이스용으로 계속 제공된다(둘은 병존). 단, 한 요소가 `clamp()`를 inline arbitrary와
+스케일 토큰으로 **이중 지정하면 안 된다** — 둘 중 하나만.
+
 ## 3. 격자 배경 유틸 (`app/globals.css`)
 ```css
 .bg-grid-ink {
@@ -62,6 +66,9 @@ arbitrary로): 브래킷 글리프 clamp(50px,9vw,120px) w400, 마퀴 19px w800.
 ```
 실측 = 46px(기존 문서의 "44–46px"는 46으로 확정, Editorial 기준). paper 배경 전체 래퍼에 적용(디자인은
 body 레벨). 다크 섹션은 격자 없음.
+
+**구현 실측(supersede):** 실제 사용 중인 격자 헬퍼는 `app/globals.css`의 `.ks-grid-bg`이며, 이 스펙의
+`.bg-grid-ink` 이름을 대체한다. 소비처는 `.ks-grid-bg`를 사용할 것.
 
 ## 4. 라운드 토큰 (`extend.borderRadius`)
 ```ts
@@ -93,6 +100,8 @@ animation: {
 ```
 마퀴 구조(width:max-content + 콘텐츠 4벌 복제 + -50% 이동)는 컴포넌트 구현 사항(시퀀스 3 이후). 구현 시
 `prefers-reduced-motion: reduce`에서 마퀴 정지 가드 추가(디자인엔 없음 — 접근성 보강, 제품 규칙 아님).
+
+**shipped 확정:** 적용된 애니메이션 이름은 `edi-marquee` / `edi-toast`이다(`ks-marquee` 아님).
 
 ## 7. 기타 실측 (토큰 아님 — 후속 슬라이스 참고)
 - 컨테이너: max-width 1280px / px-24px. 섹션 세로 패딩 clamp(40px,6vw,72px), Subscribe만 clamp(44px,6vw,80px).

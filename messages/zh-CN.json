@@ -1,16 +1,19 @@
 {
-  "header": {
-    "localeAria": "语言",
-    "currencyAria": "显示货币"
-  },
   "nav": {
     "service": "服务",
     "studios": "录音室",
     "product": "产品",
-    "review": "评价",
+    "reviews": "评价",
     "blog": "博客",
     "myPage": "我的页面",
-    "bookNow": "立即预约"
+    "bookNow": "立即预约",
+    "home": "首页",
+    "primary": "主菜单",
+    "comingSoon": "即将推出"
+  },
+  "header": {
+    "localeAria": "语言",
+    "currencyAria": "显示货币"
   },
   "home": {
     "title": "KING STUDIO",
@@ -354,11 +357,24 @@
     }
   },
   "footer": {
+    "tagline": "首尔的K-POP录音体验 — 唱歌、录音，带走属于你的音源。",
+    "exploreHeading": "探索",
+    "packages": "方案",
+    "songs": "歌曲",
+    "companyHeading": "公司",
     "about": "关于",
-    "contacts": "联系",
-    "krwNotice": "所有付款均以韩元(KRW)结算，其他货币仅供参考。",
-    "businessInfo": "商业登记信息即将提供。",
-    "rights": "版权所有。"
+    "faq": "常见问题",
+    "rights": "版权所有。",
+    "legal": {
+      "company": "{nameKo}（{nameEn}）",
+      "ceo": "代表",
+      "bizNo": "营业执照号码",
+      "mailOrderNo": "邮购业申报号码",
+      "privacyOfficer": "个人信息保护负责人",
+      "address": "地址",
+      "krwNotice": "所有付款均以韩元（KRW）结算。其他货币仅供参考，最终汇率由发卡机构决定。"
+    },
+    "operatedBy": "KING STUDIO 由 {company} 运营。"
   },
   "booking": {
     "progress": {

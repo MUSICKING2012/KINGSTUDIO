@@ -1,16 +1,19 @@
 {
-  "header": {
-    "localeAria": "언어",
-    "currencyAria": "표시 통화"
-  },
   "nav": {
     "service": "서비스",
     "studios": "스튜디오",
     "product": "상품",
-    "review": "후기",
+    "reviews": "후기",
     "blog": "블로그",
     "myPage": "마이페이지",
-    "bookNow": "바로 예약"
+    "bookNow": "바로 예약",
+    "home": "홈",
+    "primary": "주 메뉴",
+    "comingSoon": "준비 중"
+  },
+  "header": {
+    "localeAria": "언어",
+    "currencyAria": "표시 통화"
   },
   "home": {
     "title": "KING STUDIO",
@@ -354,11 +357,24 @@
     }
   },
   "footer": {
+    "tagline": "서울의 K-POP 녹음 체험 — 부르고, 녹음하고, 나만의 음원을 가져가세요.",
+    "exploreHeading": "둘러보기",
+    "packages": "패키지",
+    "songs": "곡",
+    "companyHeading": "회사",
     "about": "소개",
-    "contacts": "연락처",
-    "krwNotice": "모든 결제는 KRW로 청구됩니다. 다른 통화 표기는 참고용이며 최종 환율은 카드사 기준을 따릅니다.",
-    "businessInfo": "사업자 정보 준비 중입니다.",
-    "rights": "모든 권리 보유."
+    "faq": "자주 묻는 질문",
+    "rights": "모든 권리 보유.",
+    "legal": {
+      "company": "{nameKo}",
+      "ceo": "대표자",
+      "bizNo": "사업자등록번호",
+      "mailOrderNo": "통신판매업신고번호",
+      "privacyOfficer": "개인정보책임자",
+      "address": "주소",
+      "krwNotice": "모든 결제는 KRW로 청구됩니다. 다른 통화는 참고용이며 최종 환율은 카드사가 정합니다."
+    },
+    "operatedBy": "KING STUDIO는 {company}가 운영합니다."
   },
   "booking": {
     "progress": {

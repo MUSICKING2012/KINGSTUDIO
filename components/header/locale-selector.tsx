@@ -18,7 +18,7 @@ export function LocaleSelector() {
       aria-label={t('localeAria')}
       value={locale}
       onChange={(e) => router.replace(pathname, { locale: e.target.value as Locale })}
-      className="rounded-full border border-ink/[0.16] bg-white px-2.5 py-2 text-[12px] font-semibold text-ink"
+      className="cursor-pointer rounded-full border border-foreground/[0.16] bg-white px-2.5 py-2 text-[12px] font-semibold text-foreground"
     >
       {locales.map((l) => (
         <option key={l} value={l}>

@@ -45,14 +45,23 @@ depth layer, Anton 헤드라인, 듀얼 서피스 토글.
 
 ## Typography
 
-서체 **Pretendard 단일**(로컬 self-host; KR·EN·JP·ZH 커버). Anton 폐기. 에디토리얼 임팩트는
-**큰 사이즈 + 라이트/레귤러 웨이트 + 넓은 여백**으로 낸다(웨이트로 밀어붙이지 않는다).
+서체 Pretendard 단일(self-host, Variable 100–900). Anton 폐기.
+에디토리얼 임팩트는 **초대형 사이즈 + 헤비 웨이트 + 대문자 + 타이트 리딩**으로 낸다.
+(v1의 "라이트/레귤러 웨이트로 낸다"는 2026-07-23 C17 결정으로 폐기.)
 
-스케일(tailwind 유지, 패밀리만 Pretendard):
-- `display-lg` 72px / mobile 48px — 히어로 (weight 300–400)
-- `headline-xl` 40px / `headline-lg` 32px — 섹션 타이틀 (400–500)
-- `body-lg` 18px / `body-md` 16px — 본문 (400)
-- `label-sm` 12px · letter-spacing .05em · 600 · 대문자 — 라벨·태그·nav
+- 디스플레이 = `.ks-display` (weight 800 · uppercase · line-height .86 · letter-spacing +.01em ·
+  text-wrap balance). 강조 티어는 `.ks-display-strong`(weight 900).
+  **크기는 토큰이 아니라 섹션별 clamp arbitrary value.** 실측 범위: 상한 200/210px(히어로·강조),
+  46–84px(섹션 헤딩), 26px(예약바 타이틀).
+- 기존 스케일 `display-lg`(72) / `headline-xl`(40) / `headline-lg`(32) / `body-lg`(18) /
+  `body-md`(16) / `label-sm`(12)은 **미개편 페이지용으로 존치**. 신규 디자인 화면에서는 사용하지 않는다.
+
+**CJK 예외 (하드 규칙).** ko/ja/zh-*는 `.ks-display`의 line-height를 1로, letter-spacing을 0으로
+오버라이드한다(globals.css 최하단). `uppercase`는 CJK에 무효이므로 **CJK 카피가 대문자에 의미를 싣지 말 것.**
+
+**WCAG 불변.** accent `#F5461E`를 텍스트 색으로 쓰지 않는다(3.4:1). 초대형 헤드라인도 잉크가 기본,
+accent는 스팟에만. 다크 서피스는 `bg-foreground text-background`(잉크/페이퍼)로만 구성 —
+`.dark` 클래스는 shadcn 기본 slate가 남아 있어 사용 금지.
 
 ## Layout & Spacing (tailwind 유지)
 

@@ -26,7 +26,7 @@ export function MyPageNavItem() {
   if (!returning) return null;
 
   return (
-    <Link href="/my" className="whitespace-nowrap text-[16px] font-semibold text-ink">
+    <Link href="/my" className="whitespace-nowrap text-[16px] font-semibold text-foreground">
       {t('myPage')}
     </Link>
   );

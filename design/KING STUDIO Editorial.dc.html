@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+@keyframes ksMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes ksToast{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</helmet>
+
+<div style="font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;color:#141210;font-size:16px;line-height:1.5;background:#F0EEE9;background-image:linear-gradient(rgba(20,18,16,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(20,18,16,.045) 1px,transparent 1px);background-size:46px 46px">
+
+  <!-- ============ NAV ============ -->
+  <header data-screen-label="Nav" style="position:sticky;top:0;z-index:50;background:rgba(240,238,233,.9);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,18,16,.08)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;min-height:66px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <a href="#top" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex:none">
+        <span aria-hidden="true" style="width:26px;height:26px;border-radius:7px;background:#141210;color:#F0EEE9;display:grid;place-items:center;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:14px">K</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:16px;letter-spacing:.02em;color:#141210">KING STUDIO</span>
+      </a>
+      <nav style="display:flex;gap:24px;flex:1 1 auto;justify-content:center;min-width:0;overflow-x:auto">
+        <a href="Service.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navService }}</a>
+        <a href="Studio.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navStudio }}</a>
+        <a href="Product.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navSessions }}</a>
+        <a href="Review.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navReview }}</a>
+        <a href="Blog.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navBlog }}</a>
+        <!-- My Page = returning-customer only. Shown when ks_returning=1 marker exists (set on successful My Page magic-link login; non-HttpOnly, SameSite=Lax, Secure). New visitors never see it. -->
+        <sc-if value="{{ isReturning }}" hint-placeholder-val="{{ false }}"><a href="./My Page v2.dc.html" style="font-size: 16px; font-weight: 600; color: #141210; text-decoration: none; white-space: nowrap">{{ t.navMyPage }}</a></sc-if>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;flex:none">
+        <select value="{{ locale }}" onChange="{{ setLocale }}" aria-label="Language" style="font-family:inherit;font-size:12px;font-weight:600;color:#141210;background:#fff;border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 10px;cursor:pointer">
+          <option value="ko">한국어</option><option value="en">EN</option><option value="ja">日本語</option><option value="zh-HK">繁體中文（香港）</option><option value="zh-CN">简体中文</option>
+        </select>
+        <select value="{{ currency }}" onChange="{{ setCurrency }}" aria-label="Currency" style="font-family:inherit;font-size:12px;font-weight:600;color:#141210;background:#fff;border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 10px;cursor:pointer">
+          <option value="KRW">₩</option><option value="USD">$</option><option value="JPY">¥</option><option value="HKD">HK$</option><option value="CNY">CN¥</option>
+        </select>
+        <button type="button" onClick="{{ goBook }}" style="font-family:inherit;background:{{ accent }};color:#fff;border:none;border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap" style-hover="filter:brightness(.92)">{{ t.bookNow }}</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" data-screen-label="Hero" style="max-width:1280px;margin:0 auto;padding:34px 24px 0;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:2px;max-width:220px">
+        <span style="font-size:12px;font-weight:600;color:rgba(20,18,16,.5);line-height:1.4">{{ t.heroKicker1 }}</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(22px,2.4vw,30px);line-height:1.02;text-transform:uppercase">{{ t.heroKicker2 }}</span>
+      </div>
+      <sc-if value="{{ showHeroCard }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid rgba(20,18,16,.1);border-radius:14px;padding:8px 8px 8px 14px">
+        <div style="display:flex;flex-direction:column"><span style="font-size:12px;font-weight:700">{{ t.heroCardTitle }}</span><span style="font-size:11px;color:rgba(20,18,16,.55)">{{ t.heroCardSub }}</span></div>
+        <button type="button" onClick="{{ goBook }}" style="font-family:inherit;background:{{ accent }};color:#fff;border:none;border-radius:9px;padding:9px 15px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ t.heroCardCta }}</button>
+      </div>
+      </sc-if>
+    </div>
+
+    <!-- Big display + center photo -->
+    <div style="position:relative;padding:8px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,18,16,.4);text-transform:uppercase;padding:14px 0 6px;flex-wrap:wrap;gap:6px">
+        <span>K-POP</span><span>2026</span><span>SEOUL</span><span>SESSION</span><span style="color:rgba(20,18,16,.25)">(UNLIMITED)</span><span style="color:rgba(20,18,16,.25)">(D2C)</span>
+      </div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(58px,14.5vw,200px);line-height:.86;letter-spacing:.01em;text-transform:uppercase;text-align:center;width:100%">{{ t.big1 }}</div>
+        <!-- center photo overlapping -->
+        <div style="position:relative;width:min(340px,72vw);margin:-4vw 0;z-index:2;border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(20,18,16,.22);display:flex;aspect-ratio:3/3.4">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="edi-hero" shape="rect" fit="cover" placeholder="artist at the mic — hero" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+          <sc-if value="{{ showRotBadge }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:-30px;top:32%;transform:rotate(-90deg);transform-origin:center;background:{{ accent }};color:#fff;font-size:10px;font-weight:800;letter-spacing:.1em;padding:6px 14px;border-radius:6px;white-space:nowrap">{{ t.rotBadge }}</span></sc-if>
+          <sc-if value="{{ showCaption }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:#fff;border-radius:10px;padding:9px 14px;font-size:11.5px;font-weight:600;text-align:center;box-shadow:0 6px 18px rgba(20,18,16,.16);width:78%">{{ t.photoCaption }}</span></sc-if>
+        </div>
+        <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(58px,14.5vw,200px);line-height:.86;letter-spacing:.01em;text-transform:uppercase;text-align:center;width:100%;color:{{ big2Color }}">{{ t.big2 }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PARTNER STRIP ============ -->
+  <sc-if value="{{ showPartners }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="Trust strip" style="max-width:1280px;margin:0 auto;padding:26px 24px;box-sizing:border-box;border-top:1px solid rgba(20,18,16,.1);border-bottom:1px solid rgba(20,18,16,.1);margin-top:26px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+      <sc-for list="{{ press }}" as="p" hint-placeholder-count="5">
+        <a href="{{ p.href }}" title="{{ p.tip }}" style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:rgba(20,18,16,.32);text-decoration:none">{{ p.icon }} {{ p.name }}</a>
+      </sc-for>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ DARK SECTION ============ -->
+  <section id="about" data-screen-label="Provide" style="background:#111010;color:#F0EEE9;position:relative;overflow:hidden">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,72px) 24px;box-sizing:border-box">
+      <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:space-between;align-items:flex-start">
+        <h2 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(30px,4.6vw,60px);line-height:1.02;text-transform:uppercase;max-width:680px;text-wrap:balance">{{ t.darkTitlePre }} <span style="color:{{ accent }}">—</span> {{ t.darkTitlePost }}</h2>
+        <div style="max-width:300px;display:flex;flex-direction:column;gap:16px">
+          <p style="margin:0;font-size:14px;line-height:1.7;color:rgba(240,238,233,.7);text-wrap:pretty">{{ t.darkBody }}</p>
+          <a href="#sessions" style="font-size:13px;font-weight:800;letter-spacing:.06em;color:#F0EEE9;text-decoration:none;display:flex;align-items:center;gap:8px">{{ t.learnMore }} <span aria-hidden="true" style="color:{{ accent }}">↗</span></a>
+        </div>
+      </div>
+
+      <!-- marquee -->
+      <sc-if value="{{ showMarquee }}" hint-placeholder-val="{{ true }}">
+      <div style="overflow:hidden;margin:34px 0;border-top:1px solid rgba(240,238,233,.14);border-bottom:1px solid rgba(240,238,233,.14);padding:14px 0">
+        <div style="display:flex;width:max-content;white-space:nowrap;animation:ksMarquee 24s linear infinite;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;color:rgba(240,238,233,.35)">
+          <span style="padding:0 22px">{{ t.marquee }}</span><span style="padding:0 22px">{{ t.marquee }}</span><span style="padding:0 22px">{{ t.marquee }}</span><span style="padding:0 22px">{{ t.marquee }}</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <div style="display:flex;gap:34px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:14px;flex:1;min-width:260px">
+          <div style="position:relative;width:min(360px,80vw);border-radius:18px;overflow:hidden;display:flex;aspect-ratio:16/11;background:#1c1a19">
+            <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="edi-dark" shape="rect" fit="cover" placeholder="artist seated — dark" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+            <div style="position:absolute;left:14px;bottom:14px;background:rgba(17,16,16,.6);backdrop-filter:blur(6px);border-radius:10px;padding:10px 14px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(240,238,233,.7)">{{ t.releasedLabel }}</div>
+              <button type="button" onClick="{{ goBook }}" style="font-family:inherit;margin-top:8px;background:{{ accent }};color:#fff;border:none;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer">{{ t.heroCardCta }}</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ darkTags }}" as="tg" hint-placeholder-count="4">
+              <span style="border:1px solid rgba(240,238,233,.25);border-radius:999px;padding:8px 15px;font-size:11.5px;font-weight:600;color:rgba(240,238,233,.8);background:{{ tg.bg }}">{{ tg.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(34px,5.4vw,74px);line-height:.98;text-transform:uppercase;text-align:right;flex:none">{{ t.love1 }}<br><span style="color:{{ accent }}">—</span> {{ t.love2 }}<br>{{ t.love3 }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CATEGORY LIST ============ -->
+  <section id="sessions" data-screen-label="Categories" style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,72px) 24px;box-sizing:border-box">
+    <div style="display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div style="flex:none;order:1;display:flex;flex-direction:column;gap:14px;width:min(240px,42vw)">
+        <div style="border-radius:16px;overflow:hidden;display:flex;aspect-ratio:3/3.6;background:#e6e3dc">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="edi-cat-1" shape="rect" fit="cover" placeholder="look 1" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+        </div>
+        <div><div style="font-weight:700;font-size:14px">{{ t.cat1CapT }}</div><div style="font-size:12px;color:rgba(20,18,16,.55)">{{ t.cat1CapS }}</div></div>
+      </div>
+
+      <ul style="order:2;flex:1;min-width:280px;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;text-align:center">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+          <li style="display:flex;align-items:center;justify-content:center;gap:12px">
+            <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:clamp(26px,3.8vw,46px);line-height:1.08;text-transform:uppercase;color:{{ c.color }}">{{ c.label }}</span>
+            <span aria-hidden="true" style="width:26px;height:26px;border-radius:999px;background:{{ c.badgeBg }};color:{{ c.badgeInk }};display:grid;place-items:center;font-size:11px;font-weight:800;flex:none">{{ c.idx }}</span>
+            <sc-if value="{{ c.isRental }}" hint-placeholder-val="{{ false }}"><a href="Studio.dc.html" style="border:1px solid rgba(20,18,16,.25);border-radius:999px;padding:4px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;color:rgba(20,18,16,.55);text-decoration:none;white-space:nowrap;flex:none">{{ t.inquiryOnly }}</a></sc-if>
+          </li>
+        </sc-for>
+      </ul>
+
+      <div style="flex:none;order:3;display:flex;flex-direction:column;gap:14px;width:min(240px,42vw)">
+        <div style="border-radius:16px;overflow:hidden;display:flex;aspect-ratio:3/3.6;background:#e6e3dc">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="edi-cat-2" shape="rect" fit="cover" placeholder="look 2" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+        </div>
+        <div><div style="font-weight:700;font-size:14px">{{ t.cat2CapT }}</div><div style="font-size:12px;color:rgba(20,18,16,.55)">{{ t.cat2CapS }}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEELING BOLDER + PACKAGES ============ -->
+  <section data-screen-label="Bolder" style="max-width:1280px;margin:0 auto;padding:0 24px clamp(30px,4vw,52px);box-sizing:border-box">
+    <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:clamp(60px,15vw,210px);line-height:.86;text-transform:uppercase;color:{{ accent }};letter-spacing:-.01em">{{ t.bolder1 }}<br><span style="padding-left:18vw;display:inline-block">{{ t.bolder2 }}</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;padding-top:30px">
+      <sc-for list="{{ pkgs }}" as="p" hint-placeholder-count="3">
+        <div style="background:{{ p.bg }};color:{{ p.ink }};border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px;min-height:230px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+            <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:24px;text-transform:uppercase">{{ p.name }}</span>
+            <span aria-hidden="true" style="width:36px;height:36px;border-radius:999px;background:{{ p.ink }};color:{{ p.bg }};display:grid;place-items:center;font-size:15px">↗</span>
+          </div>
+          <p style="margin:0;font-size:13px;line-height:1.6;opacity:.8;flex:1;text-wrap:pretty">{{ p.desc }}</p>
+          <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;border-top:1px solid {{ p.rule }};padding-top:14px">
+            <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:22px">{{ p.priceStr }}</span>
+            <span style="font-size:11.5px;opacity:.6;font-weight:600">{{ p.hours }}</span>
+            <span style="font-size:10.5px;opacity:.55;font-weight:600">{{ t.vatIncl }}</span>
+          </div>
+          <sc-if value="{{ p.hasApprox }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;opacity:.55;margin-top:-10px">{{ p.approxStr }} · {{ t.refOnly }}</div></sc-if>
+          <button type="button" onClick="{{ p.pick }}" style="font-family:inherit;background:{{ p.btnBg }};color:{{ p.btnInk }};border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer" style-hover="filter:brightness(.94)">{{ t.selectLabel }}</button>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding-top:14px;font-size:12px;color:rgba(20,18,16,.55)">{{ t.pkgGuestNote }}</div>
+  </section>
+
+  <!-- ============ BOOKING BAR ============ -->
+  <section id="bookbar" data-screen-label="Booking" style="max-width:1280px;margin:0 auto;padding:0 24px clamp(40px,6vw,72px);box-sizing:border-box">
+    <div style="background:#111010;color:#F0EEE9;border-radius:20px;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 8px 14px">
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(18px,2.2vw,26px);text-transform:uppercase">{{ t.bookTitle }}</span>
+        <span style="font-size:11.5px;color:rgba(240,238,233,.55)">{{ t.kstNote }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;align-items:stretch">
+        <label style="flex:1.3 1 210px;min-width:190px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fService }}</span>
+          <select value="{{ pkg }}" onChange="{{ setPkg }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+            <sc-for list="{{ svcOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}" style="color:#111">{{ o.label }}</option></sc-for>
+          </select>
+        </label>
+        <label style="flex:.7 1 160px;min-width:150px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fDate }}</span>
+          <input type="date" value="{{ date }}" min="{{ minDate }}" max="{{ maxDate }}" onChange="{{ setDate }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;width:100%;color-scheme:dark">
+        </label>
+        <label style="flex:.7 1 160px;min-width:150px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fTime }}</span>
+          <select value="{{ time }}" onChange="{{ setTime }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+            <sc-for list="{{ slots }}" as="s" hint-placeholder-count="3"><option value="{{ s.v }}" disabled="{{ s.full }}" style="color:#111">{{ s.label }}</option></sc-for>
+          </select>
+        </label>
+        <sc-if value="{{ showGuests }}" hint-placeholder-val="{{ false }}">
+          <label style="flex:.6 1 130px;min-width:120px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+            <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fGuests }}</span>
+            <select value="{{ guests }}" onChange="{{ setGuests }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+              <sc-for list="{{ guestOpts }}" as="g" hint-placeholder-count="5"><option value="{{ g }}" style="color:#111">{{ g }}</option></sc-for>
+            </select>
+          </label>
+        </sc-if>
+        <button type="button" onClick="{{ book }}" style="flex:1 1 220px;min-width:200px;min-height:62px;font-family:inherit;background:{{ accent }};border:none;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 18px;cursor:pointer" style-hover="filter:brightness(.92)">
+          <span style="display:flex;flex-direction:column;align-items:flex-start;gap:1px"><span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:15px;text-transform:uppercase">{{ t.cta }}</span><span style="font-size:11px;opacity:.9;font-weight:600">{{ totalStr }}</span></span>
+          <span aria-hidden="true" style="font-size:18px">→</span>
+        </button>
+      </div>
+      <div style="font-size:11px;color:rgba(240,238,233,.5);padding:12px 8px 4px">{{ bookNote }}</div>
+    </div>
+  </section>
+
+  <!-- ============ TOTAL BOOST ============ -->
+  <sc-if value="{{ showBoost }}" hint-placeholder-val="{{ true }}">
+  <section data-screen-label="Boost" style="max-width:1280px;margin:0 auto;padding:0 24px clamp(30px,4vw,48px);box-sizing:border-box">
+    <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(30px,5.2vw,68px);line-height:1;text-transform:uppercase;text-align:center;text-wrap:balance">{{ t.boostLine }}</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,40px);padding:26px 0 22px">
+      <span aria-hidden="true" style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:400;font-size:clamp(50px,9vw,120px);color:rgba(20,18,16,.35);line-height:.8">[</span>
+      <div style="width:min(300px,60vw);border-radius:16px;overflow:hidden;display:flex;aspect-ratio:3/3.2;background:#e6e3dc">
+        <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="edi-boost" shape="rect" fit="cover" placeholder="artist portrait" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+      </div>
+      <span aria-hidden="true" style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:400;font-size:clamp(50px,9vw,120px);color:rgba(20,18,16,.35);line-height:.8">]</span>
+    </div>
+    <p style="margin:0 auto;max-width:720px;text-align:center;font-size:14px;line-height:1.7;color:rgba(20,18,16,.7);text-wrap:pretty">{{ t.boostBody }}</p>
+  </section>
+  </sc-if>
+
+  <!-- ============ SUBSCRIBE ============ -->
+  <sc-if value="{{ showSubscribe }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Subscribe" style="background:#111010;color:#F0EEE9">
+      <div style="max-width:1280px;margin:0 auto;padding:clamp(44px,6vw,80px) 24px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:26px;text-align:center">
+        <h2 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:clamp(34px,6.4vw,84px);line-height:.98;text-transform:uppercase">{{ t.subT1 }}<br><span style="color:rgba(240,238,233,.4)">{{ t.subT2 }}</span></h2>
+        <sc-if value="{{ subNotDone }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;width:min(480px,100%)">
+            <div style="display:flex;gap:8px;width:100%;flex-wrap:wrap;justify-content:center">
+              <input value="{{ subEmail }}" onInput="{{ setSubEmail }}" placeholder="{{ t.subPh }}" style="flex:1 1 220px;font-family:inherit;font-size:14px;color:#F0EEE9;background:#1c1a19;border:1px solid rgba(240,238,233,.2);border-radius:999px;padding:13px 18px;box-sizing:border-box" />
+              <button type="button" onClick="{{ subSubmit }}" disabled="{{ subDisabled }}" style="font-family:inherit;background:{{ subBtnBg }};color:#fff;border:none;border-radius:999px;padding:13px 26px;font-size:14px;font-weight:800;cursor:pointer">{{ t.subBtn }}</button>
+            </div>
+            <label style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:rgba(240,238,233,.6);text-align:left;cursor:pointer">
+              <input type="checkbox" checked="{{ subConsent }}" onChange="{{ toggleConsent }}" style="margin-top:2px;accent-color:{{ accent }}" />
+              <span>{{ t.subConsent }} · <a href="#reach" style="color:rgba(240,238,233,.85)">{{ t.ftPrivacy }}</a></span>
+            </label>
+          </div>
+        </sc-if>
+        <sc-if value="{{ subDone }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:15px;font-weight:700;color:rgba(240,238,233,.85)">✓ {{ t.subDone }}</div>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+
+  <!-- ============ FOOTER (shared component — single source of truth) ============ -->
+  <div id="reach"><x-import component-from-global-scope="ks-footer" from="./ks-footer.js" hint-size="100%,260px"></x-import></div>
+
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111010;color:#F0EEE9;border:1.5px solid {{ accent }};border-radius:11px;padding:13px 20px;font-size:13.5px;font-weight:700;z-index:100;max-width:min(92vw,560px);animation:ksToast .25s ease-out">{{ t.toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;options&quot;: [&quot;#F5461E&quot;, &quot;#E8352B&quot;, &quot;#601986&quot;, &quot;#1F6FEB&quot;], &quot;default&quot;: &quot;#F5461E&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Color&quot; },
+  &quot;secondWordAccent&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Color&quot; },
+  &quot;accentPackageIndex&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [0, 1, 2], &quot;default&quot;: 1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Color&quot; },
+  &quot;catActiveIndex&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [0, 1, 2, 3], &quot;default&quot;: 1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Color&quot; },
+  &quot;defaultLocale&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;en&quot;, &quot;ko&quot;, &quot;ja&quot;, &quot;zh-HK&quot;, &quot;zh-CN&quot;], &quot;default&quot;: &quot;en&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Locale&quot; },
+  &quot;showHeroCard&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot; },
+  &quot;showRotBadge&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot; },
+  &quot;showCaption&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot; },
+  &quot;showPartners&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot; },
+  &quot;showMarquee&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot; },
+  &quot;showBoost&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot; },
+  &quot;showSubscribe&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot; }
+}">
+class Component extends DCLogic {
+  state = { locale: null, currency: null, pkg: 'gold', date: null, time: null, guests: 1, toast: false, subEmail: '', subConsent: false, subDone: false, returning: false };
+
+  static PKG = {
+    gold:    { name: 'GOLD',    price: 400000,  hours: '2H',   slots: ['10:00','13:00','16:00','19:00'] },
+    making:  { name: 'K-POP MAKING CLASS', price: 150000, perPerson: true, minG: 2, maxG: 15, hours: '2H', slots: ['10:00','14:00'] },
+    diamond: { name: 'DIAMOND', price: 500000,  hours: '2H',   slots: ['10:00','14:00','18:00'] },
+    premium: { name: 'PREMIUM', price: 1500000, hours: '3H', slots: ['10:30','15:00'] }
+  };
+  static RATES = { USD: 1385, JPY: 9.2, HKD: 177.5, CNY: 192 };
+  static SYMS  = { USD: 'US$', JPY: '¥', HKD: 'HK$', CNY: 'CN¥' };
+  static DEF_CUR = { ko: 'KRW', en: 'USD', ja: 'JPY', 'zh-HK': 'HKD', 'zh-CN': 'CNY' };
+
+  static T = (() => {
+    const en = {
+      navService: 'SERVICE', navSessions: 'PRODUCT', navStudio: 'STUDIOS', navReview: 'REVIEW', navBlog: 'BLOG', navAbout: 'About', navContacts: 'Contacts', bookNow: 'Book now',
+      heroKicker1: 'Record your own', heroKicker2: 'K-pop track',
+      heroCardTitle: 'Featured in NYT', heroCardSub: '2024', heroCardCta: 'Book now',
+      big1: 'RECORD', big2: 'IN SEOUL', rotBadge: 'CURRENT · KST 2026',
+      photoCaption: 'A real session that knows no borders',
+      press: null,
+      darkTitlePre: 'We provide fresh', darkTitlePost: 'sessions for you',
+      darkBody: 'Discover producer-directed recording built to make your voice sound like the charts — vocals, mix, photos and a music video.',
+      learnMore: 'LEARN MORE',
+      marquee: 'GOLD · DIAMOND · PREMIUM · SEOUL · KST · NYT 2024 ·',
+      releasedLabel: 'Slots open D+1 → 90',
+      love1: 'LOVE', love2: 'WHAT', love3: 'WE MAKE',
+      cat1CapT: 'Producer-directed', cat1CapS: 'every take, guided',
+      cat2CapT: 'Take it home', cat2CapS: 'MP3 · CD · MV',
+      cats: [
+        { label: 'VOCAL SESSION' },
+        { label: 'MUSIC VIDEO' },
+        { label: 'MAKING CLASS' },
+        { label: 'STUDIO RENTAL' }
+      ],
+      activeCat: 1,
+      bolder1: 'FEELING', bolder2: 'BOLDER',
+      descGold: 'Producer-directed vocal training and recording. Take home your unedited MP3 the same day, plus a personal vocal report.',
+      descDia: 'Everything in Gold plus Auto-Tune vocal correction, a pro mix & master and a custom CD — final delivered in ~2–3 weeks.',
+      descPre: 'Everything in Diamond plus an in-studio cinematic music video, an edited MV and a premium welcome kit.',
+      selectLabel: 'Select session',
+      bookTitle: 'Book your slot', kstNote: 'Seoul time (KST) · D+1 → D+90',
+      fService: 'EXPERIENCE', fDate: 'DATE', fTime: 'TIME · KST', fGuests: 'GUESTS',
+      cta: 'Check availability', full: 'FULL',
+      perGuestNote: '+50% per extra guest · max 5 · charged in KRW · other currencies for reference only',
+      makingNote: 'K-Pop Making Class · priced per person · min 2 · max 15 · weekdays only 10:00–12:00 / 14:00–16:00 · groups & schools → contact us',
+      toast: 'Demo — continues to the 4-step booking flow (package → date & time → details → payment).',
+      boostLine: 'Total boost of confidence with a perfect session',
+      boostBody: 'Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours.',
+      subT1: 'Subscribe for the', subT2: 'latest sessions', subYes: 'YES',
+      navMyPage: 'My Page', vatIncl: 'VAT included', refOnly: 'Charged in KRW; other currencies are reference only.',
+      pkgGuestNote: 'Up to 5 guests per booking · each additional guest +50% of the base rate.',
+      inquiryOnly: 'INQUIRY ONLY',
+      subPh: 'you@example.com', subConsent: 'I agree to the collection and use of my email address to receive updates.', subBtn: 'Get updates', subDone: 'Thanks — you\u2019re on the list.',
+      ftTerms: 'TERMS', ftPrivacy: 'PRIVACY', ftRefund: 'REFUND',
+      ftReturning: 'Returning guest? Access your session files', ftCeo: 'CEO', ftBiz: 'Business reg. no.', ftPO: 'Privacy officer', ftAddr: 'Address',
+      ftKrw: 'All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer.'
+    };
+    const ko = Object.assign({}, en, {
+      navService: '서비스', navSessions: '상품', navStudio: '스튜디오', navReview: '후기', navBlog: '블로그', navAbout: '소개', navContacts: '연락처', bookNow: '바로 예약',
+      heroKicker1: '나만의', heroKicker2: 'K-POP 트랙',
+      heroCardTitle: '뉴욕타임스 소개', heroCardSub: '2024', heroCardCta: '바로 예약',
+      big1: '녹음하다', big2: '서울에서', rotBadge: '현재 · KST 2026',
+      photoCaption: '국경 없는 진짜 스튜디오 세션',
+      darkTitlePre: '신선한 세션을', darkTitlePost: '제공합니다',
+      darkBody: '차트처럼 들리게 만드는 프로듀서 디렉팅 녹음 — 보컬, 믹스, 사진, 뮤직비디오까지.',
+      learnMore: '자세히 보기',
+      marquee: '골드 · 다이아 · 프리미엄 · 서울 · KST · NYT 2024 ·',
+      releasedLabel: '예약 가능 D+1 → 90',
+      love1: '우리가', love2: '만드는', love3: '결과물',
+      cat1CapT: '프로듀서 디렉팅', cat1CapS: '모든 테이크 지도',
+      cat2CapT: '집으로', cat2CapS: 'MP3 · CD · MV',
+      cats: [
+        { label: '보컬 세션' },
+        { label: '뮤직비디오' },
+        { label: '메이킹클래스' },
+        { label: '스튜디오 대여' }
+      ],
+      activeCat: 1,
+      bolder1: '더 대담하게', bolder2: '녹음하다',
+      descGold: '프로듀서 디렉팅 보컬 트레이닝·녹음 · 당일 편집 전 MP3 지참 + 퍼스널 보컬 분석 리포트.',
+      descDia: 'Gold 구성 전체 + 오토튠 보컬 보정 + 프로 믹싱·마스터링 + 커스텀 CD · 최종본 약 2~3주 전달.',
+      descPre: 'Diamond 구성 전체 + 인스튜디오 뮤직비디오 + 편집본 MV + 프리미엄 웰컴킷.',
+      selectLabel: '세션 선택',
+      bookTitle: '슬롯 예약', kstNote: '서울 기준(KST) · D+1 → D+90',
+      fService: '체험 상품', fDate: '날짜', fTime: '시간 · KST', fGuests: '인원',
+      cta: '예약 가능 확인', full: '마감',
+      perGuestNote: '인원 1명 추가 시 +50% · 최대 5인 · KRW 결제 · 다른 통화는 참고용',
+      makingNote: 'K-Pop Making Class · 인당 정액 · 2~15명 · 주중 전용 10:00–12:00 / 14:00–16:00 · 단체·학교·기업은 문의',
+      toast: '데모 — 4단계 예약(상품 → 날짜·시간 → 정보 → 결제)으로 이어집니다.',
+      boostLine: '완벽한 세션으로 자신감을 최대로',
+      boostBody: '나의 목소리를 중심으로 설계된 세션에서 새로운 자신감을 경험하세요. 모든 테이크마다 거침없어지고, 온전히 나만의 트랙을 손에 넣고 서울을 떠납니다.',
+      subT1: '최신 세션 소식', subT2: '구독하기', subYes: '네',
+      navMyPage: '마이페이지', vatIncl: 'VAT 포함', refOnly: 'KRW로 결제되며 다른 통화는 참고용입니다.',
+      pkgGuestNote: '예약당 최대 5인 · 추가 1인당 기본가의 +50%.',
+      inquiryOnly: '문의 전용',
+      subPh: 'you@example.com', subConsent: '소식 수신을 위한 이메일 수집·이용에 동의합니다.', subBtn: '소식 받기', subDone: '감사합니다 — 등록되었어요.',
+      ftTerms: '이용약관', ftPrivacy: '개인정보', ftRefund: '환불정책',
+      ftReturning: '재방문 고객이신가요? 내 세션 파일 보기', ftCeo: '대표', ftBiz: '사업자등록번호', ftPO: '개인정보책임자', ftAddr: '주소',
+      ftKrw: '모든 결제는 KRW로 청구됩니다. 다른 통화 표기는 참고용이며 최종 환율은 카드사 기준을 따릅니다.'
+    });
+    const ja = Object.assign({}, en, {
+      navService: 'サービス', navSessions: '商品', navStudio: 'スタジオ', navReview: 'レビュー', navBlog: 'ブログ', navAbout: '私たちについて', navContacts: '連絡先', bookNow: '今すぐ予約',
+      heroKicker1: '自分だけの', heroKicker2: 'K-POPトラック',
+      heroCardTitle: 'NYタイムズ掲載', heroCardSub: '2024', heroCardCta: '今すぐ予約',
+      big1: 'ろくおん', big2: 'ソウルで', rotBadge: '現在 · KST 2026',
+      photoCaption: '国境のない、本物のスタジオセッション',
+      darkTitlePre: '新しいセッションを', darkTitlePost: 'お届けします',
+      darkBody: 'チャートのように響かせるプロデューサー指導の収録 — ボーカル、ミックス、写真、MVまで。',
+      learnMore: '詳しく見る',
+      marquee: 'GOLD · DIAMOND · PREMIUM · ソウル · KST · NYT 2024 ·',
+      releasedLabel: '予約可能 D+1 → 90',
+      love1: '私たちの', love2: 'つくる', love3: '成果物',
+      cat1CapT: 'プロデューサー指導', cat1CapS: '全テイクをディレクション',
+      cat2CapT: '持ち帰り', cat2CapS: 'MP3 · CD · MV',
+      cats: [
+        { label: 'ボーカル収録' },
+        { label: 'ミュージックビデオ' },
+        { label: 'メイキングクラス' },
+        { label: 'スタジオ貸出' }
+      ],
+      activeCat: 1,
+      bolder1: 'もっと', bolder2: '大胆に',
+      descGold: 'プロデューサー指導のボーカルトレーニング・録音 · 未編集MP3を当日持ち帰り + パーソナルボーカル分析レポート。',
+      descDia: 'Goldの全内容 + オートチューン補正 + プロのミックス&マスタリング + カスタムCD · 最終版は約2〜3週間で納品。',
+      descPre: 'Diamondの全内容 + スタジオMV撮影 + 編集済みMV + プレミアムウェルカムキット。',
+      selectLabel: 'セッションを選ぶ',
+      bookTitle: '枠を予約', kstNote: 'ソウル時間(KST) · D+1 → D+90',
+      fService: '体験プラン', fDate: '日付', fTime: '時間 · KST', fGuests: '人数',
+      cta: '空き状況を確認', full: '満席',
+      perGuestNote: '1名追加ごとに+50% · 最大5名 · KRW決済 · 他通貨は参考表示',
+      makingNote: 'K-Pop Making Class · 1名あたり定額 · 2〜15名 · 平日限定 10:00–12:00 / 14:00–16:00 · 団体・学校はお問い合わせ',
+      toast: 'デモ — 4ステップの予約フローに進みます。',
+      boostLine: '完璧なセッションで自信を最大に',
+      boostBody: '自分の声を中心に設計されたセッションで、新しい自信を。テイクごとに大胆になり、自分だけのトラックを手にソウルを後にします。',
+      subT1: '最新セッションを', subT2: '購読する', subYes: 'はい',
+      navMyPage: 'マイページ', vatIncl: 'VAT込み', refOnly: '請求はKRW。他通貨は参考表示です。',
+      pkgGuestNote: '1予約につき最大5名 · 追加1名ごとに基本料金の+50%。',
+      inquiryOnly: 'お問い合わせのみ',
+      subPh: 'you@example.com', subConsent: 'お知らせ配信のためのメールアドレスの収集・利用に同意します。', subBtn: 'お知らせを受け取る', subDone: 'ありがとうございます — 登録しました。',
+      ftTerms: '利用規約', ftPrivacy: 'プライバシー', ftRefund: '返金',
+      ftReturning: 'リピーターの方はこちら — セッションファイルを確認', ftCeo: '代表者', ftBiz: '事業者登録番号', ftPO: '個人情報保護責任者', ftAddr: '所在地',
+      ftKrw: 'すべての決済はKRWで請求されます。他通貨は参考表示です。'
+    });
+    const zhHKbase = Object.assign({}, en, {
+      navService: '服務', navSessions: '產品', navStudio: '錄音室', navReview: '評價', navBlog: '網誌', navAbout: '關於', navContacts: '聯絡', bookNow: '立即預約',
+      heroKicker1: '屬於你的', heroKicker2: 'K-POP 歌曲',
+      heroCardTitle: '《紐約時報》報導', heroCardSub: '2024', heroCardCta: '立即預約',
+      big1: '錄製', big2: '在首爾', rotBadge: '現在 · KST 2026',
+      photoCaption: '沒有邊界的真實錄音室課程',
+      darkTitlePre: '為你提供', darkTitlePost: '全新課程',
+      darkBody: '讓你的聲音像排行榜般動人的製作人指導錄音 — 主唱、混音、攝影與 MV。',
+      learnMore: '了解更多',
+      marquee: 'GOLD · DIAMOND · PREMIUM · 首爾 · KST · NYT 2024 ·',
+      releasedLabel: '可預約 D+1 → 90',
+      love1: '我們', love2: '打造的', love3: '成果',
+      cat1CapT: '製作人指導', cat1CapS: '每次錄製都有指導',
+      cat2CapT: '帶回家', cat2CapS: 'MP3 · CD · MV',
+      cats: [
+        { label: '人聲錄音' },
+        { label: '音樂錄影帶' },
+        { label: 'Making Class' },
+        { label: '錄音室租借' }
+      ],
+      activeCat: 1,
+      bolder1: '更加', bolder2: '大膽',
+      descGold: '製作人指導人聲訓練與錄音 · 當日帶走未編輯 MP3 + 個人人聲分析報告。',
+      descDia: '含 Gold 全部內容 + Auto-Tune 人聲修正 + 專業混音母帶 + 客製 CD · 最終版約 2〜3 週交付。',
+      descPre: '含 Diamond 全部內容 + 錄音室 MV 拍攝 + 剪輯版 MV + 尊尚迎賓禮包。',
+      selectLabel: '選擇課程',
+      bookTitle: '預約時段', kstNote: '首爾時間(KST) · D+1 → D+90',
+      fService: '體驗方案', fDate: '日期', fTime: '時間 · KST', fGuests: '人數',
+      cta: '查詢空檔', full: '已滿',
+      perGuestNote: '每加一人 +50% · 最多5人 · 以韓元結算 · 其他幣別僅供參考',
+      makingNote: 'K-Pop Making Class · 每人計費 · 2〜15人 · 僅平日 10:00–12:00 / 14:00–16:00 · 團體・學校請洽詢',
+      toast: '示範 — 將進入4步驟預約流程。',
+      boostLine: '用完美課程把自信推到最高',
+      boostBody: '在為你的聲音打造的課程中體驗全新自信。每次錄製都無所畏懼，帶著完全屬於你的歌曲離開首爾。',
+      subT1: '訂閱最新', subT2: '課程消息', subYes: '好',
+      navMyPage: '我的頁面', vatIncl: '含稅(VAT)', refOnly: '以韓元結算，其他幣別僅供參考。',
+      pkgGuestNote: '每筆預約最多5人 · 每加一人加收基本價的50%。',
+      inquiryOnly: '僅接受洽詢',
+      subPh: 'you@example.com', subConsent: '我同意為接收最新消息而收集及使用我的電子郵件。', subBtn: '接收消息', subDone: '謝謝 — 已完成訂閱。',
+      ftTerms: '服務條款', ftPrivacy: '隱私權', ftRefund: '退款',
+      ftReturning: '回訪貴賓？查看你的課程檔案', ftCeo: '代表人', ftBiz: '營業登記編號', ftPO: '個資保護負責人', ftAddr: '地址',
+      ftKrw: '所有付款均以韓元(KRW)結算，其他幣別僅供參考。'
+    });
+    const zhHK = Object.assign({}, zhHKbase, { heroKicker1: '屬於你嘅', big2: '喺首爾', kstNote: '首爾時間(KST) · D+1 → D+90' });
+    const zhCN = Object.assign({}, en, {
+      navService: '服务', navSessions: '产品', navStudio: '录音室', navReview: '评价', navBlog: '博客', navAbout: '关于', navContacts: '联系', bookNow: '立即预约',
+      navMyPage: '我的页面', vatIncl: '含增值税', refOnly: '以韩元结算，其他货币仅供参考。',
+      pkgGuestNote: '每笔预约最多5人 · 每加一人加收基本价的50%。', inquiryOnly: '仅接受咨询',
+      subPh: 'you@example.com', subConsent: '我同意为接收最新消息而收集及使用我的电子邮箱。', subBtn: '接收消息', subDone: '谢谢 — 已完成订阅。',
+      heroKicker1: '属于你的', heroKicker2: 'K-POP 歌曲',
+      heroCardTitle: '《纽约时报》报道', heroCardSub: '2024', heroCardCta: '立即预约',
+      big1: '录制', big2: '在首尔', rotBadge: '现在 · KST 2026',
+      photoCaption: '没有边界的真实录音室课程',
+      darkTitlePre: '为你提供', darkTitlePost: '全新课程',
+      darkBody: '让你的声音像排行榜一样动人的制作人指导录音 — 主唱、混音、摄影与 MV。',
+      learnMore: '了解更多',
+      marquee: 'GOLD · DIAMOND · PREMIUM · 首尔 · KST · NYT 2024 ·',
+      releasedLabel: '可预约 D+1 → 90',
+      love1: '我们', love2: '打造的', love3: '成果',
+      cat1CapT: '制作人指导', cat1CapS: '每次录制都有指导',
+      cat2CapT: '带回家', cat2CapS: 'MP3 · CD · MV',
+      cats: [ { label: '人声录音' }, { label: '音乐录影带' }, { label: 'Making Class' }, { label: '录音室租借' } ],
+      activeCat: 1,
+      bolder1: '更加', bolder2: '大胆',
+      descGold: '制作人指导人声训练与录音 · 当日带走未编辑 MP3 + 个人人声分析报告。',
+      descDia: '含 Gold 全部内容 + Auto-Tune 人声修正 + 专业混音母带 + 定制 CD · 最终版约 2〜3 周交付。',
+      descPre: '含 Diamond 全部内容 + 录音室 MV 拍摄 + 剪辑版 MV + 尊享迎宾礼包。',
+      selectLabel: '选择课程',
+      bookTitle: '预约时段', kstNote: '首尔时间(KST) · D+1 → D+90',
+      fService: '体验方案', fDate: '日期', fTime: '时间 · KST', fGuests: '人数',
+      cta: '查询空档', full: '已满',
+      perGuestNote: '每加一人 +50% · 最多5人 · 以韩元结算 · 其他货币仅供参考',
+      makingNote: 'K-Pop Making Class · 每人计费 · 2〜15人 · 仅平日 10:00–12:00 / 14:00–16:00 · 团体・学校请咨询',
+      toast: '演示 — 将进入4步预约流程。',
+      boostLine: '用完美课程把自信推到最高',
+      boostBody: '在为你的声音打造的课程中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。',
+      subT1: '订阅最新', subT2: '课程消息', subYes: '好',
+      ftTerms: '服务条款', ftPrivacy: '隐私政策', ftRefund: '退款',
+      ftReturning: '回头客？查看你的课程文件', ftCeo: '代表人', ftBiz: '营业执照编号', ftPO: '个人信息保护负责人', ftAddr: '地址',
+      ftKrw: '所有付款均以韩元(KRW)结算，其他货币仅供参考。'
+    });
+    return { en, ko, ja, 'zh-HK': zhHK, 'zh-CN': zhCN };
+  })();
+
+  kstDate(o) { const d = new Date(Date.now() + 9*3600*1000 + o*86400*1000); return d.toISOString().slice(0,10); }
+  isFull(dateStr, time) { let h=0; const s=dateStr+time; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%997; return h%3===0; }
+  fmtKrw(n) { return '₩' + n.toLocaleString('en-US'); }
+  fmtCur(nKrw, cur) {
+    if (cur === 'KRW') return this.fmtKrw(nKrw);
+    const C = Component;
+    const v = Math.round(nKrw / C.RATES[cur]);
+    return C.SYMS[cur] + v.toLocaleString('en-US');
+  }
+  approx(nKrw, cur, prefix) {
+    if (cur === 'KRW') return '';
+    const C = Component; let v = nKrw / C.RATES[cur];
+    v = cur === 'JPY' ? Math.round(v/100)*100 : Math.round(v);
+    return (prefix||'≈ ') + C.SYMS[cur] + v.toLocaleString('en-US');
+  }
+  lum(hex) { const c=hex.replace('#',''); return (0.299*parseInt(c.substr(0,2),16)+0.587*parseInt(c.substr(2,2),16)+0.114*parseInt(c.substr(4,2),16))/255; }
+
+  renderVals() {
+    const C = Component;
+    const locale = this.state.locale ?? this.props.defaultLocale ?? 'en';
+    const t = C.T[locale] || C.T.en;
+    const currency = this.state.currency ?? C.DEF_CUR[locale];
+    const accent = this.props.accentColor ?? '#F5461E';
+    const big2Color = (this.props.secondWordAccent ?? false) ? accent : '#141210';
+
+    const pkgKey = this.state.pkg;
+    const P = C.PKG[pkgKey];
+    const minDate = this.kstDate(1), maxDate = this.kstDate(90);
+    const date = this.state.date ?? minDate;
+    const isMaking = !!P.perPerson;
+    const guests = isMaking ? Math.max(P.minG, Math.min(P.maxG, this.state.guests)) : this.state.guests;
+    const slots = P.slots.map((v) => {
+      const full = this.isFull(date, v);
+      return { v, full, label: full ? (v + ' · ✕ ' + t.full) : (v + ' · ' + P.hours.toLowerCase()) };
+    });
+    const open = slots.filter((s) => !s.full);
+    const time = (this.state.time && open.some((s) => s.v === this.state.time)) ? this.state.time : (open[0] ? open[0].v : '');
+    const total = isMaking ? P.price * guests : Math.round(P.price * (1 + 0.5*(guests-1)));
+    const svcOpts = ['gold', 'diamond', 'premium', 'making'].map((id) => ({ id, label: C.PKG[id].name }));
+    const guestOpts = []; if (isMaking) { for (let g = P.minG; g <= P.maxG; g++) guestOpts.push(String(g)); }
+
+    const descs = [t.descGold, t.descDia, t.descPre];
+    const accentCard = this.props.accentPackageIndex ?? 1;
+    const accentStyle = { bg: accent, ink: this.lum(accent) > 0.6 ? '#141210' : '#fff', rule: 'rgba(255,255,255,.28)', btnBg: '#141210', btnInk: '#fff' };
+    const lightStyle  = { bg: '#F5F3EE', ink: '#141210', rule: 'rgba(20,18,16,.12)', btnBg: '#141210', btnInk: '#fff' };
+    const darkStyle   = { bg: '#141210', ink: '#F0EEE9', rule: 'rgba(240,238,233,.18)', btnBg: accent, btnInk: '#fff' };
+    const bases = [lightStyle, darkStyle, lightStyle];
+    const pkgs = ['gold', 'diamond', 'premium'].map((id, i) => {
+      const pk = C.PKG[id];
+      const st = i === accentCard ? accentStyle : bases[i];
+      return {
+        id, name: pk.name, desc: descs[i], hours: pk.hours,
+        priceStr: this.fmtKrw(pk.price),
+        hasApprox: currency !== 'KRW', approxStr: this.approx(pk.price, currency),
+        bg: st.bg, ink: st.ink, rule: st.rule,
+        btnBg: st.btnBg, btnInk: st.btnInk,
+        pick: () => { this.setState({ pkg: id, time: null }); this.goBook(); }
+      };
+    });
+
+    const active = this.props.catActiveIndex ?? t.activeCat;
+    // badge numbers are decorative indices (01–05), never performance counts
+    const cats = t.cats.map((c, i) => ({
+      label: c.label, idx: String(i + 1).padStart(2, '0'),
+      isRental: i === t.cats.length - 1,
+      color: i === active ? '#141210' : 'rgba(20,18,16,.22)',
+      badgeBg: i === active ? accent : 'rgba(20,18,16,.1)',
+      badgeInk: i === active ? '#fff' : 'rgba(20,18,16,.5)'
+    }));
+
+    // NYT 2024 — fact-checked. href = [NYT 기사 URL] placeholder, insert real article URL at implementation.
+    const press = [
+      { icon: '★', name: 'The N.Y. Times', href: '#nyt-article-url', tip: 'The New York Times, 2024' }, { icon: '◆', name: 'Seoul Beat' },
+      { icon: '✦', name: 'K-Culture' }, { icon: '◇', name: 'Visit Seoul' }, { icon: '❋', name: 'Soundmag' }
+    ];
+    const darkTags = [
+      { label: 'Gold ₩400K', bg: 'transparent' }, { label: 'Diamond ₩500K', bg: accent },
+      { label: 'Premium ₩1.5M', bg: 'transparent' }, { label: 'Making Class', bg: 'transparent' }
+    ].map((x, i) => ({ label: x.label, bg: i === 1 ? accent : 'transparent' }));
+
+    return {
+      locale, currency, t, pkg: pkgKey, date, minDate, maxDate, time, guests: String(guests),
+      slots, svcOpts, pkgs, cats, press, darkTags,
+      showGuests: isMaking, guestOpts,
+      setGuests: (e) => this.setState({ guests: parseInt(e.target.value, 10) || P.minG }),
+      bookNote: isMaking ? (t.makingNote || t.perGuestNote) : t.perGuestNote,
+      totalStr: this.fmtCur(total, currency),
+      toast: this.state.toast,
+      accent, big2Color,
+      showSubscribe: this.props.showSubscribe ?? true,
+      showPartners: this.props.showPartners ?? true,
+      showBoost: this.props.showBoost ?? true,
+      showHeroCard: this.props.showHeroCard ?? true,
+      showMarquee: this.props.showMarquee ?? true,
+      showRotBadge: this.props.showRotBadge ?? true,
+      showCaption: this.props.showCaption ?? true,
+      slotFill: { style: { width: '100%', height: '100%', display: 'block', flex: 1 } },
+      setLocale: (e) => { const l = e.target.value; this.setState({ locale: l, currency: Component.DEF_CUR[l], time: null }); },
+      setCurrency: (e) => this.setState({ currency: e.target.value }),
+      setPkg: (e) => { const id = e.target.value; const np = Component.PKG[id]; this.setState({ pkg: id, time: null, guests: np.perPerson ? Math.max(np.minG, Math.min(np.maxG, this.state.guests)) : 1 }); },
+      setDate: (e) => this.setState({ date: e.target.value, time: null }),
+      setTime: (e) => this.setState({ time: e.target.value }),
+      incG: () => this.setState((s) => ({ guests: Math.min(5, s.guests + 1) })),
+      decG: () => this.setState((s) => ({ guests: Math.max(1, s.guests - 1) })),
+      subEmail: this.state.subEmail, setSubEmail: (e) => this.setState({ subEmail: e.target.value }),
+      subConsent: this.state.subConsent, toggleConsent: (e) => this.setState({ subConsent: e.target.checked }),
+      subDone: this.state.subDone, subNotDone: !this.state.subDone,
+      subDisabled: !(this.state.subConsent && this.state.subEmail),
+      subBtnBg: (this.state.subConsent && this.state.subEmail) ? accent : 'rgba(240,238,233,.25)',
+      subSubmit: () => { if (this.state.subConsent && this.state.subEmail) this.setState({ subDone: true }); },
+      goBook: () => this.goBook(),
+      isReturning: this.state.returning,
+      toggleReturning: () => this.setState({ returning: !this.state.returning }),
+      returningDemoLabel: this.state.returning ? '🔄 데모: 재방문 고객 (My Page 노출)' : '🔄 데모: 신규 방문자 (My Page 숨김)',
+      book: () => { this.setState({ toast: true }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: false }), 3600); }
+    };
+  }
+
+  goBook() {
+    const el = document.getElementById('bookbar');
+    if (el) { const y = el.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: 'smooth' }); }
+  }
+}
+</script>
+</body>
+</html>

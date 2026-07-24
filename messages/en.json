@@ -1,16 +1,19 @@
 {
-  "header": {
-    "localeAria": "Language",
-    "currencyAria": "Display currency"
-  },
   "nav": {
     "service": "SERVICE",
     "studios": "STUDIOS",
     "product": "PRODUCT",
-    "review": "REVIEW",
+    "reviews": "REVIEW",
     "blog": "BLOG",
     "myPage": "My Page",
-    "bookNow": "Book now"
+    "bookNow": "Book now",
+    "home": "Home",
+    "primary": "Main navigation",
+    "comingSoon": "Coming soon"
+  },
+  "header": {
+    "localeAria": "Language",
+    "currencyAria": "Display currency"
   },
   "home": {
     "title": "KING STUDIO",
@@ -366,11 +369,24 @@
     }
   },
   "footer": {
+    "tagline": "A K-pop recording experience in Seoul — sing, record, and take home your own track.",
+    "exploreHeading": "Explore",
+    "packages": "Packages",
+    "songs": "Songs",
+    "companyHeading": "Company",
     "about": "About",
-    "contacts": "Contacts",
-    "krwNotice": "All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer.",
-    "businessInfo": "Business registration details coming soon.",
-    "rights": "All rights reserved."
+    "faq": "FAQ",
+    "rights": "All rights reserved.",
+    "legal": {
+      "company": "{nameKo} ({nameEn})",
+      "ceo": "CEO",
+      "bizNo": "Business reg. no.",
+      "mailOrderNo": "Mail-order business reg. no.",
+      "privacyOfficer": "Privacy officer",
+      "address": "Address",
+      "krwNotice": "All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer."
+    },
+    "operatedBy": "KING STUDIO is operated by {company}."
   },
   "booking": {
     "progress": {
