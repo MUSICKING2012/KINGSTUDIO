@@ -33,8 +33,10 @@ next-env.d.ts
 npm-debug.log*
 pnpm-debug.log*
 
-# local agent/session state
-.claude/
+# local agent/session state — settings.json(팀 자동승인 정책, CLAUDE.md §7-B 정본)만 추적.
+# settings.local.json은 머신별(psql 경로 등)이라 제외 유지.
+.claude/*
+!.claude/settings.json
 
 # playwright artifacts
 /test-results/
