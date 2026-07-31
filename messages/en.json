@@ -45,20 +45,23 @@
       "source": "The New York Times · November 2024",
       "cta": "Read the article"
     },
-    "steps": {
-      "heading": "How a session works",
-      "step1": {
-        "title": "Vocal training",
-        "body": "Warm up and find your sound with a professional vocal director."
-      },
-      "step2": {
-        "title": "Record & mix",
-        "body": "Sing your song in a real booth; our engineers mix and master your take."
-      },
-      "step3": {
-        "title": "Take it home",
-        "body": "Leave with your own audio and studio photos — yours to keep."
-      }
+    "provide": {
+      "titlePre": "We provide fresh",
+      "titlePost": "sessions for you",
+      "body": "Recording led by a vocal director, built to make your voice sound like the charts — vocals, mix and studio photos, with a music video on Premium.",
+      "learnMore": "LEARN MORE",
+      "marquee": "GOLD · DIAMOND · PREMIUM · SEOUL · KST · NYT 2024 · ",
+      "slotsLabel": "Slots open D+1 → 90",
+      "bookCta": "Book now",
+      "love1": "LOVE",
+      "love2": "WHAT",
+      "love3": "WE MAKE",
+      "imageAlt": "Artist seated in the studio live room"
+    },
+    "boost": {
+      "line": "Total boost of confidence with a perfect session",
+      "body": "Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours.",
+      "imageAlt": "Artist portrait from a studio session"
     },
     "experience": {
       "heading": "Choose your session",

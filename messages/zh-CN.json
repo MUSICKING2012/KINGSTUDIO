@@ -45,20 +45,23 @@
       "source": "The New York Times · 2024年11月",
       "cta": "阅读报导"
     },
-    "steps": {
-      "heading": "录音流程",
-      "step1": {
-        "title": "声乐训练",
-        "body": "与专业声乐总监一起暖声，找到你的声音。"
-      },
-      "step2": {
-        "title": "录音与混音",
-        "body": "在真正的录音间演唱，工程师为你混音与母带处理。"
-      },
-      "step3": {
-        "title": "带回家",
-        "body": "取得属于你的音源与录音室照片。"
-      }
+    "provide": {
+      "titlePre": "为你提供",
+      "titlePost": "全新体验",
+      "body": "由声乐总监指导、让你的声音像排行榜一样动人的录音 — 主唱、混音、录音室照片，Premium 更包含 MV。",
+      "learnMore": "了解更多",
+      "marquee": "GOLD · DIAMOND · PREMIUM · 首尔 · KST · NYT 2024 · ",
+      "slotsLabel": "可预约 D+1 → 90",
+      "bookCta": "立即预约",
+      "love1": "我们",
+      "love2": "打造的",
+      "love3": "成果",
+      "imageAlt": "坐在录音室录音间的歌手"
+    },
+    "boost": {
+      "line": "用完美体验把自信推到最高",
+      "body": "在为你的声音打造的录音中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。",
+      "imageAlt": "录音室体验的歌手肖像"
     },
     "experience": {
       "heading": "选择你的方案",
