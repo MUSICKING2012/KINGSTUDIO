@@ -75,7 +75,11 @@ export function SiteHeader() {
           <MyPageNavItem />
         </nav>
 
-        <div className="flex flex-none items-center gap-2">
+        {/* 우측 컨트롤. `flex-none` 이었을 때 375px 뷰포트에서 실측 371px 를 요구해
+            가용폭 327px(=375 − px-gutter 48)를 넘겼고, 축소되지 않아 문서 전체에 가로
+            스크롤을 만들었다(scrollWidth 399 > clientWidth 375). 줄바꿈을 허용하고
+            최소폭 0 을 주어 좁은 화면에서 다음 줄로 흐르게 한다. */}
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
           <LocaleSelector />
           <CurrencySelector />
           <Link
