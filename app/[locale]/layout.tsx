@@ -49,7 +49,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={pretendard.variable}>
       <body className="font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
+          <SiteHeader locale={locale} />
           {children}
           <SiteFooter />
         </NextIntlClientProvider>
