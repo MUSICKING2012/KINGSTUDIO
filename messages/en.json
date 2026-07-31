@@ -84,6 +84,21 @@
       "refOnly": "Charged in KRW; other currencies are reference only.",
       "guestNote": "Up to {max} guests per booking · each additional guest +50% of the base rate."
     },
+    "booking": {
+      "title": "Book your slot",
+      "kstNote": "Seoul time (KST) · D+1 → D+90",
+      "fService": "EXPERIENCE",
+      "fDate": "DATE",
+      "fTime": "TIME · KST",
+      "cta": "Check availability",
+      "full": "FULL",
+      "pickDate": "Pick a date",
+      "loading": "Loading slots…",
+      "loadError": "Could not load slots.",
+      "retry": "Retry",
+      "noSlots": "No open slots",
+      "note": "Up to {max} guests · +50% per extra guest · charged in KRW; other currencies for reference only."
+    },
     "boost": {
       "line": "Total boost of confidence with a perfect session",
       "body": "Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours.",

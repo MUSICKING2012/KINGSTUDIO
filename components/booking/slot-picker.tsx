@@ -4,6 +4,7 @@ import { Check, Loader2, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { readBookingDraft, writeBookingDraft } from '@/lib/booking/draft';
 import { useRouter } from '@/lib/i18n/navigation';
 import { cn } from '@/lib/utils';
 
@@ -24,37 +25,12 @@ type PickerLabels = {
   continueCta: string;
 };
 
-const STORAGE_KEY = 'kingstudio.booking';
-
-type BookingDraft = {
-  package: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-};
+// draft 계약(키·형태·read/write)은 `lib/booking/draft.ts` 단일 출처다 — 홈 예약바(슬라이스 4e)와
+// 공유하므로 여기에 복제하지 않는다(Home_Slice_Spec §14-①-4 진실 이중화 방지).
 
 // "HH:MM:00" → "HH:MM"
 function hhmm(t: string): string {
   return t.slice(0, 5);
-}
-
-function readDraft(): BookingDraft | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.sessionStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as BookingDraft) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeDraft(draft: BookingDraft): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  } catch {
-    // sessionStorage unavailable (private mode / quota) — non-fatal, state stays in memory.
-  }
 }
 
 type Phase = 'idle' | 'loading' | 'loaded' | 'error';
@@ -81,7 +57,7 @@ export function SlotPicker({
 
   // Rehydrate a prior selection (§5.3 sessionStorage temp-save) if it matches this package.
   useEffect(() => {
-    const draft = readDraft();
+    const draft = readBookingDraft();
     if (draft && draft.package === packageSlug && draft.date >= minDate && draft.date <= maxDate) {
       setDate(draft.date);
       setSelected({ startTime: draft.startTime, endTime: draft.endTime });
@@ -127,12 +103,12 @@ export function SlotPicker({
     if (!slot.available) return;
     const next = { startTime: slot.startTime, endTime: slot.endTime };
     setSelected(next);
-    writeDraft({ package: packageSlug, date, ...next });
+    writeBookingDraft({ package: packageSlug, date, ...next });
   };
 
   const onContinue = () => {
     if (!selected) return;
-    writeDraft({ package: packageSlug, date, ...selected });
+    writeBookingDraft({ package: packageSlug, date, ...selected });
     // Step 3 (options) lands in Stage C — this is its final target URL.
     router.push(
       `/booking/options?package=${encodeURIComponent(packageSlug)}&date=${date}&time=${selected.startTime}`,

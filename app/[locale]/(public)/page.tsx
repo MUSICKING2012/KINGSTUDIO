@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { BolderSection } from '@/components/home/bolder-section';
+import { BookingBarSection } from '@/components/home/booking-bar-section';
 import { BoostSection } from '@/components/home/boost-section';
 import { CategoriesSection } from '@/components/home/categories-section';
 import { HeroSection } from '@/components/home/hero-section';
@@ -23,7 +24,7 @@ import { Link } from '@/lib/i18n/navigation';
 //              구 steps 섹션은 Provide 로 대체돼 제거(스펙 §9-8 — home.steps.* 5로케일 동시 삭제).
 //   4c (완료): -> <CategoriesSection />(§4). 결정 ④ = A(4항목 매핑 + 비-ko /rental 비링크 게이팅).
 //   4d (완료): 구 experience 섹션 -> <BolderSection />(§5, DB 배선). home.experience.* 5로케일 제거.
-//   4e: -> Booking bar(§6)
+//   4e (완료): -> <BookingBarSection />(§6). 결정 ① = C(실 슬롯 배선) — §4 위험 구역.
 // 아래 songs/finalCta 섹션과 그 i18n 키는 각 슬라이스가 자기 섹션을 교체할 때
 // 5로케일 동시 제거한다(스펙 §9-8 / 결정 ⑥ — 슬라이스별 점진 이관). 지금 한꺼번에 지우면
 // 4c~4e 사이 홈이 반쪽으로 남으므로 그러지 않는다.
@@ -78,6 +79,8 @@ export default function HomePage({ params }: { params: { locale: string } }) {
           </Button>
         </div>
       </section>
+
+      <BookingBarSection locale={params.locale} />
 
       <BoostSection />
 
