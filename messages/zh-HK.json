@@ -58,6 +58,22 @@
       "love3": "成果",
       "imageAlt": "坐在錄音室錄音間的歌手"
     },
+    "categories": {
+      "items": {
+        "vocal": "人聲錄音",
+        "mv": "音樂錄影帶",
+        "making": "Making Class",
+        "rental": "錄音室租借"
+      },
+      "inquiryOnly": "僅接受洽詢",
+      "rentalKoOnly": "只接受韓語預約",
+      "cap1Title": "聲樂總監指導",
+      "cap1Sub": "每次錄製都有指導",
+      "cap2Title": "帶回家",
+      "cap2Sub": "WAV · MP3 · CD",
+      "image1Alt": "錄音室造型 1",
+      "image2Alt": "錄音室造型 2"
+    },
     "boost": {
       "line": "用完美體驗把自信推到最高",
       "body": "在為你的聲音打造的錄音中體驗全新自信。每次錄製都無所畏懼，帶著完全屬於你的歌曲離開首爾。",

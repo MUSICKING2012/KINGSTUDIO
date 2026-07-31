@@ -58,6 +58,22 @@
       "love3": "WE MAKE",
       "imageAlt": "Artist seated in the studio live room"
     },
+    "categories": {
+      "items": {
+        "vocal": "VOCAL SESSION",
+        "mv": "MUSIC VIDEO",
+        "making": "MAKING CLASS",
+        "rental": "STUDIO RENTAL"
+      },
+      "inquiryOnly": "INQUIRY ONLY",
+      "rentalKoOnly": "Korean-language bookings only",
+      "cap1Title": "Vocal-director led",
+      "cap1Sub": "every take, guided",
+      "cap2Title": "Take it home",
+      "cap2Sub": "WAV · MP3 · CD",
+      "image1Alt": "Studio look, take one",
+      "image2Alt": "Studio look, take two"
+    },
     "boost": {
       "line": "Total boost of confidence with a perfect session",
       "body": "Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours.",
