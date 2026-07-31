@@ -1,9 +1,11 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { CurrencySelector } from './currency-selector';
 import { LocaleSelector } from './locale-selector';
 
+import { isCategoryVisibleForLocale } from '@/lib/catalog/locale-visibility';
 import { Link } from '@/lib/i18n/navigation';
+import type { Locale } from '@/lib/i18n/routing';
 import { NAV_ITEMS } from '@/lib/nav/items';
 
 import { MyPageNavItem } from './my-page-nav-item';
@@ -27,8 +29,17 @@ import { MyPageNavItem } from './my-page-nav-item';
  *
  * 델타: Book now 라벨 white -> text-foreground (accent 위 흰 글자 3.6:1, AA 미달).
  */
-export function SiteHeader() {
-  const t = useTranslations('nav');
+export async function SiteHeader({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'nav' });
+
+  // 로케일별 라우트 존재 여부를 데이터로 판정. unstable_cache 라 정적 프리렌더가 유지된다.
+  const gated = await Promise.all(
+    NAV_ITEMS.map((item) =>
+      item.localeGatedCategory
+        ? isCategoryVisibleForLocale(item.localeGatedCategory, locale as Locale)
+        : Promise.resolve(true),
+    ),
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b border-foreground/[0.08] bg-background/90 backdrop-blur-[8px]">
@@ -53,8 +64,8 @@ export function SiteHeader() {
           aria-label={t('primary')}
           className="flex min-w-0 flex-1 justify-center gap-6 overflow-x-auto"
         >
-          {NAV_ITEMS.map((item) =>
-            item.enabled ? (
+          {NAV_ITEMS.map((item, i) =>
+            item.enabled && gated[i] ? (
               <Link
                 key={item.key}
                 href={item.href}
