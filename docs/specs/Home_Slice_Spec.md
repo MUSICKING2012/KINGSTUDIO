@@ -441,7 +441,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 |---|---|---|---|---|---|---|
 | bolder.line1 | FEELING | 더 대담하게 | もっと | 更加 | 更加 | 328·371·414·457·499 |
 | bolder.line2 | BOLDER | 녹음하다 | 大胆に | 大膽 | 大胆 | 동상 |
-| packages.selectCta | Select session | 세션 선택 | セッションを選ぶ | 選擇課程 | 选择课程 | 332·375·418·461·503 |
+| packages.selectCta | Select session | 세션 선택 | セッションを選ぶ | 選擇體驗 | 选择体验 | 332·375·418·461·503 (zh **課程→體驗**, 개정 ⑦) |
 | packages.vatIncluded | VAT included | VAT 포함 | VAT込み | 含稅(VAT) | 含增值税 | 342·385·428·471·482 |
 | packages.refOnly | Charged in KRW; other currencies are reference only. | KRW로 결제되며 다른 통화는 참고용입니다. | 請求はKRW。他通貨は参考表示です。 | 以韓元結算，其他幣別僅供參考。 | 以韩元结算，其他货币仅供参考。 | 342·385·428·471·482 |
 | packages.guestNote (ICU) | Up to {max} guests per booking · each additional guest +50% of the base rate. | 예약당 최대 {max}인 · 추가 1인당 기본가의 +50%. | 1予約につき最大{max}名 · 追加1名ごとに基本料金の+50%。 | 每筆預約最多{max}人 · 每加一人加收基本價的50%。 | 每笔预约最多{max}人 · 每加一人加收基本价的50%。 | 343·386·429·472·483 (정액 5 → `{max}` 파라미터화) |
@@ -630,6 +630,17 @@ vocal director)에 정면으로 걸려, 그대로 만들면 4b 에서 고친 것
 
 ⑥의 대안으로 `WAV · MP3 · CD · MV(Premium)` 도 가능하나, 캡션이 이미 12px 보조 라인이라 괄호 조건까지 넣으면
 가독이 무너진다. MV 소구는 §3 Provide body(개정 ① 로 Premium 한정 명시됨)와 §5 패키지 카드가 담당한다.
+
+### 13-C. §9-4 카피 개정 (2026-07-31, 4d 착수 시 — 확정 결정 ④ 의 신규 키 적용)
+
+| # | 키 | 구 값 | 문제 | 개정 값 |
+|---|---|---|---|---|
+| ⑦ | `home.packages.selectCta` (zh-HK·zh-CN) | `選擇課程` / `选择课程` | 결정 ④ 위반 — 체험 3종을 "수업 선택"으로 표기 | `選擇體驗` / `选择体验` |
+
+**미조치 기록 — `home.bolder.line2` ko 중복:** ko 에서 `bolder.line2` = `녹음하다` 인데 `home.hero.big1` 도
+`녹음하다` 다(§9-1). 한 페이지에 같은 초대형 단어가 두 번 나온다. 디자인 T맵의 원래 선택이고 사실 오류가 아니라
+편집 품질 문제라, 카피 창작을 피해 그대로 둔다. 교체가 필요하면 Aiden 판단 — 후보는 `line1`/`line2` 를
+`더 대담하게` / `부르다` 로 바꾸는 것.
 
 ---
 

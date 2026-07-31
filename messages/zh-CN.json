@@ -74,29 +74,20 @@
       "image1Alt": "录音室造型 1",
       "image2Alt": "录音室造型 2"
     },
+    "bolder": {
+      "line1": "更加",
+      "line2": "大胆"
+    },
+    "packages": {
+      "selectCta": "选择体验",
+      "vatIncluded": "含增值税",
+      "refOnly": "以韩元结算，其他货币仅供参考。",
+      "guestNote": "每笔预约最多{max}人 · 每加一人加收基本价的50%。"
+    },
     "boost": {
       "line": "用完美体验把自信推到最高",
       "body": "在为你的声音打造的录音中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。",
       "imageAlt": "录音室体验的歌手肖像"
-    },
-    "experience": {
-      "heading": "选择你的方案",
-      "sub": "从专注的声乐录音到完整的音乐录像带方案。",
-      "tiers": {
-        "gold": {
-          "name": "GOLD",
-          "hook": "制作人声乐训练与录音，含录音室照片与CD。"
-        },
-        "diamond": {
-          "name": "DIAMOND",
-          "hook": "完整混音与母带处理，含录音室照片与CD。"
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "hook": "DIAMOND的全部内容，再加上电影感音乐录像带。"
-        }
-      },
-      "cta": "比较所有方案"
     },
     "songs": {
       "heading": "唱你喜爱的歌",

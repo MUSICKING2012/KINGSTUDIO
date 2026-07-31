@@ -74,29 +74,20 @@
       "image1Alt": "Studio look, take one",
       "image2Alt": "Studio look, take two"
     },
+    "bolder": {
+      "line1": "FEELING",
+      "line2": "BOLDER"
+    },
+    "packages": {
+      "selectCta": "Select session",
+      "vatIncluded": "VAT included",
+      "refOnly": "Charged in KRW; other currencies are reference only.",
+      "guestNote": "Up to {max} guests per booking · each additional guest +50% of the base rate."
+    },
     "boost": {
       "line": "Total boost of confidence with a perfect session",
       "body": "Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours.",
       "imageAlt": "Artist portrait from a studio session"
-    },
-    "experience": {
-      "heading": "Choose your session",
-      "sub": "From a focused vocal recording to a full music-video package.",
-      "tiers": {
-        "gold": {
-          "name": "GOLD",
-          "hook": "Producer-led vocal training and your recorded take, with studio photos and a CD."
-        },
-        "diamond": {
-          "name": "DIAMOND",
-          "hook": "A full mix and master of your song, with studio photos and a CD."
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "hook": "Everything in Diamond, plus a cinematic music video."
-        }
-      },
-      "cta": "Compare all packages"
     },
     "songs": {
       "heading": "Sing a song you love",
