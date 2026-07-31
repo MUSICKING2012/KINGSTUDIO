@@ -16,16 +16,29 @@
     "currencyAria": "表示通貨"
   },
   "home": {
-    "title": "KING STUDIO",
-    "subtitle": "ソウルのK-POP録音体験。",
     "metaTitle": "KING STUDIO — ソウルで自分だけのK-POP音源を録音",
     "metaDescription": "本物のソウルの録音スタジオでボーカルディレクターとK-POPを録音し、自分の音源と写真を持ち帰る体験。The New York Times掲載。",
     "hero": {
-      "eyebrow": "ソウル · 聖水 · 2017年から",
-      "title": "本物のソウルのスタジオで、自分だけのK-POP音源を録音。",
-      "subtitle": "ボーカルディレクターとトレーニングし、プロのブースで歌い、セッションの音源と写真を持ち帰る — The New York Timesが紹介した体験。",
-      "ctaPrimary": "パッケージを見る",
-      "ctaSecondary": "曲を見る"
+      "kicker1": "自分だけの",
+      "kicker2": "K-POPトラック",
+      "big1": "ろくおん",
+      "big2": "ソウルで",
+      "rotBadge": "現在 · KST 2026",
+      "photoCaption": "国境のない、本物のスタジオセッション",
+      "photoAlt": "スタジオのマイクで録音するボーカル",
+      "card": {
+        "title": "NYタイムズ掲載",
+        "sub": "2024",
+        "cta": "今すぐ予約"
+      },
+      "meta": {
+        "a": "K-POP",
+        "b": "2026",
+        "c": "ソウル",
+        "d": "セッション",
+        "e": "(アンリミテッド)",
+        "f": "(D2C)"
+      }
     },
     "nyt": {
       "label": "メディア掲載",
@@ -365,13 +378,24 @@
     }
   },
   "footer": {
+    "ctaHeading": "ソウルで自分だけのK-POPの瞬間を録音",
+    "ctaButton": "枠を予約する",
+    "orEmail": "または",
     "tagline": "ソウルのK-POP録音体験 — 歌って、録音して、自分だけの音源を持ち帰る。",
+    "locationLine": "聖水 · ソウル · KST",
     "exploreHeading": "見る",
-    "packages": "パッケージ",
-    "songs": "曲",
-    "companyHeading": "会社",
-    "about": "紹介",
-    "faq": "よくある質問",
+    "followHeading": "フォロー",
+    "languageHeading": "言語",
+    "socialAria": "KING STUDIO の{network}",
+    "comingSoon": "準備中",
+    "links": {
+      "terms": "利用規約",
+      "privacy": "プライバシーポリシー",
+      "partners": "パートナー",
+      "about": "紹介",
+      "faq": "よくある質問",
+      "contact": "お問い合わせ"
+    },
     "rights": "無断転載を禁じます。",
     "legal": {
       "company": "{nameKo}（{nameEn}）",
@@ -381,8 +405,7 @@
       "privacyOfficer": "個人情報保護責任者",
       "address": "住所",
       "krwNotice": "すべてのお支払いはKRWで請求されます。他の通貨は参考表示であり、最終レートはカード会社が決定します。"
-    },
-    "operatedBy": "KING STUDIOは{company}が運営しています。"
+    }
   },
   "booking": {
     "progress": {

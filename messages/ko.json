@@ -16,16 +16,29 @@
     "currencyAria": "표시 통화"
   },
   "home": {
-    "title": "KING STUDIO",
-    "subtitle": "서울의 K-POP 녹음 체험.",
     "metaTitle": "KING STUDIO — 서울에서 나만의 K-POP 음원을 녹음하세요",
     "metaDescription": "실제 서울 녹음실에서 보컬 디렉터와 함께 K-POP을 녹음하고, 나만의 음원과 사진을 가져가는 체험. The New York Times 소개.",
     "hero": {
-      "eyebrow": "서울 · 성수 · 2017년부터",
-      "title": "실제 서울 녹음실에서 나만의 K-POP 음원을 녹음하세요.",
-      "subtitle": "보컬 디렉터와 함께 트레이닝하고, 프로 부스에서 노래하고, 세션의 음원과 사진을 가져가세요 — The New York Times가 소개한 그 체험.",
-      "ctaPrimary": "패키지 보기",
-      "ctaSecondary": "곡 둘러보기"
+      "kicker1": "나만의",
+      "kicker2": "K-POP 트랙",
+      "big1": "녹음하다",
+      "big2": "서울에서",
+      "rotBadge": "현재 · KST 2026",
+      "photoCaption": "국경 없는 진짜 스튜디오 세션",
+      "photoAlt": "스튜디오 마이크 앞에서 녹음하는 보컬",
+      "card": {
+        "title": "뉴욕타임스 소개",
+        "sub": "2024",
+        "cta": "바로 예약"
+      },
+      "meta": {
+        "a": "K-POP",
+        "b": "2026",
+        "c": "서울",
+        "d": "세션",
+        "e": "(무제한)",
+        "f": "(D2C)"
+      }
     },
     "nyt": {
       "label": "언론 보도",
@@ -357,13 +370,24 @@
     }
   },
   "footer": {
+    "ctaHeading": "서울에서 나만의 K-POP 순간을 녹음하세요",
+    "ctaButton": "슬롯 예약하기",
+    "orEmail": "또는",
     "tagline": "서울의 K-POP 녹음 체험 — 부르고, 녹음하고, 나만의 음원을 가져가세요.",
+    "locationLine": "성수 · 서울 · KST",
     "exploreHeading": "둘러보기",
-    "packages": "패키지",
-    "songs": "곡",
-    "companyHeading": "회사",
-    "about": "소개",
-    "faq": "자주 묻는 질문",
+    "followHeading": "팔로우",
+    "languageHeading": "언어",
+    "socialAria": "KING STUDIO {network}",
+    "comingSoon": "준비 중",
+    "links": {
+      "terms": "이용약관",
+      "privacy": "개인정보처리방침",
+      "partners": "파트너",
+      "about": "소개",
+      "faq": "자주 묻는 질문",
+      "contact": "문의하기"
+    },
     "rights": "모든 권리 보유.",
     "legal": {
       "company": "{nameKo}",
@@ -373,8 +397,7 @@
       "privacyOfficer": "개인정보책임자",
       "address": "주소",
       "krwNotice": "모든 결제는 KRW로 청구됩니다. 다른 통화는 참고용이며 최종 환율은 카드사가 정합니다."
-    },
-    "operatedBy": "KING STUDIO는 {company}가 운영합니다."
+    }
   },
   "booking": {
     "progress": {

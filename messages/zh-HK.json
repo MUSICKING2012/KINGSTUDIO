@@ -16,16 +16,29 @@
     "currencyAria": "顯示貨幣"
   },
   "home": {
-    "title": "KING STUDIO",
-    "subtitle": "首爾的K-POP錄音體驗。",
     "metaTitle": "KING STUDIO — 在首爾錄製屬於你的K-POP音源",
     "metaDescription": "在真正的首爾錄音室與聲樂總監一起錄製K-POP，帶走自己的音源與相片的體驗。獲The New York Times報導。",
     "hero": {
-      "eyebrow": "首爾 · 聖水 · 自2017年",
-      "title": "在真正的首爾錄音室，錄製屬於你的K-POP音源。",
-      "subtitle": "與聲樂總監一起訓練，在專業錄音室演唱，帶走這次錄音的音源與相片 — The New York Times報導過的體驗。",
-      "ctaPrimary": "查看套餐",
-      "ctaSecondary": "瀏覽歌曲"
+      "kicker1": "屬於你嘅",
+      "kicker2": "K-POP 歌曲",
+      "big1": "錄製",
+      "big2": "喺首爾",
+      "rotBadge": "現在 · KST 2026",
+      "photoCaption": "沒有邊界的真實錄音室課程",
+      "photoAlt": "在錄音室咪高峰前錄音的歌手",
+      "card": {
+        "title": "《紐約時報》報導",
+        "sub": "2024",
+        "cta": "立即預約"
+      },
+      "meta": {
+        "a": "K-POP",
+        "b": "2026",
+        "c": "首爾",
+        "d": "課程",
+        "e": "(無限)",
+        "f": "(D2C)"
+      }
     },
     "nyt": {
       "label": "傳媒報導",
@@ -357,13 +370,24 @@
     }
   },
   "footer": {
+    "ctaHeading": "喺首爾錄下屬於你嘅 K-POP 時刻",
+    "ctaButton": "預約時段",
+    "orEmail": "或",
     "tagline": "首爾的K-POP錄音體驗 — 唱歌、錄音，帶走屬於你的音源。",
+    "locationLine": "聖水 · 首爾 · KST",
     "exploreHeading": "探索",
-    "packages": "套餐",
-    "songs": "歌曲",
-    "companyHeading": "公司",
-    "about": "關於",
-    "faq": "常見問題",
+    "followHeading": "追蹤",
+    "languageHeading": "語言",
+    "socialAria": "KING STUDIO 的 {network}",
+    "comingSoon": "即將推出",
+    "links": {
+      "terms": "使用條款",
+      "privacy": "私隱政策",
+      "partners": "合作夥伴",
+      "about": "關於",
+      "faq": "常見問題",
+      "contact": "聯絡我們"
+    },
     "rights": "版權所有。",
     "legal": {
       "company": "{nameKo}（{nameEn}）",
@@ -373,8 +397,7 @@
       "privacyOfficer": "個人資料保護負責人",
       "address": "地址",
       "krwNotice": "所有付款均以韓元（KRW）結算。其他貨幣僅供參考，最終匯率由發卡機構決定。"
-    },
-    "operatedBy": "KING STUDIO 由 {company} 營運。"
+    }
   },
   "booking": {
     "progress": {
