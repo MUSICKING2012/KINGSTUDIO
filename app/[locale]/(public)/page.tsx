@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { BoostSection } from '@/components/home/boost-section';
 import { HeroSection } from '@/components/home/hero-section';
+import { ProvideSection } from '@/components/home/provide-section';
+import { TrustStrip } from '@/components/home/trust-strip';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/lib/i18n/navigation';
 
@@ -14,16 +17,17 @@ import { Link } from '@/lib/i18n/navigation';
 //
 // 디자인 개편 시퀀스 4 (docs/specs/Home_Slice_Spec.md) 진행 중 — 섹션을 슬라이스 단위로 교체한다.
 //   4a (완료): Hero -> <HeroSection /> (스펙 §1)
-//   4b: NYT strip -> Trust strip(§2) + Provide 다크(§3) + Boost(§7)
+//   4b (완료): NYT strip -> <TrustStrip />(§2) + <ProvideSection />(§3) + <BoostSection />(§7)
+//              구 steps 섹션은 Provide 로 대체돼 제거(스펙 §9-8 — home.steps.* 5로케일 동시 삭제).
 //   4c: -> Categories(§4)   4d: -> Bolder + 패키지 카드(§5, DB 배선)   4e: -> Booking bar(§6)
-// 아래 steps/experience/songs/finalCta 섹션과 그 i18n 키는 각 슬라이스가 자기 섹션을 교체할 때
+// 아래 experience/songs/finalCta 섹션과 그 i18n 키는 각 슬라이스가 자기 섹션을 교체할 때
 // 5로케일 동시 제거한다(스펙 §9-8 / 결정 ⑥ — 슬라이스별 점진 이관). 지금 한꺼번에 지우면
-// 4b~4e 사이 홈이 히어로만 남으므로 그러지 않는다.
+// 4c~4e 사이 홈이 반쪽으로 남으므로 그러지 않는다.
+//
+// 섹션 순서는 디자인 원문 순서를 따르되, 미구현 구간은 기존 섹션이 자리를 지킨다:
+//   Hero -> Trust strip -> Provide -> [구 experience/songs] -> Boost -> [구 finalCta] -> Footer
+// (디자인상 Boost 는 Booking bar 뒤·Subscribe 앞이고, Subscribe 는 결정 ⑤ 로 취소됐다.)
 
-// The New York Times feature (PRD §1). External, locale-agnostic — kept out of i18n.
-const NYT_URL = 'https://www.nytimes.com/2024/11/29/fashion/k-pop-recording-sessions-seoul.html';
-
-const STEP_KEYS = ['step1', 'step2', 'step3'] as const;
 const TIER_KEYS = ['gold', 'diamond', 'premium'] as const;
 
 export async function generateMetadata({
@@ -43,47 +47,9 @@ export default function HomePage({ params }: { params: { locale: string } }) {
     <main>
       <HeroSection />
 
-      {/* NYT trust strip — 4b 에서 스펙 §2 트러스트 스트립으로 교체. mt 는 히어로와의 임시 간격. */}
-      <section className="mt-section-gap border-y border-border bg-card">
-        <div className="mx-auto flex max-w-container-max flex-col gap-stack-sm px-margin-mobile py-stack-lg md:flex-row md:items-center md:justify-between md:px-margin-desktop">
-          <div>
-            <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
-              {t('nyt.label')}
-            </p>
-            <p className="mt-stack-sm text-body-lg text-foreground">{t('nyt.source')}</p>
-          </div>
-          <a
-            href={NYT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-stack-sm text-body-md font-medium text-primary underline-offset-4 hover:underline"
-          >
-            {t('nyt.cta')} <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </section>
+      <TrustStrip />
 
-      {/* How a session works */}
-      <section className="mx-auto max-w-container-max px-margin-mobile py-section-gap md:px-margin-desktop">
-        <h2 className="border-l-4 border-primary pl-4 font-display text-headline-lg text-foreground">
-          {t('steps.heading')}
-        </h2>
-        <ol className="mt-stack-lg grid grid-cols-1 gap-gutter md:grid-cols-3">
-          {STEP_KEYS.map((key, i) => (
-            <li key={key} className="rounded-brand-card border border-border bg-card p-stack-lg">
-              <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
-                {`0${i + 1}`}
-              </p>
-              <h3 className="mt-stack-sm text-body-lg font-semibold text-foreground">
-                {t(`steps.${key}.title`)}
-              </h3>
-              <p className="mt-stack-sm text-body-md text-muted-foreground">
-                {t(`steps.${key}.body`)}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <ProvideSection />
 
       {/* Experience tiers */}
       <section className="bg-card">
@@ -131,6 +97,8 @@ export default function HomePage({ params }: { params: { locale: string } }) {
           </Button>
         </div>
       </section>
+
+      <BoostSection />
 
       {/* Closing CTA — sparing ink band (DESIGN.md: ink used sparingly) */}
       <section className="border-t border-border bg-foreground text-background">
