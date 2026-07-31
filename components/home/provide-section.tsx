@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 
 import { EditorialImage } from '@/components/home/editorial-image';
+import { Marquee } from '@/components/home/marquee';
 import { Link } from '@/lib/i18n/navigation';
 
 /**
@@ -64,9 +65,11 @@ export function ProvideSection() {
           </div>
         </div>
 
-        {/* 마퀴 (디자인 107–113행) */}
+        {/* 마퀴 (디자인 107–113행). Marquee 래퍼가 화면 밖에서 애니메이션을 일시정지한다
+            — 무한 애니메이션이 CPU 유휴를 막아 Lighthouse 성능 77(Gate 3 미달)을 만들었던
+            원인(marquee.tsx docblock 실측 근거 참조). */}
         <div className="my-[34px] overflow-hidden border-y border-paper/[0.14] py-[14px]">
-          <div className="flex w-max animate-edi-marquee whitespace-nowrap">
+          <Marquee>
             {MARQUEE_COPIES.map((i) => (
               <span
                 key={i}
@@ -76,7 +79,7 @@ export function ProvideSection() {
                 {t('marquee')}
               </span>
             ))}
-          </div>
+          </Marquee>
         </div>
 
         {/* 이미지 + 태그 + LOVE (디자인 115–131행) */}
