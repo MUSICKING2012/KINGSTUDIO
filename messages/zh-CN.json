@@ -58,6 +58,22 @@
       "love3": "成果",
       "imageAlt": "坐在录音室录音间的歌手"
     },
+    "categories": {
+      "items": {
+        "vocal": "人声录音",
+        "mv": "音乐录影带",
+        "making": "Making Class",
+        "rental": "录音室租借"
+      },
+      "inquiryOnly": "仅接受咨询",
+      "rentalKoOnly": "仅接受韩语预约",
+      "cap1Title": "声乐总监指导",
+      "cap1Sub": "每次录制都有指导",
+      "cap2Title": "带回家",
+      "cap2Sub": "WAV · MP3 · CD",
+      "image1Alt": "录音室造型 1",
+      "image2Alt": "录音室造型 2"
+    },
     "boost": {
       "line": "用完美体验把自信推到最高",
       "body": "在为你的声音打造的录音中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。",

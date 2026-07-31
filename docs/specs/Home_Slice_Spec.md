@@ -426,10 +426,10 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | items.rental | STUDIO RENTAL | 스튜디오 대여 | スタジオ貸出 | 錄音室租借 | 录音室租借 | 325·368·411·454·497 |
 | inquiryOnly | INQUIRY ONLY | 문의 전용 | お問い合わせのみ | 僅接受洽詢 | 仅接受咨询 | 344·387·430·473·483 |
 | rentalKoOnly (신규) | Korean-language bookings only | 한국어 예약 전용 | 韓国語での予約のみ | 只接受韓語預約 | 仅接受韩语预约 | — |
-| cap1Title | Producer-directed | 프로듀서 디렉팅 | プロデューサー指導 | 製作人指導 | 制作人指导 | 319·362·405·448·495 |
+| cap1Title | Vocal-director led | 보컬 디렉터 디렉팅 | ボーカルディレクター指導 | 聲樂總監指導 | 声乐总监指导 | 319·362·405·448·495 (**개정 ⑤** — 구 `Producer-directed` 계열) |
 | cap1Sub | every take, guided | 모든 테이크 지도 | 全テイクをディレクション | 每次錄製都有指導 | 每次录制都有指导 | 동상 |
 | cap2Title | Take it home | 집으로 | 持ち帰り | 帶回家 | 带回家 | 320·363·406·449·496 |
-| cap2Sub | MP3 · CD · MV | MP3 · CD · MV | MP3 · CD · MV | MP3 · CD · MV | MP3 · CD · MV | 동상 |
+| cap2Sub | WAV · MP3 · CD | WAV · MP3 · CD | WAV · MP3 · CD | WAV · MP3 · CD | WAV · MP3 · CD | 동상 (**개정 ⑥** — 구 `MP3 · CD · MV`) |
 | image1Alt (신규) | Studio look, take one | 스튜디오 룩 1 | スタジオルック 1 | 錄音室造型 1 | 录音室造型 1 | 140 |
 | image2Alt (신규) | Studio look, take two | 스튜디오 룩 2 | スタジオルック 2 | 錄音室造型 2 | 录音室造型 2 | 157 |
 
@@ -616,6 +616,20 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 **④의 적용 범위 한계 — 손대지 않는 `課程`:** `packages.catalog.categories.group.*`(團體課程), `packages.items.{making-class,dreampath,workshop}.concept/includes`, `faq.*`의 단체 관련 답변. 이들은 **실제로 class·프로그램**이라 `課程`이 정확하다. §5.2상 group 카테고리(Making Class·꿈길·워크샵)는 수업 성격이 맞다.
 
 **③의 잔존 처리:** `home.experience.tiers.gold.hook` 이 5로케일에서 여전히 `Producer-led`/`프로듀서`/`プロデューサー`/`制作人`을 쓴다. 다만 이 키는 §9-8상 **4d에서 제거 예정**이므로 지금 고치지 않는다(곧 사라질 키에 대한 churn 회피). 4d가 §9-4로 교체할 때 vocal director 용어로 정리한다.
+
+### 13-B. §9-3 카피 개정 (2026-07-31, 4c 착수 시 — 확정 결정 ①③의 신규 키 적용)
+
+§9-3 은 4c 가 **처음 생성**하는 키다. 그런데 두 키가 이미 확정된 결정 ①(MV = Premium 전용)·③(디렉팅 주체 =
+vocal director)에 정면으로 걸려, 그대로 만들면 4b 에서 고친 것과 같은 오류를 새로 심는다. 결정을 신규 키에
+적용한 것이므로 새 판단이 아니다.
+
+| # | 키 | 구 값(디자인 원문) | 문제 | 정본 근거 | 개정 값 |
+|---|---|---|---|---|---|
+| ⑤ | `home.categories.cap1Title` | `Producer-directed` / `프로듀서 디렉팅` / `プロデューサー指導` / `製作人指導` / `制作人指导` | 결정 ③ 위반 — 디렉팅 주체는 vocal director | 결정 ③ + 레포 용례(`metaDescription`·`about.*`·`faq.*`) | `Vocal-director led` / `보컬 디렉터 디렉팅` / `ボーカルディレクター指導` / `聲樂總監指導` / `声乐总监指导` |
+| ⑥ | `home.categories.cap2Sub` | `MP3 · CD · MV`(5로케일 동일) | **오류 2건.** ⓐ `MV` 는 Premium 전용인데 "Take it home" 캡션이라 전 패키지 제공물로 읽힌다(결정 ① 과 동일 사안). ⓑ `MP3` 만 적어 **mp3-only** 로 읽힌다 — PRD 는 WAV 16/44.1 을 전 체험에 ● 로 제공한다(4b 검출 목록의 "✗ mp3-only / WAV 금지" 항목에 정확히 해당) | PRD §5.6 매트릭스: `Raw 음원(WAV 16/44.1)` Gold·Diamond·Premium ● / `Raw 음원(MP3 320k)` 동일 ● / `CD 앨범` 동일 ● / `가로형 MV`·`세로형 하이라이트` **Premium 열만** ● | `WAV · MP3 · CD` (전 체험 3종 공통 제공물만 — 12px 보조 캡션이라 조건부 문구를 넣을 자리가 없다) |
+
+⑥의 대안으로 `WAV · MP3 · CD · MV(Premium)` 도 가능하나, 캡션이 이미 12px 보조 라인이라 괄호 조건까지 넣으면
+가독이 무너진다. MV 소구는 §3 Provide body(개정 ① 로 Premium 한정 명시됨)와 §5 패키지 카드가 담당한다.
 
 ---
 
