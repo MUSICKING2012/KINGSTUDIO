@@ -386,7 +386,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | big1 | RECORD | 녹음하다 | ろくおん | 錄製 | 录制 | 310·354·397·440·487 |
 | big2 | IN SEOUL | 서울에서 | ソウルで | 喺首爾 | 在首尔 | 310·354·397·479·487 |
 | rotBadge | CURRENT · KST 2026 | 현재 · KST 2026 | 現在 · KST 2026 | 現在 · KST 2026 | 现在 · KST 2026 | 310·354·397·440·487 |
-| photoCaption | A real session that knows no borders | 국경 없는 진짜 스튜디오 세션 | 国境のない、本物のスタジオセッション | 沒有邊界的真實錄音室課程 | 没有边界的真实录音室课程 | 311·355·398·441·488 |
+| photoCaption | A real session that knows no borders | 국경 없는 진짜 스튜디오 세션 | 国境のない、本物のスタジオセッション | 沒有邊界的真實錄音室體驗 | 没有边界的真实录音室体验 | 311·355·398·441·488 (zh **課程→體驗**, 개정 ④) |
 | photoAlt (신규) | Vocalist recording at the microphone in the studio | 스튜디오 마이크 앞에서 녹음하는 보컬 | スタジオのマイクで録音するボーカル | 在錄音室咪高峰前錄音的歌手 | 在录音室话筒前录音的歌手 | — |
 | card.title | Featured in NYT | 뉴욕타임스 소개 | NYタイムズ掲載 | 《紐約時報》報導 | 《纽约时报》报道 | 309·353·396·439·486 |
 | card.sub | 2024 | 2024 | 2024 | 2024 | 2024 | 동상 |
@@ -394,7 +394,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | meta.a (신규) | K-POP | K-POP | K-POP | K-POP | K-POP | 69 |
 | meta.b (신규) | 2026 | 2026 | 2026 | 2026 | 2026 | 69 |
 | meta.c (신규) | SEOUL | 서울 | ソウル | 首爾 | 首尔 | 69 |
-| meta.d (신규) | SESSION | 세션 | セッション | 課程 | 课程 | 69 |
+| meta.d (신규) | SESSION | 세션 | セッション | 體驗 | 体验 | 69 (zh **課程→體驗**, 개정 ④) |
 | meta.e (신규) | (UNLIMITED) | (무제한) | (アンリミテッド) | (無限) | (无限) | 69 |
 | meta.f (신규) | (D2C) | (D2C) | (D2C) | (D2C) | (D2C) | 69 |
 
@@ -403,10 +403,10 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | 키 | en | ko | ja | zh-HK | zh-CN | 원문행 |
 |---|---|---|---|---|---|---|
 | titlePre | We provide fresh | 신선한 세션을 | 新しいセッションを | 為你提供 | 为你提供 | 313·356·399·442·489 |
-| titlePost | sessions for you | 제공합니다 | お届けします | 全新課程 | 全新课程 | 동상 |
-| body | Discover producer-directed recording built to make your voice sound like the charts — vocals, mix, photos and a music video. | 차트처럼 들리게 만드는 프로듀서 디렉팅 녹음 — 보컬, 믹스, 사진, 뮤직비디오까지. | チャートのように響かせるプロデューサー指導の収録 — ボーカル、ミックス、写真、MVまで。 | 讓你的聲音像排行榜般動人的製作人指導錄音 — 主唱、混音、攝影與 MV。 | 让你的声音像排行榜一样动人的制作人指导录音 — 主唱、混音、摄影与 MV。 | 314·357·400·443·490 |
+| titlePost | sessions for you | 제공합니다 | お届けします | 全新體驗 | 全新体验 | 동상 (zh **課程→體驗**, 개정 ④) |
+| body | Recording led by a vocal director, built to make your voice sound like the charts — vocals, mix and studio photos, with a music video on Premium. | 차트처럼 들리게 만드는 보컬 디렉터 디렉팅 녹음 — 보컬, 믹스, 스튜디오 사진, 그리고 Premium에는 뮤직비디오까지. | チャートのように響かせるボーカルディレクター指導の収録 — ボーカル、ミックス、スタジオ写真、Premium ではミュージックビデオも。 | 由聲樂總監指導、讓你的聲音像排行榜般動人的錄音 — 主唱、混音、錄音室相片，Premium 更包含 MV。 | 由声乐总监指导、让你的声音像排行榜一样动人的录音 — 主唱、混音、录音室照片，Premium 更包含 MV。 | 314·357·400·443·490 (**개정 ①③**) |
 | learnMore | LEARN MORE | 자세히 보기 | 詳しく見る | 了解更多 | 了解更多 | 315·358·401·444·491 |
-| marquee | GOLD · DIAMOND · PREMIUM · SEOUL · KST · NYT 2024 · | 골드 · 다이아 · 프리미엄 · 서울 · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · ソウル · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · 首爾 · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · 首尔 · KST · NYT 2024 · | 316·359·402·445·492 |
+| marquee | GOLD · DIAMOND · PREMIUM · SEOUL · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · 서울 · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · ソウル · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · 首爾 · KST · NYT 2024 · | GOLD · DIAMOND · PREMIUM · 首尔 · KST · NYT 2024 · | 316·359·402·445·492 (ko **골드/다이아/프리미엄→라틴**, 개정 ②) |
 | slotsLabel | Slots open D+1 → 90 | 예약 가능 D+1 → 90 | 予約可能 D+1 → 90 | 可預約 D+1 → 90 | 可预约 D+1 → 90 | 317·360·403·446·493 |
 | bookCta | Book now | 바로 예약 | 今すぐ予約 | 立即預約 | 立即预约 | 309·353·396·439·486 |
 | love1 | LOVE | 우리가 | 私たちの | 我們 | 我们 | 318·361·404·447·494 |
@@ -470,9 +470,9 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 
 | 키 | en | ko | ja | zh-HK | zh-CN | 원문행 |
 |---|---|---|---|---|---|---|
-| line | Total boost of confidence with a perfect session | 완벽한 세션으로 자신감을 최대로 | 完璧なセッションで自信を最大に | 用完美課程把自信推到最高 | 用完美课程把自信推到最高 | 339·382·425·468·510 |
-| body | Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours. | 나의 목소리를 중심으로 설계된 세션에서 새로운 자신감을 경험하세요. 모든 테이크마다 거침없어지고, 온전히 나만의 트랙을 손에 넣고 서울을 떠납니다. | 自分の声を中心に設計されたセッションで、新しい自信を。テイクごとに大胆になり、自分だけのトラックを手にソウルを後にします。 | 在為你的聲音打造的課程中體驗全新自信。每次錄製都無所畏懼，帶著完全屬於你的歌曲離開首爾。 | 在为你的声音打造的课程中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。 | 340·383·426·469·511 |
-| imageAlt (신규) | Artist portrait from a studio session | 스튜디오 세션 아티스트 포트레이트 | スタジオセッションのアーティストポートレート | 錄音室課程的歌手肖像 | 录音室课程的歌手肖像 | 236 |
+| line | Total boost of confidence with a perfect session | 완벽한 세션으로 자신감을 최대로 | 完璧なセッションで自信を最大に | 用完美體驗把自信推到最高 | 用完美体验把自信推到最高 | 339·382·425·468·510 (zh **課程→體驗**, 개정 ④) |
+| body | Step into a new level of confidence with a session built around your voice. With every take you feel unstoppable — and you leave Seoul with a track that is entirely yours. | 나의 목소리를 중심으로 설계된 세션에서 새로운 자신감을 경험하세요. 모든 테이크마다 거침없어지고, 온전히 나만의 트랙을 손에 넣고 서울을 떠납니다. | 自分の声を中心に設計されたセッションで、新しい自信を。テイクごとに大胆になり、自分だけのトラックを手にソウルを後にします。 | 在為你的聲音打造的錄音中體驗全新自信。每次錄製都無所畏懼，帶著完全屬於你的歌曲離開首爾。 | 在为你的声音打造的录音中体验全新自信。每次录制都无所畏惧，带着完全属于你的歌曲离开首尔。 | 340·383·426·469·511 (zh **課程→錄音**, 개정 ④ — 문장 내 `體驗`가 동사로 이미 쓰여 명사는 `錄音`) |
+| imageAlt (신규) | Artist portrait from a studio session | 스튜디오 세션 아티스트 포트레이트 | スタジオセッションのアーティストポートレート | 錄音室體驗的歌手肖像 | 录音室体验的歌手肖像 | 236 (zh **課程→體驗**, 개정 ④) |
 
 ### 9-7. `home.subscribe.*` — **결정 ⑤가 "포함"일 때만 생성.** 제외 시 키 자체를 만들지 않는다.
 (참고 원문행: subT1/subT2 341·384·427·470·512 / subPh·subConsent·subBtn·subDone 345·388·431·474·484)
@@ -601,6 +601,21 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 ⑧ **big2에 accent 미적용.** 디자인 prop 기본값(false, 543행) 채택 — accent 대형 헤드라인은 §5 Bolder 1곳으로 절제.
 ⑨ **비활성 항목은 `<span>` + `sr-only`.** 비-ko `/rental`(§4-C). Nav 슬라이스 §7-② 패턴 재사용, 죽은 링크 0.
 ⑩ **가짜 UI 금지.** 결정 ①이 A안이면 booking bar의 날짜·시간 필드를 disabled로 남기지 않고 **렌더하지 않는다**(§6-F).
+
+### 13-A. §9 카피 개정 (2026-07-31, Aiden 승인 — 4b STEP 1-A 대조 산출)
+
+4b 착수 전 PRD 대조에서 4건이 확인돼 §9 키표를 개정했다. 개정분은 **5로케일 동시** 적용한다.
+
+| # | 대상 키 | 문제 | 정본 근거 | 조치 |
+|---|---|---|---|---|
+| ① | `home.provide.body` | "music video"를 무조건부로 나열 — **MV는 Premium 전용** | PRD §5.2 체험표 뮤직비디오 행 = `Gold —` / `Diamond —` / `Premium 포함(외부 전문팀)`; §5.6 매트릭스 가로형 MV·세로형 하이라이트 모두 Premium 열만 ● | 문장 안에 Premium 한정 명시(MV는 최대 차별화 요소라 제거하지 않음) |
+| ② | `home.provide.marquee` (ko) | ko만 `골드 · 다이아 · 프리미엄` — 레포 어디에도 없는 표기이고 `다이아`는 절단형. 같은 다크 섹션의 태그 칩(§3-C)이 `Diamond`를 표시해 한 화면에 두 이름 공존 | `packages.items.{gold,diamond,premium}.name` = **5로케일 전부 `Gold`/`Diamond`/`Premium`** (07-31 실측) | ko 마퀴의 패키지명을 라틴으로 통일(ja·zh는 이미 라틴) |
+| ③ | `home.provide.body` | "producer-directed" — 레포 정착 용어는 **vocal director** | 역할 분리 확정(Aiden): **보컬 디렉팅 주체 = vocal director**, 프로듀서는 세션 전체 진행 역할로 별개. 레포 용례 `home.metaDescription`·`home.steps.step1`·`about.*`·`faq.*` 전부 vocal director | 로케일별 정착 표기 사용 — en `vocal director` / ko `보컬 디렉터` / ja `ボーカルディレクター` / zh-HK `聲樂總監` / zh-CN `声乐总监` |
+| ④ | zh-HK·zh-CN 다수 | 디자인 zh 번역이 session을 일괄 `課程/课程`(수업)으로 옮김 — 실제 class 는 `K-Pop Making Class` 하나뿐이고 체험 3종은 녹음 체험 | 포지셔닝(Aiden 확정): **수업이 아니라 체험** | `體驗/体验`로 통일. 대상: `home.hero.photoCaption`·`home.hero.meta.d`(§9-1, **4a 배포분 소급 수정**), `home.provide.titlePost`(§9-2), `home.boost.line`·`body`·`imageAlt`(§9-6) |
+
+**④의 적용 범위 한계 — 손대지 않는 `課程`:** `packages.catalog.categories.group.*`(團體課程), `packages.items.{making-class,dreampath,workshop}.concept/includes`, `faq.*`의 단체 관련 답변. 이들은 **실제로 class·프로그램**이라 `課程`이 정확하다. §5.2상 group 카테고리(Making Class·꿈길·워크샵)는 수업 성격이 맞다.
+
+**③의 잔존 처리:** `home.experience.tiers.gold.hook` 이 5로케일에서 여전히 `Producer-led`/`프로듀서`/`プロデューサー`/`制作人`을 쓴다. 다만 이 키는 §9-8상 **4d에서 제거 예정**이므로 지금 고치지 않는다(곧 사라질 키에 대한 churn 회피). 4d가 §9-4로 교체할 때 vocal director 용어로 정리한다.
 
 ---
 
