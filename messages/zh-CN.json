@@ -16,16 +16,29 @@
     "currencyAria": "显示货币"
   },
   "home": {
-    "title": "KING STUDIO",
-    "subtitle": "首尔的K-POP录音体验。",
     "metaTitle": "KING STUDIO — 在首尔录制属于你的K-POP音源",
     "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报导。",
     "hero": {
-      "eyebrow": "首尔 · 圣水 · 自2017年",
-      "title": "在真正的首尔录音室，录制属于你的K-POP音源。",
-      "subtitle": "与声乐总监一起训练，在专业录音间演唱，带走这场录音的音源与照片 — The New York Times报导过的体验。",
-      "ctaPrimary": "查看方案",
-      "ctaSecondary": "浏览歌曲"
+      "kicker1": "属于你的",
+      "kicker2": "K-POP 歌曲",
+      "big1": "录制",
+      "big2": "在首尔",
+      "rotBadge": "现在 · KST 2026",
+      "photoCaption": "没有边界的真实录音室课程",
+      "photoAlt": "在录音室话筒前录音的歌手",
+      "card": {
+        "title": "《纽约时报》报道",
+        "sub": "2024",
+        "cta": "立即预约"
+      },
+      "meta": {
+        "a": "K-POP",
+        "b": "2026",
+        "c": "首尔",
+        "d": "课程",
+        "e": "(无限)",
+        "f": "(D2C)"
+      }
     },
     "nyt": {
       "label": "媒体报导",
@@ -357,13 +370,24 @@
     }
   },
   "footer": {
+    "ctaHeading": "在首尔录下属于你的 K-POP 时刻",
+    "ctaButton": "预约时段",
+    "orEmail": "或",
     "tagline": "首尔的K-POP录音体验 — 唱歌、录音，带走属于你的音源。",
+    "locationLine": "圣水 · 首尔 · KST",
     "exploreHeading": "探索",
-    "packages": "方案",
-    "songs": "歌曲",
-    "companyHeading": "公司",
-    "about": "关于",
-    "faq": "常见问题",
+    "followHeading": "关注",
+    "languageHeading": "语言",
+    "socialAria": "KING STUDIO 的 {network}",
+    "comingSoon": "即将推出",
+    "links": {
+      "terms": "使用条款",
+      "privacy": "隐私政策",
+      "partners": "合作伙伴",
+      "about": "关于",
+      "faq": "常见问题",
+      "contact": "联系我们"
+    },
     "rights": "版权所有。",
     "legal": {
       "company": "{nameKo}（{nameEn}）",
@@ -373,8 +397,7 @@
       "privacyOfficer": "个人信息保护负责人",
       "address": "地址",
       "krwNotice": "所有付款均以韩元（KRW）结算。其他货币仅供参考，最终汇率由发卡机构决定。"
-    },
-    "operatedBy": "KING STUDIO 由 {company} 运营。"
+    }
   },
   "booking": {
     "progress": {

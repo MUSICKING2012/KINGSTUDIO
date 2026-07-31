@@ -16,16 +16,29 @@
     "currencyAria": "Display currency"
   },
   "home": {
-    "title": "KING STUDIO",
-    "subtitle": "K-POP recording experience in Seoul.",
     "metaTitle": "KING STUDIO — Record your own K-pop track in Seoul",
     "metaDescription": "A real Seoul recording studio where visitors train with a vocal director, record a K-pop song, and take home their own audio and photos. Featured in The New York Times.",
     "hero": {
-      "eyebrow": "SEOUL · SEONGSU · SINCE 2017",
-      "title": "Record your own K-pop track in a real Seoul studio.",
-      "subtitle": "Train with a vocal director, sing in a professional booth, and take home the audio and photos from your session — the experience The New York Times wrote about.",
-      "ctaPrimary": "See packages",
-      "ctaSecondary": "Browse songs"
+      "kicker1": "Record your own",
+      "kicker2": "K-pop track",
+      "big1": "RECORD",
+      "big2": "IN SEOUL",
+      "rotBadge": "CURRENT · KST 2026",
+      "photoCaption": "A real session that knows no borders",
+      "photoAlt": "Vocalist recording at the microphone in the studio",
+      "card": {
+        "title": "Featured in NYT",
+        "sub": "2024",
+        "cta": "Book now"
+      },
+      "meta": {
+        "a": "K-POP",
+        "b": "2026",
+        "c": "SEOUL",
+        "d": "SESSION",
+        "e": "(UNLIMITED)",
+        "f": "(D2C)"
+      }
     },
     "nyt": {
       "label": "As featured in",
@@ -369,13 +382,24 @@
     }
   },
   "footer": {
+    "ctaHeading": "Record your K-pop moment in Seoul",
+    "ctaButton": "Book your slot",
+    "orEmail": "or",
     "tagline": "A K-pop recording experience in Seoul — sing, record, and take home your own track.",
+    "locationLine": "Seongsu · Seoul · KST",
     "exploreHeading": "Explore",
-    "packages": "Packages",
-    "songs": "Songs",
-    "companyHeading": "Company",
-    "about": "About",
-    "faq": "FAQ",
+    "followHeading": "Follow",
+    "languageHeading": "Language",
+    "socialAria": "KING STUDIO on {network}",
+    "comingSoon": "Coming soon",
+    "links": {
+      "terms": "Terms of Use",
+      "privacy": "Privacy policy",
+      "partners": "Partners",
+      "about": "About",
+      "faq": "FAQ",
+      "contact": "Contact us"
+    },
     "rights": "All rights reserved.",
     "legal": {
       "company": "{nameKo} ({nameEn})",
@@ -385,8 +409,7 @@
       "privacyOfficer": "Privacy officer",
       "address": "Address",
       "krwNotice": "All payments are charged in KRW. Other currencies are shown for reference only; the final rate is set by your card issuer."
-    },
-    "operatedBy": "KING STUDIO is operated by {company}."
+    }
   },
   "booking": {
     "progress": {

@@ -56,7 +56,12 @@
 금지(레이아웃 전체가 dynamic으로 강등돼 generateStaticParams 정적 렌더가 깨짐). 신규 방문자 미노출,
 hydration 후 나타나는 지연은 허용.
 
-## 2. Footer (ks-footer.js 실측)
+## 2. Footer (ks-footer.js 실측) — ⚠ **SUPERSEDED (2026-07-31)**
+
+> 이 절은 **`docs/specs/Footer_Slice_Spec.md` v2 가 대체한다.** 새 실측 소스는 claude.ai/design
+> `KING STUDIO Footer.dc.html`(3밴드 구조 — CTA / 3컬럼 / 법정 바)이고, 구 `ks-footer.js` 기반인
+> 아래 서술은 더 이상 코드와 일치하지 않는다. 이력 보존용으로만 남긴다. §1(nav)은 계속 유효.
+
 `<footer>` `bg-ink-footer text-paper/70`. wrapper `mx-auto max-w-[1280px] px-6 py-[34px] flex flex-col gap-5`.
 - 상단 행(`flex justify-between gap-5 flex-wrap items-start`):
   - 브랜드 컬럼: "KING STUDIO" `font-black text-[18px] text-paper` + 연락처 1줄 `text-[12px]`

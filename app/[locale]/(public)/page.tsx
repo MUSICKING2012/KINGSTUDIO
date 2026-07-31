@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { HeroSection } from '@/components/home/hero-section';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/lib/i18n/navigation';
 
@@ -10,6 +11,14 @@ import { Link } from '@/lib/i18n/navigation';
 // per CLAUDE.md §6, shown on /packages). CTAs are ink buttons: shadcn's default variant is accent +
 // white (fails AA at label size, §3.9), so primary CTAs override to bg-foreground/text-background.
 // All copy lives in messages/*.json home.* (5 locales, key-consistent). NYT = real 2024 feature (§1).
+//
+// 디자인 개편 시퀀스 4 (docs/specs/Home_Slice_Spec.md) 진행 중 — 섹션을 슬라이스 단위로 교체한다.
+//   4a (완료): Hero -> <HeroSection /> (스펙 §1)
+//   4b: NYT strip -> Trust strip(§2) + Provide 다크(§3) + Boost(§7)
+//   4c: -> Categories(§4)   4d: -> Bolder + 패키지 카드(§5, DB 배선)   4e: -> Booking bar(§6)
+// 아래 steps/experience/songs/finalCta 섹션과 그 i18n 키는 각 슬라이스가 자기 섹션을 교체할 때
+// 5로케일 동시 제거한다(스펙 §9-8 / 결정 ⑥ — 슬라이스별 점진 이관). 지금 한꺼번에 지우면
+// 4b~4e 사이 홈이 히어로만 남으므로 그러지 않는다.
 
 // The New York Times feature (PRD §1). External, locale-agnostic — kept out of i18n.
 const NYT_URL = 'https://www.nytimes.com/2024/11/29/fashion/k-pop-recording-sessions-seoul.html';
@@ -32,33 +41,10 @@ export default function HomePage({ params }: { params: { locale: string } }) {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="mx-auto max-w-container-max px-margin-mobile py-section-gap md:px-margin-desktop">
-        <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
-          {t('hero.eyebrow')}
-        </p>
-        <h1 className="mt-stack-md max-w-4xl font-display text-display-lg-mobile font-light leading-tight text-foreground md:text-display-lg">
-          {t('hero.title')}
-        </h1>
-        <p className="mt-stack-lg max-w-2xl text-body-lg text-muted-foreground">
-          {t('hero.subtitle')}
-        </p>
-        <div className="mt-stack-lg flex flex-wrap gap-stack-md">
-          <Button
-            asChild
-            size="lg"
-            className="bg-foreground text-background hover:bg-foreground/90"
-          >
-            <Link href="/experience">{t('hero.ctaPrimary')}</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/songs">{t('hero.ctaSecondary')}</Link>
-          </Button>
-        </div>
-      </section>
+      <HeroSection />
 
-      {/* NYT trust strip */}
-      <section className="border-y border-border bg-card">
+      {/* NYT trust strip — 4b 에서 스펙 §2 트러스트 스트립으로 교체. mt 는 히어로와의 임시 간격. */}
+      <section className="mt-section-gap border-y border-border bg-card">
         <div className="mx-auto flex max-w-container-max flex-col gap-stack-sm px-margin-mobile py-stack-lg md:flex-row md:items-center md:justify-between md:px-margin-desktop">
           <div>
             <p className="font-label-sm text-label-sm uppercase tracking-widest text-muted-foreground">
