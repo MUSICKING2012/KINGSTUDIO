@@ -74,29 +74,20 @@
       "image1Alt": "錄音室造型 1",
       "image2Alt": "錄音室造型 2"
     },
+    "bolder": {
+      "line1": "更加",
+      "line2": "大膽"
+    },
+    "packages": {
+      "selectCta": "選擇體驗",
+      "vatIncluded": "含稅(VAT)",
+      "refOnly": "以韓元結算，其他幣別僅供參考。",
+      "guestNote": "每筆預約最多{max}人 · 每加一人加收基本價的50%。"
+    },
     "boost": {
       "line": "用完美體驗把自信推到最高",
       "body": "在為你的聲音打造的錄音中體驗全新自信。每次錄製都無所畏懼，帶著完全屬於你的歌曲離開首爾。",
       "imageAlt": "錄音室體驗的歌手肖像"
-    },
-    "experience": {
-      "heading": "選擇你的套餐",
-      "sub": "由專注的聲樂錄音到完整的音樂錄像套餐。",
-      "tiers": {
-        "gold": {
-          "name": "GOLD",
-          "hook": "監製聲樂訓練與錄音，連錄音室相片及CD。"
-        },
-        "diamond": {
-          "name": "DIAMOND",
-          "hook": "完整混音與母帶處理，連錄音室相片及CD。"
-        },
-        "premium": {
-          "name": "PREMIUM",
-          "hook": "DIAMOND的全部內容，再加電影感音樂錄像。"
-        }
-      },
-      "cta": "比較所有套餐"
     },
     "songs": {
       "heading": "唱你喜愛的歌",
