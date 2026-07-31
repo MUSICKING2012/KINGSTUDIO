@@ -74,9 +74,12 @@ export async function SiteHeader({ locale }: { locale: string }) {
                 {t(item.key)}
               </Link>
             ) : (
+              // 비활성 항목. /40 은 16px 에서 실측 2.55:1 로 AA(4.5:1) 미달이라 /70(6.2:1)으로
+              // 상향(2026-07-31 Lighthouse color-contrast 감사 적발 — §11-W 하한과 동일).
+              // 활성/비활성 구분은 색이 아니라 weight 차(semibold→normal) + sr-only 텍스트로 전달.
               <span
                 key={item.key}
-                className="cursor-default whitespace-nowrap text-[16px] font-semibold text-foreground/40"
+                className="cursor-default whitespace-nowrap text-[16px] font-normal text-foreground/70"
               >
                 {t(item.key)}
                 <span className="sr-only"> ({t('comingSoon')})</span>
