@@ -61,7 +61,7 @@ export function SiteFooter() {
             </Link>
             <a
               href={`mailto:${BUSINESS_INFO.email}`}
-              className="self-start text-[13px] text-paper underline-offset-4 hover:underline"
+              className="inline-flex min-h-[24px] items-center self-start text-[13px] text-paper underline-offset-4 hover:underline"
             >
               {t('orEmail')} {BUSINESS_INFO.email}
             </a>

@@ -41,12 +41,12 @@ export function FooterLocalePills() {
             href={pathname}
             locale={l}
             hrefLang={l}
-            aria-label={LOCALE_LABEL[l]}
+            aria-label={`${PILL_LABEL[l]} — ${LOCALE_LABEL[l]}`}
             aria-current={isActive ? 'true' : undefined}
             className={
               isActive
-                ? 'rounded-full border border-primary bg-primary px-[13px] py-[7px] text-[12px] font-bold text-foreground'
-                : 'rounded-full border border-paper/25 px-[13px] py-[7px] text-[12px] font-bold text-paper hover:border-paper/50'
+                ? 'inline-flex min-h-[28px] items-center rounded-full border border-primary bg-primary px-[13px] py-2 text-[12px] font-bold text-foreground'
+                : 'inline-flex min-h-[28px] items-center rounded-full border border-paper/25 px-[13px] py-2 text-[12px] font-bold text-paper hover:border-paper/50'
             }
           >
             {PILL_LABEL[l]}

@@ -44,11 +44,9 @@ export async function SiteHeader({ locale }: { locale: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-foreground/[0.08] bg-background/90 backdrop-blur-[8px]">
       <div className="mx-auto flex min-h-[66px] max-w-container-max flex-wrap items-center gap-5 px-gutter">
-        <Link
-          href="/"
-          aria-label={t('home')}
-          className="flex flex-none items-center gap-[9px] no-underline"
-        >
+        {/* 접근 이름 = 링크 텍스트(KING STUDIO). aria-label="Home" 은 보이는 라벨과 불일치라
+            음성 입력("KING STUDIO 클릭")이 매칭되지 않아 제거(WCAG 2.5.3 Label in Name). */}
+        <Link href="/" className="flex flex-none items-center gap-[9px] no-underline">
           <span
             aria-hidden="true"
             className="grid h-[26px] w-[26px] place-items-center rounded-[7px] bg-foreground text-[14px] font-extrabold text-background"
