@@ -15,6 +15,138 @@
     "localeAria": "Language",
     "currencyAria": "Display currency"
   },
+  "service": {
+    "metaTitle": "What a KING STUDIO session includes | K-pop recording in Seoul",
+    "metaDescription": "Vocal training, producer-directed recording, mixing and a music video — what each KING STUDIO session includes and how a Seoul recording afternoon works.",
+    "hero": {
+      "meta": {
+        "a": "SERVICE",
+        "b": "SEOUL · SEONGSU",
+        "c": "EN · KO · JA · ZH",
+        "d": "KST 2026",
+        "e": "(D2C)"
+      },
+      "title1": "What we",
+      "title2": "make with you",
+      "sub": "No singing experience needed. A vocal director guides every take until it sounds like you at your best — then you leave Seoul with a finished K-pop track. One relaxed afternoon, about 2 to 3 hours."
+    },
+    "trust": {
+      "badge": "AS FEATURED IN",
+      "source": "The New York Times",
+      "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
+      "languages": "Sessions guided in English, Korean, Japanese & Chinese · Seongsu, Seoul",
+      "reviewsSoon": "Traveler reviews — coming soon"
+    },
+    "pillars": {
+      "p1": {
+        "tier": "GOLD · PERSONAL VOCAL",
+        "dur": "≈ 2h",
+        "title": "Vocal Training",
+        "desc": "Vocal-director led training and take capture in a pro booth. You take home your raw recording (WAV & MP3) plus a verse-and-chorus edit, and a personal vocal report."
+      },
+      "p2": {
+        "tier": "DIAMOND",
+        "dur": "≈ 2h",
+        "title": "Recording & Mixing",
+        "desc": "Full-song recording with Auto-Tune vocal correction and a pro mix & master, plus a custom CD — the polished final delivered after post-production. The vocal report is Gold-only."
+      },
+      "p3": {
+        "tier": "PREMIUM",
+        "dur": "≈ 3h",
+        "title": "Music Video",
+        "desc": "Everything in Diamond, plus an in-studio cinematic music video, an edited MV and a premium welcome kit."
+      },
+      "more": "Full pricing and the group K-Pop Making Class → see packages"
+    },
+    "steps": {
+      "heading": "How a session works",
+      "s1": {
+        "title": "Vocal Training",
+        "desc": "Warm up and learn your song with a vocal coach. No experience required — you build the basics before recording."
+      },
+      "s2": {
+        "title": "Vocal Directing",
+        "desc": "A vocal director coaches tone, timing and delivery and guides every take as you record in a pro booth."
+      },
+      "s3": {
+        "title": "Take it home",
+        "desc": "Leave the studio the same day with your raw recording (WAV & MP3) — your take is yours right away. The polished version follows once post-production is done."
+      },
+      "s4": {
+        "title": "Vocal Editing (Auto-Tune)",
+        "desc": "Your takes are comped and tuned — pitch and timing polished so the vocal sits right."
+      },
+      "s5": {
+        "title": "Mixing & Mastering",
+        "desc": "The vocal is balanced against the track and mastered to a release-ready finish, then delivered by secure link — with a custom CD or a music video on higher packages."
+      }
+    },
+    "takeHome": {
+      "title1": "What you",
+      "title2": "take home",
+      "sub": "Everything is delivered through a secure link — with version history and an expiry date — so your files travel home with you.",
+      "d1": {
+        "label": "Your song, recorded",
+        "note": "raw WAV & MP3 of your track"
+      },
+      "d2": {
+        "label": "A personal vocal report",
+        "note": "what your voice does best — Gold"
+      },
+      "d3": {
+        "label": "A custom CD",
+        "note": "your recording, pressed to keep"
+      },
+      "d4": {
+        "label": "A music video",
+        "note": "filmed in-studio — Premium"
+      },
+      "d5": {
+        "label": "A secure download link",
+        "note": "version history · expiry date"
+      },
+      "compare": "Which package includes what → compare packages"
+    },
+    "cross": {
+      "groupTitle": "Coming as a group?",
+      "groupDesc": "The K-Pop Making Class makes one song together — built for teams and groups.",
+      "groupCta": "Group details →",
+      "rentalTitle": "Want the room itself?",
+      "rentalDesc": "Studio rental with an engineer — a Korean-language product.",
+      "rentalCta": "STUDIOS →",
+      "rentalKoOnly": "Korean-language bookings only"
+    },
+    "faq": {
+      "heading": "FAQ",
+      "q1": {
+        "q": "Do I need any singing experience?",
+        "a": "No. A vocal director guides every take and coaches your delivery, so first-timers leave with a track they are proud of."
+      },
+      "q2": {
+        "q": "What language is the session in?",
+        "a": "Sessions are guided in English, Korean, Japanese and Chinese. The song catalog shows titles in your language where available."
+      },
+      "q3": {
+        "q": "How long does a session take?",
+        "a": "About 2 hours (Gold and Diamond) to 3 hours (Premium) — one relaxed afternoon in Seoul."
+      },
+      "q4": {
+        "q": "Can we come as a group?",
+        "a": "Yes. The K-Pop Making Class makes one song together, and solo packages can take extra guests — see the packages page for group sizes and per-guest pricing."
+      },
+      "q5": {
+        "q": "What do I actually take home?",
+        "a": "At minimum the raw WAV and MP3 of your track. Higher packages add a mixed and mastered final, a custom CD and a music video — see the packages page for what each package includes."
+      },
+      "all": "All questions → full FAQ"
+    },
+    "cta": {
+      "title1": "Ready to",
+      "title2": "record?",
+      "packages": "See packages →",
+      "book": "Book a session"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — Record your own K-pop track in Seoul",
     "metaDescription": "A real Seoul recording studio where visitors train with a vocal director, record a K-pop song, and take home their own audio and photos. Featured in The New York Times.",
