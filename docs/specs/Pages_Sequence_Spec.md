@@ -52,11 +52,11 @@
 | F1 | Making Class "from 2 people" (크로스링크·FAQ, 2회) | **stale 확정** | C12 = 최소 3 (`seed-packages.ts` headcountMin 3). 홈 §11-D 와 동일 함정 |
 | F2 | "Solo packages take up to 5 guests" (FAQ) | **오류 확정** | Gold headcountMax = 2. ICU `{max}` 패턴으로 |
 | F3 | "unedited recording (MP3)" / steps 전반 mp3-only 서술 | **오류 확정** | PRD §5.6: WAV 16/44.1 + MP3 둘 다 ● + Gold 는 간이 믹스(1절+후렴)도 ● |
-| F4 | "personal vocal report" (pillar·deliverables, Gold 전용 서술) | **실재 미확인** | PRD §5.6 전달물 매트릭스에 없음. `packages.items.gold.includes` 에도 없음. **Aiden 확인 필요** — 실재하면 PRD 정정, 아니면 카피 제거 |
-| F5 | "Guided in English, Korean & Japanese" / 히어로 메타 "EN · KO · JA" | **사실 미확인** | 세션 진행 언어(직원 역량) 주장 — 사이트 로케일(5개)과 별개. zh 고객 응대 불가 단정이 되므로 **Aiden 확인 필요** |
+| F4 | "personal vocal report" (pillar·deliverables, Gold 전용 서술) | **실재 확정 (2026-08-03 Aiden)** | 코드는 이미 알고 있었음(`comparison.ts:31` gold:true·비교표 5로케일 라벨 존재). **PRD §5.6 매트릭스에 행 추가 + `gold.includes` 5로케일 동기화 완료** — 3자 정합(PRD·코드·카피) 회복 |
+| F5 | "Guided in English, Korean & Japanese" / 히어로 메타 "EN · KO · JA" | **불완전 확정 (2026-08-03 Aiden: zh 지원함)** | 5a 카피는 **EN·KO·JA·ZH 4개 언어**로 표기(en: "English, Korean, Japanese & Chinese"). 디자인의 3개 언어 표기는 이식 금지 |
 | F6 | 딜리버러블 "secure link — version history and an expiry date" | 통과 | 매직링크·서명 URL 정책(§3.5)과 정합 |
 | F7 | pillar 02 "vocal report is Gold-only" | F4 종속 | F4 판정에 따름 |
-| F8 | NYT 인용문 ""Dreams of Being a K-Pop Star?…"" | **검증 필요** | 실제 기사 제목과 일치 여부 — 허위 인용 방지. URL 은 레포 정본과 동일 |
+| F8 | NYT 인용문 ""Dreams of Being a K-Pop Star?…"" | **일치 확정 (2026-08-03 Aiden)** | 인용 사용 가능. URL 은 레포 정본과 동일 |
 
 ## 4. OPEN DECISION (A/B/C + 추천 — 확정 전 해당 슬라이스 착수 금지)
 
@@ -86,16 +86,19 @@
   (리뷰 `language` 필드 존재 — 현재 로케일 우선? 전체?). PRD §5.9 대조는 5b 스펙에서.
 - **추천**: 최신순 + 커서 페이지네이션, 평균 노출(집계 쿼리), 전체 언어 표시(양 부족 초기라 필터 시 빈 화면 위험).
 
-### ⑤ F4·F5·F8 사실 확인 (5a 선행, Aiden 전용)
-- F4 보컬 리포트: 실제 제공물인가? (실재 시 PRD §5.6 매트릭스 정정 필요)
-- F5 세션 진행 언어: EN·KO·JA 가 맞는가? zh 는?
-- F8 NYT 기사 제목 원문 확인.
+### ⑤ F4·F5·F8 사실 확인 — **전건 확정 (2026-08-03 Aiden 회신)**
+- F4 보컬 리포트 = **실재(Gold 전용)** → PRD §5.6 행 추가·`gold.includes` 5로케일 반영 완료(이 커밋).
+- F5 세션 진행 언어 = **EN·KO·JA·ZH** → 5a 카피 4개 언어 표기.
+- F8 NYT 제목 = **일치** → 인용 사용 가능.
+
+부수 발견·정정(이 커밋): 기존 카탈로그 카피 `packages.items.making-class.concept` 이 5로케일 전부
+"(2~15명)" 으로 **C12(최소 3) stale** 이었음 → "(3~15명)" 계열로 정정(F1 과 동일 계열, 시퀀스 5 이전부터 존재).
 
 ## 5. 진행 현황
 
 | 슬라이스 | 상태 |
 |---|---|
-| 5a Service | 스냅샷·플래그 완료. **결정 ②·⑤ 대기** |
+| 5a Service | 스냅샷·플래그 완료. ⑤ 확정 — **결정 ② 만 대기** |
 | 5b Review | **결정 ④ 대기** |
 | 5c Product / 5d Studio | **결정 ① 대기** |
 | 5e Blog | **결정 ③ 대기** |
