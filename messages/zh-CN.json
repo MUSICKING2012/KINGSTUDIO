@@ -15,6 +15,138 @@
     "localeAria": "语言",
     "currencyAria": "显示货币"
   },
+  "service": {
+    "metaTitle": "KING STUDIO 体验内容说明 | 首尔K-POP录音",
+    "metaDescription": "声乐训练、制作人指导录音、混音到音乐录影带 — 介绍 KING STUDIO 各方案内容，以及在首尔的录音下午如何进行。",
+    "hero": {
+      "meta": {
+        "a": "服务",
+        "b": "首尔 · 圣水",
+        "c": "EN · KO · JA · ZH",
+        "d": "KST 2026",
+        "e": "(D2C)"
+      },
+      "title1": "与你一起",
+      "title2": "打造的作品",
+      "sub": "无需任何唱歌经验。声乐总监会引导每一次录制，直到你唱出最好的自己 — 然后带着完成的K-POP歌曲离开首尔。悠闲的一个下午，约2至3小时。"
+    },
+    "trust": {
+      "badge": "媒体报导",
+      "source": "The New York Times",
+      "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
+      "languages": "体验以英语·韩语·日语·中文进行 · 首尔圣水",
+      "reviewsSoon": "旅客评价 — 即将推出"
+    },
+    "pillars": {
+      "p1": {
+        "tier": "GOLD · 个人声乐",
+        "dur": "约2小时",
+        "title": "声乐训练",
+        "desc": "声乐总监指导的训练与专业录音间录制。带走原始音源（WAV·MP3）、主歌＋副歌完整版，以及个人声乐报告。"
+      },
+      "p2": {
+        "tier": "DIAMOND",
+        "dur": "约2小时",
+        "title": "录音 & 混音",
+        "desc": "完整歌曲录制，加上 Auto-Tune 修正、专业混音母带与定制 CD — 后期完成后交付最终版。声乐报告为 Gold 专属。"
+      },
+      "p3": {
+        "tier": "PREMIUM",
+        "dur": "约3小时",
+        "title": "音乐录影带",
+        "desc": "含 Diamond 全部内容，加上录音室内电影感 MV 拍摄、剪辑版 MV 与尊享迎宾礼包。"
+      },
+      "more": "完整价格与团体 K-Pop Making Class → 查看方案"
+    },
+    "steps": {
+      "heading": "体验流程",
+      "s1": {
+        "title": "声乐训练",
+        "desc": "与声乐教练开声并练习你的歌曲。无需经验 — 录音前先建立基础。"
+      },
+      "s2": {
+        "title": "声乐指导",
+        "desc": "声乐总监指导音色·节奏·演绎，在专业录音间引导每一次录制。"
+      },
+      "s3": {
+        "title": "当日带走",
+        "desc": "原始音源（WAV·MP3）当日直接带走 — 你的录音立即属于你。精修版本于后期完成后交付。"
+      },
+      "s4": {
+        "title": "人声编辑（Auto-Tune）",
+        "desc": "挑选并拼接录音，修整音准与节奏，让人声准确到位。"
+      },
+      "s5": {
+        "title": "混音 & 母带",
+        "desc": "平衡人声与伴奏，母带处理至发行水准，再以安全链接交付 — 高阶方案另含定制 CD 或 MV。"
+      }
+    },
+    "takeHome": {
+      "title1": "你会",
+      "title2": "带走什么",
+      "sub": "所有成果都经有版本记录与到期日的安全链接交付 — 文件跟着你回家。",
+      "d1": {
+        "label": "你录制的歌曲",
+        "note": "原始 WAV·MP3"
+      },
+      "d2": {
+        "label": "个人声乐报告",
+        "note": "你声音的强项 — Gold"
+      },
+      "d3": {
+        "label": "定制 CD",
+        "note": "收藏你的录音"
+      },
+      "d4": {
+        "label": "音乐录影带",
+        "note": "录音室拍摄 — Premium"
+      },
+      "d5": {
+        "label": "安全下载链接",
+        "note": "版本记录 · 到期日"
+      },
+      "compare": "各方案包含项目 → 方案比较"
+    },
+    "cross": {
+      "groupTitle": "团体前来？",
+      "groupDesc": "K-Pop Making Class 让团队与团体一起完成一首歌。",
+      "groupCta": "团体方案详情 →",
+      "rentalTitle": "需要录音室本身？",
+      "rentalDesc": "含录音师的录音室租借 — 韩语专用商品。",
+      "rentalCta": "STUDIOS →",
+      "rentalKoOnly": "仅接受韩语预约"
+    },
+    "faq": {
+      "heading": "常见问题",
+      "q1": {
+        "q": "没有唱歌经验可以吗？",
+        "a": "可以。声乐总监会引导每一次录制并指导你的演绎，第一次也能带走令自己自豪的歌曲。"
+      },
+      "q2": {
+        "q": "体验以什么语言进行？",
+        "a": "以英语、韩语、日语及中文进行。歌曲目录在可用时会以你的语言显示歌名。"
+      },
+      "q3": {
+        "q": "体验需时多久？",
+        "a": "约2小时（Gold·Diamond）至3小时（Premium）— 在首尔悠闲的一个下午。"
+      },
+      "q4": {
+        "q": "可以团体参加吗？",
+        "a": "可以。K-Pop Making Class 一起完成一首歌，个人方案亦可携同宾客 — 人数与宾客收费请见方案页面。"
+      },
+      "q5": {
+        "q": "实际会带走什么？",
+        "a": "至少带走你歌曲的原始 WAV 与 MP3。高阶方案另含混音母带最终版、定制 CD 与 MV — 各方案内容请见方案页面。"
+      },
+      "all": "所有问题 → 完整 FAQ"
+    },
+    "cta": {
+      "title1": "准备好",
+      "title2": "录音了吗？",
+      "packages": "查看方案 →",
+      "book": "预约体验"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — 在首尔录制属于你的K-POP音源",
     "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报导。",

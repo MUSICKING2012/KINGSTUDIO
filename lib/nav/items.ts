@@ -35,7 +35,7 @@ export type NavItem = {
 };
 
 export const NAV_ITEMS: readonly NavItem[] = [
-  { key: 'service', href: '/service', enabled: false },
+  { key: 'service', href: '/service', enabled: true }, // 5a 에서 켬 (라우트 신설)
   // STUDIOS slice renames to final URL
   { key: 'studios', href: '/rental', enabled: true, localeGatedCategory: 'rental' },
   { key: 'product', href: '/experience', enabled: true }, // PRODUCT slice renames to final URL
