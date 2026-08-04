@@ -10,7 +10,7 @@ import type { MetadataRoute } from 'next';
 export const revalidate = 86400;
 
 // Structural/static routes (2b-SEO-infra-A): one entry per locale, with hreflang alternates.
-//   '' = home, '/songs' = catalog LIST page, '/experience' + '/group' = per-category catalog entry
+//   '' = home, '/songs' = catalog LIST page, '/product' + '/group' = per-category catalog entry
 //   points (CategoryIA refactor). Individual song-detail URLs are appended below (W4).
 // '/rental' is intentionally EXCLUDED: rental packages (1Hour/1Pro) are ko-only, so the route 404s in
 // en/ja/zh-* — listing it would emit hreflang alternates to 4 non-200 URLs (200-invariant/hreflang
@@ -18,7 +18,7 @@ export const revalidate = 86400;
 // NOTE: MetadataRoute.Sitemap's `alternates` only supports `languages` (no canonical), so entries use
 // hreflangLanguages (5 locales + x-default=en) — buildAlternates (which adds canonical, for page
 // generateMetadata) does not fit the sitemap shape.
-const STATIC_PATHS = ['', '/songs', '/experience', '/group'] as const;
+const STATIC_PATHS = ['', '/songs', '/product', '/group'] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];

@@ -95,7 +95,7 @@ export default function HomePage({ params }: { params: { locale: string } }) {
               size="lg"
               className="bg-background text-foreground hover:bg-background/90"
             >
-              <Link href="/experience">{t('finalCta.cta')}</Link>
+              <Link href="/product">{t('finalCta.cta')}</Link>
             </Button>
           </div>
         </div>

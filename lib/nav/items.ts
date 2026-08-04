@@ -7,9 +7,9 @@ import type { PackageCategory } from '@prisma/client';
  * (미존재 링크는 app/[locale]/[...rest] catch-all 로 빨려들어가 오답 페이지를 낸다.
  *  404 보다 나쁘므로 링크 자체를 만들지 않는다.)
  *
- * studios→/rental, product→/experience 는 임시 href (Nav_Footer_Slice_Spec_v1 §7-① 채택,
- * 07-24 통합 결정): 라우트 실존 확인됨. STUDIOS/PRODUCT 페이지 슬라이스가 최종 URL 확정 시
- * href 를 갱신한다(이동 시 리다이렉트 동반). 나머지 3항목은 라우트 미존재 → enabled:false.
+ * studios→/rental 은 임시 href (Nav_Footer_Slice_Spec_v1 §7-① 채택, 07-24 통합 결정):
+ * STUDIOS 페이지 슬라이스(5d)가 최종 URL 확정 시 href 를 갱신한다(이동 시 리다이렉트 동반).
+ * product 는 5c 에서 /product 로 확정(구 /experience 는 308 리다이렉트).
  *
  * My Page(재방문 조건부) = components/header/my-page-nav-item.tsx (ks_returning=1 쿠키 게이팅).
  * 쿠키 세팅 주체는 My Page/매직링크 슬라이스 소관.
@@ -38,7 +38,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'service', href: '/service', enabled: true }, // 5a 에서 켬 (라우트 신설)
   // STUDIOS slice renames to final URL
   { key: 'studios', href: '/rental', enabled: true, localeGatedCategory: 'rental' },
-  { key: 'product', href: '/experience', enabled: true }, // PRODUCT slice renames to final URL
+  { key: 'product', href: '/product', enabled: true }, // 5c 에서 최종 URL 확정
   { key: 'reviews', href: '/reviews', enabled: true }, // 5b 에서 켬 (라우트 신설)
   { key: 'blog', href: '/blog', enabled: false },
 ] as const;
