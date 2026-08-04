@@ -130,7 +130,7 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
           ))}
         </div>
         <Link
-          href="/experience"
+          href="/product"
           className="mt-[18px] inline-block text-[13px] font-bold text-foreground/70 underline-offset-4 hover:underline"
         >
           {t('pillars.more')}
@@ -185,7 +185,7 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
               </div>
             ))}
             <Link
-              href="/experience"
+              href="/product"
               className="pt-3.5 text-[12.5px] font-semibold text-background/65 underline underline-offset-4"
             >
               {t('takeHome.compare')}
@@ -270,7 +270,7 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
           </h2>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/experience"
+              href="/product"
               className="rounded-full bg-white px-[26px] py-[15px] text-[15px] font-extrabold text-foreground"
             >
               {t('cta.packages')}

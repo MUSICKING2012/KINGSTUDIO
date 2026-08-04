@@ -38,14 +38,19 @@ beforeEach(() => {
 });
 
 describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
-  it('emits home + /songs + /experience + /group for every locale', async () => {
+  it('emits home + /songs + /product + /group for every locale', async () => {
     const urls = (await sitemap()).map((e) => e.url);
     for (const l of locales) {
       expect(urls).toContain(`https://example.test/${l}`);
       expect(urls).toContain(`https://example.test/${l}/songs`);
-      expect(urls).toContain(`https://example.test/${l}/experience`);
+      expect(urls).toContain(`https://example.test/${l}/product`);
       expect(urls).toContain(`https://example.test/${l}/group`);
     }
+  });
+
+  it('excludes the renamed /experience (5c: 308 redirect, not a canonical URL)', async () => {
+    const urls = (await sitemap()).map((e) => e.url);
+    expect(urls.some((u) => /\/experience$/.test(new URL(u).pathname))).toBe(false);
   });
 
   it('excludes /rental (ko-only route → non-200 in en/ja/zh-*)', async () => {

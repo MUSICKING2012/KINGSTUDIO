@@ -32,7 +32,7 @@ import type { Locale } from '@/lib/i18n/routing';
 // 결정 ④-A 매핑. href 는 전부 07-31 실측 실존 라우트.
 // localeGated: rental 만 true — 비-ko 에서 링크를 만들지 않는다(§4-C).
 const CATEGORIES = [
-  { key: 'vocal', href: '/experience', localeGated: false },
+  { key: 'vocal', href: '/product', localeGated: false },
   { key: 'mv', href: '/packages/premium', localeGated: false },
   { key: 'making', href: '/group', localeGated: false },
   { key: 'rental', href: '/rental', localeGated: true },
