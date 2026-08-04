@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.rv-link:hover{color:#F5461E}
+.rv-play{transition:transform .18s ease,background .18s ease}
+.rv-vid:hover .rv-play{transform:scale(1.08);background:#F5461E}
+</style>
+</helmet>
+
+<div style="font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;color:#141210;font-size:16px;line-height:1.5;background:#F0EEE9;background-image:linear-gradient(rgba(20,18,16,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(20,18,16,.045) 1px,transparent 1px);background-size:44px 44px;min-height:100vh">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(240,238,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,18,16,.08)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;min-height:66px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <a href="KING STUDIO Editorial.dc.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex:none">
+        <span style="width:26px;height:26px;border-radius:7px;background:#141210;color:#F0EEE9;display:grid;place-items:center;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:14px">K</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:16px;letter-spacing:.02em">KING STUDIO</span>
+      </a>
+      <nav style="display:flex;gap:24px;flex:1 1 auto;justify-content:center;min-width:0;overflow-x:auto">
+        <a href="Service.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">SERVICE</a>
+        <a href="Studio.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">STUDIOS</a>
+        <a href="Product.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">PRODUCT</a>
+        <a href="Review.dc.html" style="font-size:16px;font-weight:700;text-decoration:none;white-space:nowrap;border-bottom:2px solid #F5461E;padding:4px 0">REVIEW</a>
+        <a href="Blog.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">BLOG</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;flex:none">
+        <span style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700">EN ▾</span>
+        <span style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700">₩ ▾</span>
+        <a href="Product.dc.html#book" style="background:#F5461E;color:#fff;border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">Book now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO + RATING SUMMARY -->
+  <section style="max-width:1280px;margin:0 auto;padding:40px 24px 0;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,18,16,.4);text-transform:uppercase;padding-bottom:20px;flex-wrap:wrap;gap:6px">
+      <span>REVIEW</span><span>FROM {{ hero.countries }}+ COUNTRIES</span>
+      <a href="https://www.nytimes.com/2024/11/29/fashion/k-pop-recording-sessions-seoul.html" target="_blank" rel="noopener noreferrer" class="rv-link" style="text-decoration:none;color:rgba(20,18,16,.4)">NYT 2024 ↗</a>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap">
+      <h1 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(46px,9vw,110px);line-height:.9;text-transform:uppercase;letter-spacing:-.01em">Left with<br>a track</h1>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <div style="background:#fff;border-radius:18px;padding:20px 24px;box-shadow:0 2px 12px rgba(20,18,16,.06);min-width:130px">
+          <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:40px;line-height:1;color:#F5461E">{{ hero.avg }}</div>
+          <div style="font-size:12px;color:rgba(20,18,16,.55);margin-top:6px">avg. rating <span style="color:#E8A94B">★★★★★</span></div>
+        </div>
+        <div style="background:#fff;border-radius:18px;padding:20px 24px;box-shadow:0 2px 12px rgba(20,18,16,.06);min-width:130px">
+          <div style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:40px;line-height:1">{{ hero.count }}</div>
+          <div style="font-size:12px;color:rgba(20,18,16,.55);margin-top:6px">{{ hero.countLabel }}</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:rgba(20,18,16,.4);padding-top:10px">◦ {{ placeholderNote }}</div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <section style="max-width:1280px;margin:0 auto;padding:32px 24px 0;box-sizing:border-box">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6">
+        <button type="button" onClick="{{ f.go }}" style="border:1px solid {{ f.border }};cursor:pointer;background:{{ f.bg }};color:{{ f.ink }};border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;white-space:nowrap">{{ f.label }}</button>
+      </sc-for>
+      <a href="#writereview" class="rv-link" style="margin-left:auto;font-size:12.5px;font-weight:700;text-decoration:none;color:rgba(20,18,16,.55);white-space:nowrap">Been to the studio? Write a review →</a>
+    </div>
+  </section>
+
+  <!-- REVIEW GRID -->
+  <section style="max-width:1280px;margin:0 auto;padding:22px 24px 0;box-sizing:border-box">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px">
+      <sc-for list="{{ shown }}" as="r" hint-placeholder-count="6">
+        <div style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(20,18,16,.06);display:flex;flex-direction:column">
+          <sc-if value="{{ r.hasVideo }}" hint-placeholder-val="{{ false }}">
+            <div class="rv-vid" style="position:relative;aspect-ratio:4/3;background:#1c1a19;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden">
+              <div style="position:absolute;inset:0;display:flex">
+                <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ r.slotId }}" shape="rect" fit="cover" placeholder="{{ r.thumbPh }}" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+              </div>
+              <span class="rv-play" style="position:relative;z-index:2;width:52px;height:52px;border-radius:50%;background:rgba(20,18,16,.72);color:#fff;display:grid;place-items:center;font-size:17px">▶</span>
+              <span style="position:absolute;top:10px;left:10px;z-index:2;background:rgba(240,238,233,.92);border-radius:8px;padding:3px 9px;font-size:10.5px;font-weight:800">{{ r.pkg }}</span>
+              <sc-if value="{{ r.hasDur }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;z-index:2;background:rgba(20,18,16,.72);color:#fff;border-radius:8px;padding:3px 9px;font-size:10.5px;font-weight:700">{{ r.dur }}</span></sc-if>
+            </div>
+            <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:34px;height:34px;border-radius:50%;background:{{ r.avColor }};color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none">{{ r.initials }}</span>
+                <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">{{ r.flag }} {{ r.name }}</div><div style="font-size:11px;color:rgba(20,18,16,.5)">{{ r.country }}</div></div>
+                <span style="color:#E8A94B;font-size:12px;letter-spacing:1px">{{ r.stars }}</span>
+              </div>
+              <p style="margin:0;font-size:13.5px;line-height:1.6;color:rgba(20,18,16,.8)">"{{ r.quote }}"</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ r.textOnly }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:24px 20px 18px;display:flex;flex-direction:column;gap:14px;flex:1">
+              <span aria-hidden="true" style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:44px;line-height:.5;color:rgba(245,70,30,.5)">"</span>
+              <p style="margin:0;font-size:16px;line-height:1.55;font-weight:600;flex:1">{{ r.quote }}</p>
+              <div style="display:flex;align-items:center;gap:10px;border-top:1px solid rgba(20,18,16,.08);padding-top:14px">
+                <span style="width:34px;height:34px;border-radius:50%;background:{{ r.avColor }};color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none">{{ r.initials }}</span>
+                <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">{{ r.flag }} {{ r.name }}</div><div style="font-size:11px;color:rgba(20,18,16,.5)">{{ r.country }}</div></div>
+                <div style="text-align:right"><span style="background:#F5F3EE;border-radius:6px;padding:2px 8px;font-size:9.5px;font-weight:800;display:inline-block">{{ r.pkg }}</span><div style="color:#E8A94B;font-size:11px;letter-spacing:1px;margin-top:3px">{{ r.stars }}</div></div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:40px 0;color:rgba(20,18,16,.5);font-size:14px">No reviews in this filter yet.</div>
+    </sc-if>
+  </section>
+
+  <!-- CTA -->
+  <section id="writereview" style="max-width:1280px;margin:0 auto;padding:56px 24px 64px;box-sizing:border-box">
+    <div style="background:#111010;color:#F0EEE9;border-radius:24px;padding:clamp(30px,5vw,60px);display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <h2 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(30px,5vw,60px);text-transform:uppercase;line-height:.94">Your review<br>is next.</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="Product.dc.html#book" style="background:#F5461E;color:#fff;border-radius:999px;padding:15px 26px;font-size:15px;font-weight:800;text-decoration:none">Book a session →</a>
+        <a href="My Page v2.dc.html" style="background:transparent;color:#F0EEE9;border:1px solid rgba(240,238,233,.35);border-radius:999px;padding:15px 26px;font-size:15px;font-weight:800;text-decoration:none">Write a review →</a>
+      </div>
+    </div>
+    <div style="font-size:11px;color:rgba(20,18,16,.4);padding-top:10px">◦ "Write a review" routes to the returning-customer flow (My Page) — verified past customers only. Final destination: client to confirm.</div>
+  </section>
+
+  <!-- FOOTER -->
+  <x-import component-from-global-scope="ks-footer" from="./ks-footer.js" hint-size="100%,260px"></x-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1280, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  // NOTE: hero numbers + reviews below are PLACEHOLDER sample data pending real client content.
+  // Reviews are customer-authored (text + star rating); video/thumb/dur are optional (studio-filmed via admin/CMS).
+  // Product-model rules enforced: no photo-shoot mentions; Gold = no mix/master claim; Diamond = mix+CD; Premium = MV; Making Class = group track.
+  state = { filter: 'all' };
+
+  static REVIEWS = [
+    { name: 'Mia', country: 'Taiwan', flag: '🇹🇼', pkg: 'Diamond', stars: '★★★★★',
+      quote: 'I walked in never having recorded and walked out with a mixed, mastered track and a custom CD. The vocal directing made all the difference.',
+      video: true, dur: '0:48', avColor: '#C2410C', slotId: 'rv-mia', thumbPh: 'Mia — studio video' },
+    { name: 'Daniel', country: 'USA', flag: '🇺🇸', pkg: 'Premium', stars: '★★★★★',
+      quote: 'The in-studio music video is unreal. Felt like a proper artist for a day in Seoul — the whole team guided every take.',
+      video: true, dur: '1:12', avColor: '#7C3AED', slotId: 'rv-daniel', thumbPh: 'Daniel — MV still' },
+    { name: 'Aoi', country: 'Japan', flag: '🇯🇵', pkg: 'Gold', stars: '★★★★★',
+      quote: 'No singing experience at all, but the vocal training and directing got me through it. I took my recording home the same day.',
+      video: false, avColor: '#0369A1' },
+    { name: 'Seoul Intl. School', country: 'Korea · group', flag: '🇰🇷', pkg: 'K-Pop Making Class', stars: '★★★★★',
+      quote: 'Our class made one song together — everyone tried the singer, producer and engineer roles. Best field trip we have run.',
+      video: true, dur: '0:59', avColor: '#15803D', slotId: 'rv-group', thumbPh: 'Making Class — group video' },
+    { name: 'Sofia', country: 'Spain', flag: '🇪🇸', pkg: 'Diamond', stars: '★★★★★',
+      quote: 'The mix came back better than I imagined and the messenger revisions were so easy. The CD is going straight on my shelf.',
+      video: false, avColor: '#BE185D' },
+    { name: 'Wei', country: 'Singapore', flag: '🇸🇬', pkg: 'Gold', stars: '★★★★☆',
+      quote: 'Relaxed, friendly and genuinely fun. The producer coached my delivery take by take — left with a recording I am proud of.',
+      video: false, avColor: '#0F766E' },
+    { name: 'Kelvin', country: 'Hong Kong', flag: '🇭🇰', pkg: 'Premium', stars: '★★★★★',
+      quote: 'Booked Premium for the music video and it exceeded every expectation. The edit landed a couple of weeks after and looks cinematic.',
+      video: false, avColor: '#B45309' },
+    { name: 'Lena', country: 'Germany', flag: '🇩🇪', pkg: 'Diamond', stars: '★★★★★',
+      quote: 'From directing to the final master, everything felt professional. Hearing my mixed track for the first time was surreal.',
+      video: true, dur: '0:37', avColor: '#4338CA', slotId: 'rv-lena', thumbPh: 'Lena — studio video' }
+  ];
+
+  initials(name) { const p = name.trim().split(' '); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
+
+  renderVals() {
+    const s = this.state;
+    const F = [
+      ['all', 'All reviews'], ['Gold', 'Gold'], ['Diamond', 'Diamond'],
+      ['Premium', 'Premium'], ['K-Pop Making Class', 'K-Pop Making Class'], ['video', 'With video']
+    ];
+    const filters = F.map(([id, label]) => ({
+      label, go: () => this.setState({ filter: id }),
+      bg: s.filter === id ? '#141210' : 'transparent', ink: s.filter === id ? '#fff' : '#141210',
+      border: s.filter === id ? '#141210' : 'rgba(20,18,16,.2)'
+    }));
+
+    let list = Component.REVIEWS;
+    if (s.filter === 'video') list = list.filter((r) => r.video);
+    else if (s.filter !== 'all') list = list.filter((r) => r.pkg === s.filter);
+
+    const shown = list.map((r) => ({
+      name: r.name, country: r.country, flag: r.flag, pkg: r.pkg, stars: r.stars, quote: r.quote,
+      hasVideo: !!r.video, textOnly: !r.video, hasDur: !!r.dur, dur: r.dur || '',
+      slotId: r.slotId || '', thumbPh: r.thumbPh || 'studio video',
+      initials: this.initials(r.name), avColor: r.avColor
+    }));
+
+    return {
+      filters, shown, empty: shown.length === 0,
+      hero: { avg: '4.9', count: '3,650+', countLabel: 'recordings delivered', countries: '40' },
+      placeholderNote: 'Sample content — hero numbers and reviews to be replaced with verified client data (no fabricated ratings).',
+      slotFill: { style: { width: '100%', height: '100%', display: 'block', flex: 1 } }
+    };
+  }
+}
+</script>
+</body>
+</html>

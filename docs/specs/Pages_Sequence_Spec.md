@@ -98,7 +98,7 @@
 
 | 슬라이스 | 상태 |
 |---|---|
-| 5a Service | 스냅샷·플래그 완료. ⑤ 확정 — **결정 ② 만 대기** |
-| 5b Review | **결정 ④ 대기** |
+| 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
+| 5b Review | 구현 완료(2026-08-04, ④ 추천안 확정) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product / 5d Studio | **결정 ① 대기** |
 | 5e Blog | **결정 ③ 대기** |

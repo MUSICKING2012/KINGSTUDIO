@@ -95,8 +95,12 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
           <div className="text-[12px] leading-[1.6] text-foreground/70">
             {t('trust.languages')}
             <br />
-            {/* /reviews 는 5b 가 켠다 — 죽은 링크 0 원칙, 비링크 안내로 렌더 */}
-            <span className="font-bold text-foreground/70">{t('trust.reviewsSoon')}</span>
+            <Link
+              href="/reviews"
+              className="font-bold text-foreground underline-offset-4 hover:underline"
+            >
+              {t('trust.reviewsCta')}
+            </Link>
           </div>
         </div>
       </section>
