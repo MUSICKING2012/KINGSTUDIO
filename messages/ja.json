@@ -35,7 +35,7 @@
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
       "languages": "セッション対応言語: 英語·韓国語·日本語·中国語 · ソウル聖水",
-      "reviewsSoon": "旅行者レビュー — 準備中"
+      "reviewsCta": "旅行者レビューを見る →"
     },
     "pillars": {
       "p1": {
@@ -145,6 +145,37 @@
       "title2": "準備はいいですか？",
       "packages": "パッケージを見る →",
       "book": "セッションを予約"
+    }
+  },
+  "reviews": {
+    "metaTitle": "旅行者レビュー | KING STUDIO ソウル",
+    "metaDescription": "KING STUDIO 訪問者のリアルなレビュー — ソウルで自分だけのK-POPトラックを録音した旅行者の星評価とストーリー。",
+    "metaLabel": "レビュー",
+    "hero": {
+      "title1": "トラックと共に",
+      "title2": "帰りました"
+    },
+    "stats": {
+      "avgLabel": "平均評価",
+      "countLabel": "掲載レビュー"
+    },
+    "filters": {
+      "all": "すべてのレビュー",
+      "writeCta": "ご利用済みですか？レビューを書く →"
+    },
+    "empty": {
+      "noneYet": "まだレビューはありません — セッションは始まったばかり。最初のレビューをどうぞ。",
+      "filterNone": "このフィルターにはまだレビューがありません。"
+    },
+    "card": {
+      "ratingAria": "5点中{rating}点"
+    },
+    "loadMore": "レビューをもっと見る",
+    "cta": {
+      "title1": "次のレビューは",
+      "title2": "あなたの番。",
+      "book": "セッションを予約 →",
+      "write": "レビューを書く →"
     }
   },
   "home": {

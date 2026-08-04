@@ -35,7 +35,7 @@
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
       "languages": "体验以英语·韩语·日语·中文进行 · 首尔圣水",
-      "reviewsSoon": "旅客评价 — 即将推出"
+      "reviewsCta": "查看旅客评价 →"
     },
     "pillars": {
       "p1": {
@@ -145,6 +145,37 @@
       "title2": "录音了吗？",
       "packages": "查看方案 →",
       "book": "预约体验"
+    }
+  },
+  "reviews": {
+    "metaTitle": "旅客评价 | KING STUDIO 首尔",
+    "metaDescription": "KING STUDIO 访客的真实评价 — 在首尔录制自己K-POP歌曲的旅客星级与故事。",
+    "metaLabel": "评价",
+    "hero": {
+      "title1": "带着歌曲",
+      "title2": "回家"
+    },
+    "stats": {
+      "avgLabel": "平均评分",
+      "countLabel": "已发布评价"
+    },
+    "filters": {
+      "all": "全部评价",
+      "writeCta": "来过录音室？写评价 →"
+    },
+    "empty": {
+      "noneYet": "尚未有评价 — 体验刚刚开始。第一条评价由你写下。",
+      "filterNone": "此筛选暂无评价。"
+    },
+    "card": {
+      "ratingAria": "5分满分中{rating}分"
+    },
+    "loadMore": "载入更多评价",
+    "cta": {
+      "title1": "下一条评价",
+      "title2": "就是你。",
+      "book": "预约体验 →",
+      "write": "写评价 →"
     }
   },
   "home": {

@@ -35,7 +35,7 @@
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
       "languages": "Sessions guided in English, Korean, Japanese & Chinese · Seongsu, Seoul",
-      "reviewsSoon": "Traveler reviews — coming soon"
+      "reviewsCta": "Read traveler reviews →"
     },
     "pillars": {
       "p1": {
@@ -145,6 +145,37 @@
       "title2": "record?",
       "packages": "See packages →",
       "book": "Book a session"
+    }
+  },
+  "reviews": {
+    "metaTitle": "Traveler reviews | KING STUDIO Seoul",
+    "metaDescription": "Real reviews from KING STUDIO guests — star ratings and stories from travelers who recorded their own K-pop track in Seoul.",
+    "metaLabel": "REVIEW",
+    "hero": {
+      "title1": "Left with",
+      "title2": "a track"
+    },
+    "stats": {
+      "avgLabel": "avg. rating",
+      "countLabel": "published reviews"
+    },
+    "filters": {
+      "all": "All reviews",
+      "writeCta": "Been to the studio? Write a review →"
+    },
+    "empty": {
+      "noneYet": "No reviews yet — sessions are just getting started. Yours could be the first.",
+      "filterNone": "No reviews in this filter yet."
+    },
+    "card": {
+      "ratingAria": "Rated {rating} out of 5"
+    },
+    "loadMore": "Load more reviews",
+    "cta": {
+      "title1": "Your review",
+      "title2": "is next.",
+      "book": "Book a session →",
+      "write": "Write a review →"
     }
   },
   "home": {

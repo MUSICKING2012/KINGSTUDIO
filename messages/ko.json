@@ -35,7 +35,7 @@
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
       "languages": "세션 진행 언어: 영어·한국어·일본어·중국어 · 서울 성수",
-      "reviewsSoon": "방문객 후기 — 준비 중"
+      "reviewsCta": "방문객 후기 보기 →"
     },
     "pillars": {
       "p1": {
@@ -145,6 +145,37 @@
       "title2": "준비 되셨나요?",
       "packages": "패키지 보기 →",
       "book": "세션 예약"
+    }
+  },
+  "reviews": {
+    "metaTitle": "방문객 후기 | KING STUDIO 서울",
+    "metaDescription": "KING STUDIO 방문객의 실제 후기 — 서울에서 나만의 K-POP 트랙을 녹음한 여행자들의 별점과 이야기.",
+    "metaLabel": "후기",
+    "hero": {
+      "title1": "트랙과 함께",
+      "title2": "돌아갔습니다"
+    },
+    "stats": {
+      "avgLabel": "평균 별점",
+      "countLabel": "등록된 후기"
+    },
+    "filters": {
+      "all": "전체 후기",
+      "writeCta": "다녀오셨나요? 후기 남기기 →"
+    },
+    "empty": {
+      "noneYet": "아직 후기가 없습니다 — 세션이 막 시작됐어요. 첫 후기의 주인공이 되어 주세요.",
+      "filterNone": "이 필터에는 아직 후기가 없습니다."
+    },
+    "card": {
+      "ratingAria": "5점 만점에 {rating}점"
+    },
+    "loadMore": "후기 더 보기",
+    "cta": {
+      "title1": "다음 후기는",
+      "title2": "당신 차례.",
+      "book": "세션 예약 →",
+      "write": "후기 남기기 →"
     }
   },
   "home": {

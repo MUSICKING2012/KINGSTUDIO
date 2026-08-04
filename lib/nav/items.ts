@@ -39,6 +39,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   // STUDIOS slice renames to final URL
   { key: 'studios', href: '/rental', enabled: true, localeGatedCategory: 'rental' },
   { key: 'product', href: '/experience', enabled: true }, // PRODUCT slice renames to final URL
-  { key: 'reviews', href: '/reviews', enabled: false },
+  { key: 'reviews', href: '/reviews', enabled: true }, // 5b 에서 켬 (라우트 신설)
   { key: 'blog', href: '/blog', enabled: false },
 ] as const;
