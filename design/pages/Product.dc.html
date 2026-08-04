@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.pr-faq{border-bottom:1px solid rgba(20,18,16,.12)}
+.pr-faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:20px 2px;font-size:17px;font-weight:700}
+.pr-faq summary::-webkit-details-marker{display:none}
+.pr-faq .plus{color:#F5461E;font-size:22px;font-weight:400;transition:transform .2s ease;flex:none}
+.pr-faq[open] .plus{transform:rotate(45deg)}
+.pr-link:hover{color:#F5461E}
+</style>
+</helmet>
+
+<div style="font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;color:#141210;font-size:16px;line-height:1.5;background:#F0EEE9;background-image:linear-gradient(rgba(20,18,16,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(20,18,16,.045) 1px,transparent 1px);background-size:44px 44px;min-height:100vh">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(240,238,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,18,16,.08)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;min-height:66px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <a href="KING STUDIO Editorial.dc.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex:none">
+        <span style="width:26px;height:26px;border-radius:7px;background:#141210;color:#F0EEE9;display:grid;place-items:center;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:14px">K</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:16px;letter-spacing:.02em">KING STUDIO</span>
+      </a>
+      <nav style="display:flex;gap:24px;flex:1 1 auto;justify-content:center;min-width:0;overflow-x:auto">
+        <a href="Service.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">{{ t.navService }}</a>
+        <a href="Studio.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">{{ t.navStudio }}</a>
+        <a href="Product.dc.html" style="font-size:16px;font-weight:700;text-decoration:none;white-space:nowrap;border-bottom:2px solid #F5461E;padding:4px 0">{{ t.navSessions }}</a>
+        <a href="Review.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">{{ t.navReview }}</a>
+        <a href="Blog.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">{{ t.navBlog }}</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;flex:none">
+        <select value="{{ locale }}" onChange="{{ setLocale }}" aria-label="Language" style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;background:#fff;color:#141210;cursor:pointer">
+          <option value="ko">한국어</option><option value="en">EN</option><option value="ja">日本語</option><option value="zh-HK">繁中(港)</option><option value="zh-CN">简体</option>
+        </select>
+        <select value="{{ currency }}" onChange="{{ setCurrency }}" aria-label="Currency" style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 10px;font-size:12px;font-weight:700;background:#fff;color:#141210;cursor:pointer">
+          <option value="KRW">₩</option><option value="USD">$</option><option value="JPY">¥</option><option value="HKD">HK$</option><option value="CNY">CN¥</option>
+        </select>
+        <button type="button" onClick="{{ goBook }}" style="font-family:inherit;background:#F5461E;color:#fff;border:none;border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">{{ t.bookNow }}</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section style="max-width:1280px;margin:0 auto;padding:40px 24px 0;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,18,16,.4);text-transform:uppercase;padding-bottom:20px;flex-wrap:wrap;gap:6px">
+      <span>PRODUCT</span><span>GOLD · DIAMOND · PREMIUM · GROUP</span><span>KST 2026</span><span>(D2C)</span>
+    </div>
+    <h1 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(46px,9vw,110px);line-height:.9;text-transform:uppercase;letter-spacing:-.01em">{{ t.h1a }}<br>{{ t.h1b }}</h1>
+    <p style="max-width:560px;font-size:15px;line-height:1.7;color:rgba(20,18,16,.7);margin:26px 0 0">{{ t.heroSub }}</p>
+  </section>
+
+  <!-- PACKAGE CARDS -->
+  <section style="max-width:1280px;margin:0 auto;padding:44px 24px 0;box-sizing:border-box">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+      <sc-for list="{{ pkgs }}" as="p" hint-placeholder-count="3">
+        <div style="background:{{ p.bg }};color:{{ p.ink }};border-radius:20px;padding:26px 24px;display:flex;flex-direction:column;gap:12px;position:relative">
+          <sc-if value="{{ p.popular }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:18px;right:18px;background:#141210;color:#fff;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.05em">{{ t.popular }}</span></sc-if>
+          <div>
+            <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:26px;text-transform:uppercase">{{ p.name }}</span>
+            <sc-if value="{{ p.hasSub }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-top:2px">{{ p.sub }}</span></sc-if>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:30px">{{ p.priceStr }}</span>
+            <span style="font-size:12px;font-weight:700;opacity:.7">· {{ p.hours }}</span>
+          </div>
+          <sc-if value="{{ p.hasApprox }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;opacity:.65;margin-top:-6px">{{ p.approxStr }} · {{ t.refOnly }}</span></sc-if>
+          <div style="display:flex;flex-direction:column;gap:8px;padding-top:6px;border-top:1px solid {{ p.rule }}">
+            <sc-for list="{{ p.inc }}" as="i" hint-placeholder-count="4">
+              <span style="font-size:13px;line-height:1.5;display:flex;gap:8px"><span aria-hidden="true" style="opacity:.7">✓</span>{{ i }}</span>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ p.pick }}" style="margin-top:auto;font-family:inherit;background:{{ p.btnBg }};color:{{ p.btnInk }};border:none;border-radius:11px;padding:13px;font-size:14px;font-weight:800;cursor:pointer">{{ t.select }} →</button>
+        </div>
+      </sc-for>
+    </div>
+    <a href="Service.dc.html" class="pr-link" style="display:inline-block;margin-top:16px;font-size:13px;font-weight:700;color:rgba(20,18,16,.55);text-decoration:none">New to recording? See how a session works →</a>
+  </section>
+
+  <!-- GROUP PROGRAM -->
+  <section style="max-width:1280px;margin:0 auto;padding:18px 24px 0;box-sizing:border-box">
+    <div style="background:#141210;color:#F0EEE9;border-radius:20px;padding:clamp(24px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span style="background:#F5461E;color:#fff;border-radius:999px;padding:4px 11px;font-size:10px;font-weight:800;letter-spacing:.05em">{{ t.groupBadge }}</span>
+          <span style="border:1px solid rgba(240,238,233,.3);border-radius:999px;padding:4px 11px;font-size:10px;font-weight:700;color:rgba(240,238,233,.7)">{{ t.notSolo }}</span>
+        </div>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(26px,3.4vw,38px);text-transform:uppercase;line-height:1.02">K-Pop Making Class</span>
+        <p style="margin:0;font-size:14px;line-height:1.6;color:rgba(240,238,233,.7);max-width:44ch">{{ t.mcDesc }}</p>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <sc-for list="{{ mcChips }}" as="c" hint-placeholder-count="5">
+            <span style="background:rgba(240,238,233,.08);border-radius:999px;padding:5px 11px;font-size:11.5px;font-weight:600">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:6px;border-left:1px solid rgba(240,238,233,.14);padding-left:28px">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(240,238,233,.5)">{{ t.perPerson }}</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:34px">{{ mcPriceStr }}</span>
+        <sc-if value="{{ hasApprox }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:rgba(240,238,233,.6)">{{ mcApproxStr }} · {{ t.refOnly }}</span></sc-if>
+        <span style="font-size:12px;color:rgba(240,238,233,.6);margin-top:2px">{{ t.mcTotal }}</span>
+        <button type="button" onClick="{{ pickMaking }}" style="margin-top:12px;font-family:inherit;background:#F5461E;color:#fff;border:none;border-radius:11px;padding:13px 20px;font-size:14px;font-weight:800;cursor:pointer;align-self:flex-start">{{ t.mcCta }} →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARE TABLE -->
+  <section style="max-width:1280px;margin:0 auto;padding:56px 24px 0;box-sizing:border-box">
+    <h2 style="margin:0 0 22px;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(28px,4vw,44px);text-transform:uppercase;line-height:1">{{ t.compare }}</h2>
+    <div style="border:1px solid rgba(20,18,16,.12);border-radius:18px;overflow:hidden;background:#F5F3EE">
+      <div style="overflow-x:auto"><div style="min-width:640px">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;background:#141210;color:#F0EEE9;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase">
+          <span style="padding:14px 18px">{{ t.feature }}</span>
+          <span style="padding:14px 12px;text-align:center">Gold</span>
+          <span style="padding:14px 12px;text-align:center;background:#F5461E">Diamond</span>
+          <span style="padding:14px 12px;text-align:center">Premium</span>
+        </div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;font-size:13.5px;background:{{ r.zebra }}">
+            <span style="padding:13px 18px;font-weight:600">{{ r.feat }}</span>
+            <span style="padding:13px 12px;text-align:center;color:{{ r.c0 }}">{{ r.g }}</span>
+            <span style="padding:13px 12px;text-align:center;font-weight:800;color:{{ r.c1 }};background:rgba(245,70,30,.07)">{{ r.d }}</span>
+            <span style="padding:13px 12px;text-align:center;color:{{ r.c2 }}">{{ r.p }}</span>
+          </div>
+        </sc-for>
+      </div></div>
+    </div>
+    <p style="margin:12px 2px 0;font-size:11.5px;color:rgba(20,18,16,.5)">{{ t.compareNote }}</p>
+  </section>
+
+  <!-- RESULTS GALLERY (real media via upload slots — leave empty until client provides) -->
+  <section style="max-width:1280px;margin:0 auto;padding:56px 24px 0;box-sizing:border-box">
+    <h2 style="margin:0 0 4px;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(28px,4vw,44px);text-transform:uppercase;line-height:1">{{ t.results }}</h2>
+    <p style="margin:0 0 22px;font-size:14px;color:rgba(20,18,16,.6)">{{ t.resultsSub }}</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+      <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="6">
+        <div style="position:relative;border-radius:16px;overflow:hidden;aspect-ratio:1/1;background:#e6e3dc;display:flex">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ g.id }}" shape="rect" fit="cover" placeholder="{{ g.cap }}" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+          <span style="position:absolute;left:10px;bottom:10px;background:rgba(17,16,16,.7);backdrop-filter:blur(6px);color:#fff;border-radius:8px;padding:4px 10px;font-size:10.5px;font-weight:700">{{ g.cap }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- HOW-IT-WORKS CROSS-LINK (5-step grid lives ONLY on Service) -->
+  <section style="max-width:1280px;margin:0 auto;padding:32px 24px 0;box-sizing:border-box">
+    <div style="border-top:1px solid rgba(20,18,16,.14);border-bottom:1px solid rgba(20,18,16,.14);padding:22px 0;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <span style="font-size:14.5px;font-weight:600;color:rgba(20,18,16,.7)">First time in a studio? See how a session works, step by step.</span>
+      <a href="Service.dc.html" style="border:1px solid #141210;border-radius:999px;padding:11px 22px;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap">How it works → SERVICE</a>
+    </div>
+  </section>
+
+  <!-- STUDIO RENTAL cross-link (detail lives on Studios page) -->
+  <section style="max-width:1280px;margin:0 auto;padding:22px 24px 0;box-sizing:border-box">
+    <div style="font-size:13px;color:rgba(20,18,16,.55)">스튜디오 대여를 찾으시나요? 대여 안내는 Studios 페이지에서. <a href="Studio.dc.html" class="pr-link" style="font-weight:800;text-decoration:none;color:rgba(20,18,16,.75)">STUDIOS →</a></div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="max-width:900px;margin:0 auto;padding:56px 24px 0;box-sizing:border-box">
+    <h2 style="margin:0 0 20px;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(28px,4vw,44px);text-transform:uppercase;line-height:1">FAQ</h2>
+    <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+      <details class="pr-faq">
+        <summary><span class="plus" aria-hidden="true">+</span>{{ f.q }}</summary>
+        <p style="margin:0;padding:0 2px 22px 36px;font-size:14.5px;line-height:1.65;color:rgba(20,18,16,.7)">{{ f.a }}</p>
+      </details>
+    </sc-for>
+  </section>
+
+  <!-- REFUND STRIP -->
+  <section style="max-width:1280px;margin:0 auto;padding:26px 24px 0;box-sizing:border-box">
+    <div style="background:#F5F3EE;border:1px dashed rgba(20,18,16,.25);border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;color:rgba(20,18,16,.7)">
+      <span style="flex:1;min-width:220px">{{ t.refundLine }}</span>
+      <a href="#reach" class="pr-link" style="font-weight:700;text-decoration:none;white-space:nowrap">{{ t.refundCta }} →</a>
+    </div>
+  </section>
+
+  <!-- BOOK — LIVE BOOKING BAR -->
+  <section id="bookbar" data-screen-label="Booking" style="max-width:1280px;margin:0 auto;padding:44px 24px clamp(40px,6vw,72px);box-sizing:border-box">
+    <div style="background:#111010;color:#F0EEE9;border-radius:20px;padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 8px 14px">
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(18px,2.2vw,26px);text-transform:uppercase">{{ t.bookTitle }}</span>
+        <span style="font-size:11.5px;color:rgba(240,238,233,.55)">{{ t.kstNote }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;align-items:stretch">
+        <label style="flex:1.3 1 210px;min-width:190px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fService }}</span>
+          <select value="{{ pkg }}" onChange="{{ setPkg }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+            <sc-for list="{{ svcOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.id }}" style="color:#111">{{ o.label }}</option></sc-for>
+          </select>
+        </label>
+        <label style="flex:.7 1 160px;min-width:150px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fDate }}</span>
+          <input type="date" value="{{ date }}" min="{{ minDate }}" max="{{ maxDate }}" onChange="{{ setDate }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;width:100%;color-scheme:dark">
+        </label>
+        <label style="flex:.7 1 160px;min-width:150px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fTime }}</span>
+          <select value="{{ time }}" onChange="{{ setTime }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+            <sc-for list="{{ slots }}" as="s" hint-placeholder-count="3"><option value="{{ s.v }}" disabled="{{ s.full }}" style="color:#111">{{ s.label }}</option></sc-for>
+          </select>
+        </label>
+        <label style="flex:.6 1 130px;min-width:120px;display:flex;flex-direction:column;gap:4px;background:#1c1a19;border-radius:11px;padding:11px 15px">
+          <span style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:rgba(240,238,233,.5)">{{ t.fGuests }}</span>
+          <select value="{{ guests }}" onChange="{{ setGuests }}" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#F0EEE9;background:transparent;border:none;padding:2px 0;cursor:pointer;width:100%">
+            <sc-for list="{{ guestOpts }}" as="g" hint-placeholder-count="5"><option value="{{ g }}" style="color:#111">{{ g }}</option></sc-for>
+          </select>
+        </label>
+        <button type="button" onClick="{{ book }}" style="flex:1 1 220px;min-width:200px;min-height:62px;font-family:inherit;background:{{ accent }};border:none;border-radius:11px;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 18px;cursor:pointer" style-hover="filter:brightness(.92)">
+          <span style="display:flex;flex-direction:column;align-items:flex-start;gap:1px"><span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:15px;text-transform:uppercase">{{ t.cta }}</span><span style="font-size:11px;opacity:.9;font-weight:600">{{ totalStr }}</span></span>
+          <span aria-hidden="true" style="font-size:18px">→</span>
+        </button>
+      </div>
+      <div style="font-size:11px;color:rgba(240,238,233,.5);padding:12px 8px 4px">{{ bookNote }}</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <x-import component-from-global-scope="ks-footer" from="./ks-footer.js" hint-size="100%,260px"></x-import>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:120;background:#141210;color:#fff;border-radius:12px;padding:13px 22px;font-size:13px;font-weight:600;box-shadow:0 10px 34px rgba(20,18,16,.3);max-width:90vw;text-align:center">{{ t.toast }}</div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1280, &quot;height&quot;: 900}, &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;options&quot;: [&quot;#F5461E&quot;, &quot;#601986&quot;, &quot;#e83528&quot;, &quot;#141210&quot;], &quot;default&quot;: &quot;#F5461E&quot;, &quot;tsType&quot;: &quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { locale: null, currency: null, pkg: 'gold', date: null, time: null, guests: 1, toast: false };
+
+  static PKG = {
+    gold:    { name: 'GOLD',    price: 400000,  hours: '2h', slots: ['10:00','13:00','16:00','19:00'] },
+    diamond: { name: 'DIAMOND', price: 500000,  hours: '2h', slots: ['10:00','14:00','18:00'] },
+    premium: { name: 'PREMIUM', price: 1500000, hours: '3h', slots: ['10:30','15:00'] },
+    making:  { name: 'K-POP MAKING CLASS', price: 150000, perPerson: true, minG: 2, maxG: 15, hours: '2h', slots: ['10:00','14:00'] }
+  };
+  static RATES = { USD: 1385, JPY: 9.2, HKD: 177.5, CNY: 192 };
+  static SYMS  = { USD: 'US$', JPY: '¥', HKD: 'HK$', CNY: 'CN¥' };
+  static DEF_CUR = { ko: 'KRW', en: 'USD', ja: 'JPY', 'zh-HK': 'HKD', 'zh-CN': 'CNY' };
+
+  static T = (() => {
+    const en = {
+      navService: 'SERVICE', navSessions: 'PRODUCT', navStudio: 'STUDIOS', navReview: 'REVIEW', navBlog: 'BLOG', bookNow: 'Book now',
+      h1a: 'Pick your', h1b: 'package',
+      heroSub: 'Three tiers plus a group class, one visit in Seoul. Prices show in your currency for reference — you are charged in KRW. Up to five guests per booking; +50% per extra guest.',
+      popular: 'POPULAR', select: 'Select', refOnly: 'Charged in KRW; other currencies for reference only.',
+      groupBadge: 'GROUP PROGRAM', notSolo: 'Not a solo package',
+      mcDesc: 'Make one song together as a team — schools, companies and travel groups. A hands-on class across three studio roles (singer, producer, sound engineer): music-theory insights, Pro Tools experience and producer-guided recording, with professional English interpretation. Everyone takes home the group track.',
+      perPerson: 'Per person', mcTotal: 'Total = per person × head count (2–15) · charged in KRW.', mcCta: 'Request group booking',
+      compare: 'Compare packages', feature: 'Feature',
+      compareNote: 'All payments charged in KRW · other currencies for reference only · +50% per extra guest, max 5.',
+      results: 'See the results', resultsSub: 'Music videos & studio moments from real sessions.',
+      how: 'How a session works',
+      rentalDesc: 'Book the booth for your own project. A Korean-language, domestic service — arranged by inquiry.', rentalCta: '문의하기 / Inquire',
+      refundLine: 'Cancellation & refund policy — [PROVIDE ONE-LINE POLICY].', refundCta: 'Full refund policy',
+      bookTitle: 'Book your slot', kstNote: 'Seoul time (KST) · D+1 → D+90',
+      fService: 'EXPERIENCE', fDate: 'DATE', fTime: 'TIME · KST', fGuests: 'GUESTS', cta: 'Check availability', full: 'FULL',
+      toast: 'Demo — continues to the 4-step booking flow (package → date & time → details → payment).',
+      perGuestNote: '+50% per extra guest · up to 5 guests · charged in KRW, other currencies for reference.',
+      makingNote: 'Making Class · per person · 2–15 guests · weekdays only 10:00–12:00 / 14:00–16:00 · charged in KRW.',
+      incGold: ['Studio tour & mic test', 'Producer-directed vocal recording', 'Personal vocal report', 'Unedited take-home recording (MP3)'],
+      incDia: ['Everything in Gold (the personal vocal report is Gold-only)', 'Auto-Tune & Melodyne vocal correction', 'Pro mixing & mastering', 'Custom CD of your recording', 'Messenger revisions · final delivered ~2–3 weeks after'],
+      incPre: ['Everything in Diamond', 'In-studio cinematic music video', 'Edited MV delivery', 'Premium welcome kit'],
+      mcChips: ['👥 From 2 · Max 15', '⏱ ≈ 2h', '🎧 Unedited MP3 take-home', '🎚 3 roles: singer · producer · engineer', '🗣 English interpretation'],
+      rowFeats: ['Session length','Songs recorded','Studio tour & mic test','Vocal directing','Personal vocal report','Vocal editing (Auto-Tune)','Mix & master','Custom CD','Music video (MV)','Premium welcome kit','Secure download link','Delivery'],
+      deliverA: 'Same day (raw)', deliverB: '~2–3 wks',
+      steps: [
+        ['1','Vocal Training','Warm up and learn your song with a vocal coach. No experience required — you build the basics before recording.'],
+        ['2','Vocal Directing','A producer coaches tone, timing and delivery and directs every take as you record in a pro booth.'],
+        ['3','Take it Home','Leave the studio the same day with your recording — your take is yours right away. The polished version follows once post-production is done.'],
+        ['4','Vocal Editing (Auto Tune)','Your takes are comped and tuned — pitch and timing polished so the vocal sits right.'],
+        ['5','Mixing & Mastering','The vocal is balanced against the track and mastered to a release-ready finish, then delivered by secure link — your MP3, plus a custom CD or a music video on higher packages.']
+      ],
+      faqs: [
+        ['What currency am I charged in?','All payments are charged in KRW. Other currencies on the site are for reference only; your card issuer sets the final rate.'],
+        ['How does pricing work for extra guests?','Solo packages take up to five guests. Each additional guest adds +50% of the base package price.'],
+        ['How is the group K-Pop Making Class billed?','Per person (₩150,000), for groups from 2 up to 15. Your total is the per-person rate times the head count.'],
+        ['Can I cancel or reschedule my booking?','[PROVIDE EXACT CANCELLATION / REFUND POLICY — client to supply. Do not invent terms.]'],
+        ['When and how do I get my files?','Gold takes home an unedited recording the same day. For Diamond and Premium, the mixed and mastered master (with a custom CD) is delivered by messenger and secure link about two to three weeks after your session — with revisions, version history and an expiry date; the Premium music video follows about two weeks after you approve the audio.']
+      ]
+    };
+    const ko = Object.assign({}, en, {
+      navService: '서비스', navSessions: '프로덕트', navStudio: '스튜디오', navReview: '후기', navBlog: '블로그', bookNow: '예약하기',
+      h1a: '패키지를', h1b: '선택하세요',
+      heroSub: '3개 티어와 단체 클래스, 서울에서의 한 번의 방문. 가격은 참고용으로 선택 통화로 표시되며 실제 결제는 KRW입니다. 예약당 최대 5인, 추가 1인당 +50%.',
+      popular: '인기', select: '선택', refOnly: 'KRW로 결제되며 다른 통화는 참고용입니다.',
+      groupBadge: '단체 프로그램', notSolo: '개인 패키지 아님',
+      mcDesc: '팀으로 한 곡을 함께 완성 — 학교·기업·여행 단체. 보컬·프로듀서·사운드 엔지니어 세 역할을 체험하는 핸즈온 클래스: 음악 이론, Pro Tools 실습, 프로듀서 지도 녹음, 영어 통역 제공. 각자 그룹 트랙을 가져갑니다.',
+      perPerson: '인당', mcTotal: '총액 = 인당 × 인원(2~15) · KRW 결제.', mcCta: '단체 예약 문의',
+      compare: '패키지 비교', feature: '항목',
+      compareNote: '모든 결제는 KRW · 다른 통화는 참고용 · 추가 1인당 +50%, 최대 5인.',
+      results: '결과물 보기', resultsSub: '실제 세션의 뮤직비디오와 스튜디오 순간.',
+      how: '세션 진행 방식',
+      rentalDesc: '내 프로젝트를 위한 부스 대여. 한국어 국내 상품 — 문의로 진행합니다.', rentalCta: '문의하기 / Inquire',
+      refundLine: '취소·환불 정책 — [정책 한 줄 입력 필요].', refundCta: '전체 환불 정책',
+      bookTitle: '슬롯 예약', kstNote: '서울 기준(KST) · D+1 → D+90',
+      fService: '체험 상품', fDate: '날짜', fTime: '시간 · KST', fGuests: '인원', cta: '예약 가능 확인', full: '마감',
+      toast: '데모 — 4단계 예약 플로우로 이동합니다 (상품 → 날짜·시간 → 정보 → 결제).',
+      perGuestNote: '추가 1인당 +50% · 최대 5인 · KRW 결제, 다른 통화는 참고용.',
+      makingNote: '메이킹 클래스 · 인당 · 2~15명 · 주중 전용 10:00–12:00 / 14:00–16:00 · KRW 결제.',
+      incGold: ['스튜디오 투어 & 마이크 테스트', '프로듀서 디렉팅 보컬 녹음', '개인 보컬 리포트', '미편집 take-home 녹음본 (MP3)'],
+      incDia: ['Gold 전체 포함 (보컬 리포트는 Gold 전용)', '오토튠 & 멜로다인 보컬 보정', '프로 믹싱 & 마스터링', '내 녹음 커스텀 CD', '메신저 수정 · 최종본 ~2~3주 후 전달'],
+      incPre: ['Diamond 전체 포함', '스튜디오 시네마틱 뮤직비디오', '편집본 MV 전달', '프리미엄 웰컴 키트'],
+      mcChips: ['👥 2인부터 · 최대 15', '⏱ ≈ 2시간', '🎧 미편집 MP3 지참', '🎚 3역할: 보컬 · 프로듀서 · 엔지니어', '🗣 영어 통역'],
+      rowFeats: ['세션 시간','녹음 곡 수','스튜디오 투어 & 마이크 테스트','보컬 디렉팅','개인 보컬 리포트','보컬 편집 (오토튠)','믹스 & 마스터','커스텀 CD','뮤직비디오 (MV)','프리미엄 웰컴 키트','보안 다운로드 링크','전달'],
+      deliverA: '당일 (미편집)', deliverB: '~2~3주',
+      steps: [
+        ['1','보컬 트레이닝','보컬 코치와 워밍업하고 곡을 익힙니다. 경험 불필요 — 녹음 전 기본기를 다집니다.'],
+        ['2','보컬 디렉팅','프로듀서가 톤·타이밍·표현을 지도하며 프로 부스에서 모든 테이크를 디렉팅합니다.'],
+        ['3','당일 지참','당일 녹음본을 바로 가져갑니다 — 내 테이크는 즉시 내 것. 다듬은 버전은 후반작업 후 전달됩니다.'],
+        ['4','보컬 편집 (오토튠)','테이크를 컴핑·튜닝 — 음정과 타이밍을 다듬어 보컬을 정돈합니다.'],
+        ['5','믹싱 & 마스터링','보컬을 트랙과 밸런싱하고 릴리즈 수준으로 마스터링 후 보안 링크로 전달 — MP3, 상위 패키지는 커스텀 CD·MV 포함.']
+      ],
+      faqs: [
+        ['결제는 어떤 통화로 되나요?','모든 결제는 KRW로 진행됩니다. 사이트의 다른 통화는 참고용이며 최종 환율은 카드사가 정합니다.'],
+        ['추가 인원 요금은 어떻게 되나요?','개인 패키지는 최대 5인. 추가 1인당 기본가의 +50%가 붙습니다.'],
+        ['단체 메이킹 클래스 요금은?','인당 ₩150,000, 2~15명. 총액 = 인당 × 인원.'],
+        ['예약 취소·변경이 가능한가요?','[정확한 취소·환불 정책 — 클라이언트 제공. 임의로 작성하지 않음.]'],
+        ['결과물은 언제·어떻게 받나요?','Gold는 당일 미편집 녹음본을 지참. Diamond·Premium은 믹스·마스터된 최종본(커스텀 CD 포함)을 세션 약 2~3주 후 메신저·보안 링크로 전달 — 수정·버전 이력·만료일 포함. Premium 뮤직비디오는 오디오 승인 후 약 2주 뒤 전달됩니다.']
+      ]
+    });
+    const ja = Object.assign({}, en, { navService: 'サービス', navSessions: 'プロダクト', navStudio: 'スタジオ', navReview: 'レビュー', navBlog: 'ブログ', bookNow: '予約', h1a: 'パッケージを', h1b: '選ぶ', refOnly: '請求はKRW。他通貨は参考表示です。', select: '選択', compare: 'パッケージ比較', how: 'セッションの流れ', results: '結果を見る', bookTitle: '枠を予約', cta: '空き状況を確認', full: '満席' });
+    const zhHK = Object.assign({}, en, { navService: '服務', navSessions: '產品', navStudio: '錄音室', navReview: '評價', navBlog: '網誌', bookNow: '立即預約', h1a: '選擇你的', h1b: '方案', refOnly: '以韓元結算，其他幣別僅供參考。', select: '選擇', compare: '方案比較', how: '課程流程', results: '查看成果', bookTitle: '預約時段', cta: '查詢空檔', full: '已滿' });
+    const zhCN = Object.assign({}, en, { navService: '服务', navSessions: '产品', navStudio: '录音室', navReview: '评价', navBlog: '博客', bookNow: '立即预约', h1a: '选择你的', h1b: '方案', refOnly: '以韩元结算，其他货币仅供参考。', select: '选择', compare: '方案比较', how: '课程流程', results: '查看成果', bookTitle: '预约时段', cta: '查询空档', full: '已满' });
+    return { en, ko, ja, 'zh-HK': zhHK, 'zh-CN': zhCN };
+  })();
+
+  kstDate(o) { const d = new Date(Date.now() + 9*3600*1000 + o*86400*1000); return d.toISOString().slice(0,10); }
+  isFull(dateStr, time) { let h=0; const s=dateStr+time; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%997; return h%3===0; }
+  fmtKrw(n) { return '₩' + n.toLocaleString('en-US'); }
+  fmtCur(nKrw, cur) { if (cur === 'KRW') return this.fmtKrw(nKrw); return Component.SYMS[cur] + Math.round(nKrw / Component.RATES[cur]).toLocaleString('en-US'); }
+  approx(nKrw, cur) { if (cur === 'KRW') return ''; let v = nKrw / Component.RATES[cur]; v = cur === 'JPY' ? Math.round(v/100)*100 : Math.round(v); return '≈ ' + Component.SYMS[cur] + v.toLocaleString('en-US'); }
+
+  renderVals() {
+    const C = Component;
+    const locale = this.state.locale ?? 'en';
+    const t = C.T[locale] || C.T.en;
+    const currency = this.state.currency ?? C.DEF_CUR[locale];
+    const accent = this.props.accentColor ?? '#F5461E';
+
+    const pkgKey = this.state.pkg;
+    const P = C.PKG[pkgKey];
+    const minDate = this.kstDate(1), maxDate = this.kstDate(90);
+    const date = this.state.date ?? minDate;
+    const isMaking = !!P.perPerson;
+    const guests = isMaking ? Math.max(P.minG, Math.min(P.maxG, this.state.guests)) : Math.max(1, Math.min(5, this.state.guests));
+    const slots = P.slots.map((v) => { const full = this.isFull(date, v); return { v, full, label: full ? (v + ' · ✕ ' + t.full) : (v + ' · ' + P.hours) }; });
+    const open = slots.filter((s) => !s.full);
+    const time = (this.state.time && open.some((s) => s.v === this.state.time)) ? this.state.time : (open[0] ? open[0].v : '');
+    const total = isMaking ? P.price * guests : Math.round(P.price * (1 + 0.5*(guests-1)));
+    const svcOpts = ['gold','diamond','premium','making'].map((id) => ({ id, label: C.PKG[id].name }));
+    const guestOpts = [];
+    if (isMaking) { for (let g = P.minG; g <= P.maxG; g++) guestOpts.push(String(g)); }
+    else { for (let g = 1; g <= 5; g++) guestOpts.push(String(g)); }
+
+    const hasApprox = currency !== 'KRW';
+    const cardDefs = [
+      { id: 'gold', sub: 'Personal Vocal', hasSub: true, popular: false, inc: t.incGold, bg: '#F5F3EE', ink: '#141210', rule: 'rgba(20,18,16,.12)', btnBg: '#141210', btnInk: '#fff' },
+      { id: 'diamond', sub: '', hasSub: false, popular: true, inc: t.incDia, bg: accent, ink: '#fff', rule: 'rgba(255,255,255,.28)', btnBg: '#141210', btnInk: '#fff' },
+      { id: 'premium', sub: '', hasSub: false, popular: false, inc: t.incPre, bg: '#141210', ink: '#F0EEE9', rule: 'rgba(240,238,233,.18)', btnBg: accent, btnInk: '#fff' }
+    ];
+    const pkgs = cardDefs.map((c) => {
+      const pk = C.PKG[c.id];
+      return { id: c.id, name: pk.name, sub: c.sub, hasSub: c.hasSub, popular: c.popular, hours: pk.hours,
+        priceStr: currency === 'KRW' ? this.fmtKrw(pk.price) : '≈ ' + this.fmtCur(pk.price, currency), hasApprox, approxStr: this.fmtKrw(pk.price) + ' KRW',
+        inc: c.inc, bg: c.bg, ink: c.ink, rule: c.rule, btnBg: c.btnBg, btnInk: c.btnInk,
+        pick: () => { this.setState({ pkg: c.id, time: null, guests: 1 }); this.goBook(); } };
+    });
+
+    // compare rows
+    const MUTE = 'rgba(20,18,16,.35)', INK = '#141210';
+    const cell = (v) => ({ v, c: v === '—' ? MUTE : INK });
+    const rowData = [
+      ['2h','2h','3h'], ['1','1','1'], ['✓','✓','✓'], ['✓','✓','✓'],
+      ['✓','—','—'], ['—','✓','✓'], ['—','✓','✓'], ['—','✓','✓'],
+      ['—','—','✓'], ['—','—','✓'], ['✓','✓','✓'],
+      [t.deliverA, t.deliverB, t.deliverB]
+    ];
+    const rows = rowData.map((r, i) => ({
+      feat: t.rowFeats[i], zebra: i % 2 ? '#F5F3EE' : '#FBFAF7',
+      g: r[0], d: r[1], p: r[2],
+      c0: r[0] === '—' ? MUTE : INK, c1: r[1] === '—' ? MUTE : INK, c2: r[2] === '—' ? MUTE : INK
+    }));
+
+    const gallery = [
+      { id: 'pr-g1', cap: 'Premium MV' }, { id: 'pr-g2', cap: 'MV still' }, { id: 'pr-g3', cap: 'Behind the scenes' },
+      { id: 'pr-g4', cap: 'In the booth' }, { id: 'pr-g5', cap: 'Studio' }, { id: 'pr-g6', cap: 'On set' }
+    ];
+    const faqs = t.faqs.map((f) => ({ q: f[0], a: f[1] }));
+
+    return {
+      locale, currency, t, accent,
+      setLocale: (e) => { const l = e.target.value; this.setState({ locale: l, currency: C.DEF_CUR[l], time: null }); },
+      setCurrency: (e) => this.setState({ currency: e.target.value }),
+      pkgs, mcChips: t.mcChips,
+      mcPriceStr: currency === 'KRW' ? this.fmtKrw(C.PKG.making.price) : '≈ ' + this.fmtCur(C.PKG.making.price, currency), hasApprox, mcApproxStr: this.fmtKrw(C.PKG.making.price) + ' KRW',
+      pickMaking: () => { this.setState({ pkg: 'making', time: null, guests: 3 }); this.goBook(); },
+      rows, gallery, faqs,
+      slotFill: { style: { width: '100%', height: '100%', display: 'block', flex: 1 } },
+      pkg: pkgKey, date, minDate, maxDate, time, guests: String(guests), slots, svcOpts, guestOpts,
+      setPkg: (e) => { const id = e.target.value; const np = C.PKG[id]; this.setState({ pkg: id, time: null, guests: np.perPerson ? np.minG : 1 }); },
+      setDate: (e) => this.setState({ date: e.target.value, time: null }),
+      setTime: (e) => this.setState({ time: e.target.value }),
+      setGuests: (e) => this.setState({ guests: parseInt(e.target.value, 10) || 1 }),
+      totalStr: this.fmtCur(total, currency),
+      bookNote: isMaking ? t.makingNote : t.perGuestNote,
+      goBook: () => this.goBook(),
+      book: () => { this.setState({ toast: true }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: false }), 3600); },
+      toast: this.state.toast
+    };
+  }
+
+  goBook() {
+    const el = document.getElementById('bookbar');
+    if (el) { const y = el.getBoundingClientRect().top + window.scrollY - 80; window.scrollTo({ top: y, behavior: 'smooth' }); }
+  }
+}
+</script>
+</body>
+</html>

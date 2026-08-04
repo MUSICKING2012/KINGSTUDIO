@@ -60,7 +60,7 @@
 
 ## 4. OPEN DECISION (A/B/C + 추천 — 확정 전 해당 슬라이스 착수 금지)
 
-### ① 라우트 리네임 — `/experience`→`/product`, `/rental`→`/studios` (5c·5d 선행)
+### ① 라우트 리네임 — `/experience`→`/product`, `/rental`→`/studios` (5c·5d 선행) — **확정 A (2026-08-04 Aiden "리네임 A 진행")**
 - **A. 리네임 실행**: nav 라벨(PRODUCT·STUDIOS)과 URL 일치. 301 redirect 영구 유지 + sitemap 갱신.
   기존 URL 인바운드(홈 Categories·푸터·booking 백링크) 동시 갱신. SEO 리스크는 301 로 흡수.
 - **B. 현행 URL 유지**: nav 라벨만 PRODUCT/STUDIOS, URL 은 /experience·/rental. 작업 최소.
@@ -99,6 +99,7 @@
 | 슬라이스 | 상태 |
 |---|---|
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
-| 5b Review | 구현 완료(2026-08-04, ④ 추천안 확정) — /reviews + nav 탭 + Service 링크 활성 |
-| 5c Product / 5d Studio | **결정 ① 대기** |
+| 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
+| 5c Product | 구현 완료(2026-08-04, ① A) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
+| 5d Studio | 결정 ① 확정(A) — 착수 대기 |
 | 5e Blog | **결정 ③ 대기** |
