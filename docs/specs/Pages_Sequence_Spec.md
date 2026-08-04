@@ -100,6 +100,23 @@
 |---|---|
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
-| 5c Product | 구현 완료(2026-08-04, ① A) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
+| 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
 | 5d Studio | 결정 ① 확정(A) — 착수 대기 |
 | 5e Blog | **결정 ③ 대기** |
+
+## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
+
+다음 작업 = **5d Studio**: `/rental` → `/studios` 리네임(결정 ① A 기확정, 재질문 불필요) + STUDIOS 페이지 신설.
+
+킥오프 절차 (5c 와 동일 사이클):
+1. `git pull` 후 STEP 0 (worktree clean · main=origin/main 확인).
+2. `Studio.dc.html` 을 DesignSync 로 가져와 `design/pages/` 에 sha 고정 커밋. **주의: DesignSync 는
+   서브에이전트에 전파되지 않음 — 메인 세션에서 직접 호출**(5c 실측).
+3. `Product_Slice_Spec.md` §2 리네임 메커니즘 재사용 — 단, `/rental` 은 **ko 전용**이라 다름:
+   nav localeGatedCategory('rental') 게이트 유지, 리다이렉트·sitemap 처리 시 비-ko 404 동작 검증 필수.
+4. 디자인 자체 데이터(가격·슬롯·문구)는 이식 0 — DB·PRD 정본 대체(5c 델타표 패턴).
+5. 게이트: tsc·biome·i18n:check·vitest·build(정적 라우트 수 기록, 현재 38)·e2e(리다이렉트 단언 포함)·
+   가격 하드코딩 스캔.
+
+보류·백로그: 5e Blog 는 결정 ③(Ghost 운영 여부) 대기. ja·zh 기계번역 감수(service 76 + reviews 17 +
+product 신규)는 Aiden 몫. OPENEXCHANGERATES_APP_ID 미발급 → 환율 표시는 KRW 단독 강등 중(정상 동작).
