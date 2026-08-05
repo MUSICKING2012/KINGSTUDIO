@@ -1861,3 +1861,29 @@ model TeamMember {
 
   @@map("team_members")
 }
+
+/// Self-operated blog post (5e-1, `Blog_Slice_Spec.md` §2 — 결정 ③ D: Ghost 배제).
+/// Body/title are English-only (decision ⓒ); UI chrome localizes via the `blog` messages ns.
+/// `category` resolves to `blog.categories.{category}` message keys — enforced by a DB CHECK
+/// (same contract pattern as studio_room_profiles.slug, PR #39). Publishing pipeline =
+/// content/blog/*.md → `pnpm seed:blog` upsert (admin editor is a later module).
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  category    String // 'story' | 'press' | 'behind' | 'seoulTravel' (CHECK-constrained)
+  title       String
+  excerpt     String
+  body        String // markdown, en (decision ⓒ)
+  readMinutes Int      @map("read_minutes")
+  featured    Boolean  @default(false)
+  isPublished Boolean  @default(true) @map("is_published")
+  publishedAt DateTime @map("published_at")
+  /// old Ghost URL path — feeds the 5e-2 301 redirect map (decision ⓐ)
+  legacyPath  String?  @map("legacy_path")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([isPublished, publishedAt])
+  @@map("blog_posts")
+}

@@ -44,7 +44,20 @@ Gold ≠ 믹스, Diamond = 믹스/마스터+CD, Premium = 스튜디오 MV).
 | D9 | CTA → `Product.dc.html#book` | `/product`·`/product#bookbar`(5a·5d CTA 패턴) | 기존 라우트 정본 |
 | D10 | 카테고리 4종(Story·Press·Behind·Seoul travel) | 채택(초기 세트) — 글 데이터의 속성으로 저장, 하드코딩 탭 금지 | 데이터 주도 원칙(§4-C 계열) |
 
-## 2. OPEN DECISION (①~③은 시퀀스 공통 결정 — 여기는 5e 전용 ⓐ~ⓓ)
+## 2. OPEN DECISION — **전건 확정 (2026-08-05 Aiden 회신)**
+
+- **ⓐ = 기존 글 있음, 이관 필요.** Ghost export(JSON/마크다운) 제공 대기 → 이관 + 구 URL 301
+  맵은 **5e-2**(export 도착 후). 그 전까지 nav BLOG 탭 비활성 유지 + sitemap 미포함(빈 목록
+  페이지를 링크·색인하지 않는다 — 5d-2 "빈 페이지 회피" 계열).
+- **ⓑ = DB `BlogPost` 테이블 + 스크립트 게시.** 게시 파이프라인 = `content/blog/*.md`
+  (frontmatter) → `pnpm seed:blog` upsert. 어드민 에디터는 후속 모듈.
+- **ⓒ = en 단일.** 글 본문·제목 en 고정, UI 크롬만 5로케일(`blog` ns). 전 로케일 동일 본문.
+- **ⓓ = 뉴스레터 이연.** 섹션 미구현(Mailchimp §1 스택 변경 + 수신 동의 법무 M5 이후 별도 결정).
+
+**분할:** 5e-1(이 슬라이스) = 모델·게시 파이프라인·/blog·/blog/[slug]·JSON-LD·e2e — nav 탭은
+비활성 유지. 5e-2(export 도착 후) = 이관·301 맵·nav 탭 켬·sitemap 포함.
+
+### (기록용 — 확정 전 선택지)
 
 ### ⓐ 기존 Ghost 글 이관
 - 기존 Ghost 블로그에 발행 글이 있는가? 있다면: export(JSON/마크다운) 제공 → 이관 + 구 URL 301 맵.

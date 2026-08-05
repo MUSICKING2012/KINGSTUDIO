@@ -903,5 +903,44 @@
         "highlight_vertical": "Vertical highlight (9:16)"
       }
     }
+  },
+  "blog": {
+    "metaTitle": "Journal — Notes from the Studio | KING STUDIO",
+    "metaDescription": "Stories from our Seongsu studio — customer stories, press, behind the scenes and Seoul travel guides.",
+    "hero": {
+      "meta": {
+        "a": "Blog",
+        "b": "Notes from the studio",
+        "c": "Seoul"
+      },
+      "title": "Journal"
+    },
+    "categories": {
+      "all": "All",
+      "story": "Story",
+      "press": "Press",
+      "behind": "Behind",
+      "seoulTravel": "Seoul travel"
+    },
+    "readMinutes": "{min} min read",
+    "readArticle": "Read article",
+    "loadMore": "Load more ({count})",
+    "empty": "No posts yet — our first stories are on the way.",
+    "coverAlt": "{title} — cover image",
+    "breadcrumb": "Blog",
+    "related": "Related stories",
+    "inlineCta": {
+      "line1": "Your song is",
+      "line2": "waiting in Seoul."
+    },
+    "endCta": {
+      "line1": "Record your",
+      "line2": "own story."
+    },
+    "cta": {
+      "title1": "Ready to",
+      "title2": "record?",
+      "book": "Book a session"
+    }
   }
 }

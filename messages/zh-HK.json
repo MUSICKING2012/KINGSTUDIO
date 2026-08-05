@@ -891,5 +891,44 @@
         "highlight_vertical": "直式精華影片 (9:16)"
       }
     }
+  },
+  "blog": {
+    "metaTitle": "日誌 — 錄音室筆記 | KING STUDIO",
+    "metaDescription": "來自聖水洞錄音室的故事 — 客戶故事、媒體報道、幕後與首爾旅行指南。",
+    "hero": {
+      "meta": {
+        "a": "網誌",
+        "b": "錄音室筆記",
+        "c": "首爾"
+      },
+      "title": "日誌"
+    },
+    "categories": {
+      "all": "全部",
+      "story": "故事",
+      "press": "媒體",
+      "behind": "幕後",
+      "seoulTravel": "首爾旅行"
+    },
+    "readMinutes": "{min}分鐘閱讀",
+    "readArticle": "閱讀文章",
+    "loadMore": "載入更多 ({count})",
+    "empty": "暫無文章 — 第一批故事即將上線。",
+    "coverAlt": "{title} — 封面圖片",
+    "breadcrumb": "網誌",
+    "related": "相關文章",
+    "inlineCta": {
+      "line1": "你的歌",
+      "line2": "在首爾等你"
+    },
+    "endCta": {
+      "line1": "錄下你",
+      "line2": "自己的故事"
+    },
+    "cta": {
+      "title1": "準備好",
+      "title2": "錄音了嗎？",
+      "book": "預約錄音"
+    }
   }
 }

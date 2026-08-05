@@ -891,5 +891,44 @@
         "highlight_vertical": "세로형 하이라이트 (9:16)"
       }
     }
+  },
+  "blog": {
+    "metaTitle": "저널 — 스튜디오 노트 | KING STUDIO",
+    "metaDescription": "성수동 스튜디오에서 전하는 이야기 — 고객 스토리, 프레스, 비하인드, 서울 여행 가이드.",
+    "hero": {
+      "meta": {
+        "a": "블로그",
+        "b": "스튜디오 노트",
+        "c": "서울"
+      },
+      "title": "저널"
+    },
+    "categories": {
+      "all": "전체",
+      "story": "스토리",
+      "press": "프레스",
+      "behind": "비하인드",
+      "seoulTravel": "서울 여행"
+    },
+    "readMinutes": "{min}분 읽기",
+    "readArticle": "글 읽기",
+    "loadMore": "더 보기 ({count})",
+    "empty": "아직 발행된 글이 없습니다 — 곧 첫 이야기를 전할게요.",
+    "coverAlt": "{title} — 커버 이미지",
+    "breadcrumb": "블로그",
+    "related": "관련 글",
+    "inlineCta": {
+      "line1": "당신의 노래가",
+      "line2": "서울에서 기다립니다"
+    },
+    "endCta": {
+      "line1": "당신의 이야기를",
+      "line2": "녹음하세요"
+    },
+    "cta": {
+      "title1": "이제",
+      "title2": "녹음할까요?",
+      "book": "세션 예약"
+    }
   }
 }
