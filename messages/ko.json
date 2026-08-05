@@ -330,7 +330,7 @@
         "making": "메이킹클래스",
         "rental": "스튜디오 대여"
       },
-      "inquiryOnly": "문의 전용",
+      "koreanOnly": "한국어 전용",
       "rentalKoOnly": "한국어 예약 전용",
       "cap1Title": "보컬 디렉터 디렉팅",
       "cap1Sub": "모든 테이크 지도",

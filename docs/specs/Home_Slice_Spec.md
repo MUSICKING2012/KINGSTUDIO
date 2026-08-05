@@ -424,7 +424,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | items.mv | MUSIC VIDEO | 뮤직비디오 | ミュージックビデオ | 音樂錄影帶 | 音乐录影带 | 323·366·409·452·497 |
 | items.making | MAKING CLASS | 메이킹클래스 | メイキングクラス | Making Class | Making Class | 324·367·410·453·497 |
 | items.rental | STUDIO RENTAL | 스튜디오 대여 | スタジオ貸出 | 錄音室租借 | 录音室租借 | 325·368·411·454·497 |
-| inquiryOnly | INQUIRY ONLY | 문의 전용 | お問い合わせのみ | 僅接受洽詢 | 仅接受咨询 | 344·387·430·473·483 |
+| ~~inquiryOnly~~ → koreanOnly | KOREAN ONLY | 한국어 전용 | 韓国語のみ | 僅限韓語 | 仅限韩语 | 디자인 원문 344·387·430·473·483 은 "INQUIRY ONLY" — **이식 금지로 정정**(5d-2 결정 ②: 1Hour·1Pro = 즉시결제, PRD §5.2. `Studio_Slice_Spec.md` §2-②, 2026-08-05) |
 | rentalKoOnly (신규) | Korean-language bookings only | 한국어 예약 전용 | 韓国語での予約のみ | 只接受韓語預約 | 仅接受韩语预约 | — |
 | cap1Title | Vocal-director led | 보컬 디렉터 디렉팅 | ボーカルディレクター指導 | 聲樂總監指導 | 声乐总监指导 | 319·362·405·448·495 (**개정 ⑤** — 구 `Producer-directed` 계열) |
 | cap1Sub | every take, guided | 모든 테이크 지도 | 全テイクをディレクション | 每次錄製都有指導 | 每次录制都有指导 | 동상 |
