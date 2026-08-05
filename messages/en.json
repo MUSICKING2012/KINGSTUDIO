@@ -242,6 +242,44 @@
       "line": "Change-of-mind cancellations: 100% refund up to 3 days before the session · 80% at 2 days before · 50% at 1 day before · no refund on the session day or for no-shows. Payment-gateway fees are deducted. The full policy is shown at checkout."
     }
   },
+  "studios": {
+    "metaTitle": "Studios — Two Rooms in Seongsu | KING STUDIO",
+    "metaDescription": "Inside KING STUDIO's two purpose-built recording rooms in Seongsu, Seoul — the booths, the desks, and studio rental (1Hour · 1Pro) with an engineer.",
+    "hero": {
+      "meta": {
+        "a": "STUDIOS",
+        "b": "SEOUL · SEONGSU",
+        "c": "TWO ROOMS",
+        "d": "KST 2026"
+      },
+      "title1": "Inside the",
+      "title2": "studios",
+      "sub": "Two purpose-built rooms in Seongsu — the booths, the desks and the people behind every session. This is where your track gets made.",
+      "imageAlt": "Studio interior — hero view"
+    },
+    "rooms": {
+      "a": {
+        "name": "STUDIO A",
+        "purpose": "The main session room — where producer-directed vocal sessions run.",
+        "mainAlt": "STUDIO A — main room",
+        "boothAlt": "STUDIO A — booth",
+        "deskAlt": "STUDIO A — desk"
+      },
+      "b": {
+        "name": "STUDIO B",
+        "purpose": "The second room — sessions and group work.",
+        "mainAlt": "STUDIO B — main room",
+        "boothAlt": "STUDIO B — booth",
+        "deskAlt": "STUDIO B — desk"
+      }
+    },
+    "cta": {
+      "title1": "Ready to",
+      "title2": "record?",
+      "packages": "See packages",
+      "book": "Book a session"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — Record your own K-pop track in Seoul",
     "metaDescription": "A real Seoul recording studio where visitors train with a vocal director, record a K-pop song, and take home their own audio and photos. Featured in The New York Times.",
