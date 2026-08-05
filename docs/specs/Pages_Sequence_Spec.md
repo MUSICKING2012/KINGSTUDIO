@@ -138,4 +138,5 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
    범위·백로그는 `Studio_Slice_Spec.md` §3 하단.
 3. 게이트 재검증 시 로컬 실 DB·Redis 필요(vitest 통합·e2e). 원격 세션은 스크래치 PG16(:5433)+
    Redis+Upstash REST 셔임으로 통과함(447/447·71/71) — 로컬 재검증도 동일 결과로 재현됨.
-4. 홈 Categories INQUIRY ONLY 필 정정(결정 ② 후속)은 별도 소슬라이스 — 5d-3 에 묶어도 됨.
+4. ~~홈 Categories INQUIRY ONLY 필 정정(결정 ② 후속)은 별도 소슬라이스~~ → **완료(2026-08-05,
+   `fix/home-rental-pill-decision2`)** — `koreanOnly` 카피로 정정, `Studio_Slice_Spec.md` §3 하단.

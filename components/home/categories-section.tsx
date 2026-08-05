@@ -24,7 +24,10 @@ import type { Locale } from '@/lib/i18n/routing';
  *    (계산 ≈1.5:1)로 흐리고 활성만 잉크로 둔다 — AA 대폭 미달이고 상태를 색만으로 전달해
  *    §3.9 위반이다. 모든 라벨을 `text-foreground` 로 두고, 강조는 `aria-hidden` 장식 배지의
  *    accent 채움으로만 표현한다(장식이므로 색 단독 전달 문제 자체가 성립하지 않음).
- *  - 캡션 `/.55`, INQUIRY ONLY pill `/.55` → 12px·10px 소형 텍스트라 `/70` 으로 상향.
+ *  - 캡션 `/.55`, rental pill `/.55` → 12px·10px 소형 텍스트라 `/70` 으로 상향.
+ *  - **디자인 "INQUIRY ONLY" 필 문구 미채택.** 1Hour·1Pro 는 `bookingFlow=instant_payment`
+ *    (PRD §5.2, 문의제 아님 — 5d-2 결정 ② 후속 정정). 필은 실제 제약인 "한국어 전용"
+ *    (`koreanOnly`)을 표기한다 — `Studio_Slice_Spec.md` §2-②.
  *
  * 배지 숫자는 장식 인덱스다(디자인 581행 주석 실측: "never performance counts") → `aria-hidden`.
  */
@@ -108,7 +111,7 @@ export async function CategoriesSection({ locale }: { locale: string }) {
 
               {cat.localeGated && (
                 <span className="flex-none whitespace-nowrap rounded-full border border-foreground/25 px-2.5 py-1 text-[10px] font-extrabold tracking-[0.06em] text-foreground/70">
-                  {t('inquiryOnly')}
+                  {t('koreanOnly')}
                 </span>
               )}
             </li>

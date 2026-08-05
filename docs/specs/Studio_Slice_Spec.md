@@ -90,4 +90,6 @@ B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카�
 43)·`e2e/studios-page.spec.ts`·가격 하드코딩 스캔. §11-W 알파 하한. 죽은 링크 0.
 
 **5d-3 백로그 (fill-in 도착 후):** 룸 스펙 표·room↔product 매핑·장비 리스트·팀 섹션(동의 확인
-필수)·실사진 교체·소개 페이지 전환 여부(로케일 노출·sitemap 재검토), 홈 INQUIRY ONLY 필 정정.
+필수)·실사진 교체·소개 페이지 전환 여부(로케일 노출·sitemap 재검토). ~~홈 INQUIRY ONLY 필 정정~~
+→ **완료(2026-08-05 소슬라이스)**: `home.categories.inquiryOnly` → `koreanOnly`("한국어 전용" 계열
+×5), 필 의미 = 문의제(오표기) → 한국어 전용(실제 제약).

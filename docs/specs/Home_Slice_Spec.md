@@ -226,7 +226,8 @@ flex flex-wrap items-center justify-between gap-5
 
 ### 4-C. 항목 ↔ 라우트 (결정 ④)
 디자인 4항목(322–325행): `VOCAL SESSION` / `MUSIC VIDEO` / `MAKING CLASS` / `STUDIO RENTAL`.
-`isRental`(150행)만 링크 + `INQUIRY ONLY` pill.
+`isRental`(150행)만 링크 + `INQUIRY ONLY` pill(디자인 원문 — 필 카피는 2026-08-05 `KOREAN ONLY` 로
+정정됨, 아래 표·키 표 참조).
 
 **권고안(A) 매핑 — 실측 라우트 기준:**
 
@@ -235,13 +236,13 @@ flex flex-wrap items-center justify-between gap-5
 | VOCAL SESSION | `/experience` | 전 로케일 | gold/diamond/premium `languagesAvailable = ALL`(`seed-packages.ts:22,38,54`) |
 | MUSIC VIDEO | `/packages/premium` | 전 로케일 | Premium = MV 포함 패키지, 상세 라우트 실존 |
 | MAKING CLASS | `/group` | 전 로케일 | making-class `ALL`(`:102`) → `CategoryCatalog` notFound 미발동 |
-| STUDIO RENTAL | `/rental` + `INQUIRY ONLY` pill | **ko 전용** | 1hour·1pro 둘 다 `KO`(`:70,86`) → 비-ko에서 `pkgs.length===0` → `notFound()`(`category-catalog.tsx:39`) |
+| STUDIO RENTAL | `/studios`(구 `/rental`, 5d-1 리네임 308) + `KOREAN ONLY` pill(구 `INQUIRY ONLY`, 5d-2 결정 ② 정정) | **ko 전용** | 1hour·1pro 둘 다 `KO`(`:70,86`) → 비-ko에서 `pkgs.length===0` → `notFound()`(`category-catalog.tsx:39`) |
 
 - 비-ko 로케일에서 STUDIO RENTAL은 **`<span>`(비링크) + `sr-only` 안내**로 렌더. Nav 슬라이스 `enabled:false` 패턴 재사용
   (`site-header.tsx:65-73`). 죽은 링크·오답 404 방지.
 - 판정은 **하드코딩 로케일 allow-list가 아니라** `listPackages({locale}).some(p => p.category==='rental')` 데이터 기반으로
   한다(`category-catalog.tsx:38` 주석의 동일 원칙). → 이 섹션은 서버 컴포넌트이며 DB read가 필요 → 4d의 렌더 모드 전환(결정 ⑦)에 동승.
-- `INQUIRY ONLY` pill `rounded-full border border-foreground/25 px-2.5 py-1 text-[10px] font-extrabold tracking-[0.06em] text-foreground/70`
+- rental pill(현행 `KOREAN ONLY`) `rounded-full border border-foreground/25 px-2.5 py-1 text-[10px] font-extrabold tracking-[0.06em] text-foreground/70`
   (디자인 `/.55` → 10px 소형 AA 미달로 `/70` 상향).
 
 ---
@@ -424,7 +425,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | items.mv | MUSIC VIDEO | 뮤직비디오 | ミュージックビデオ | 音樂錄影帶 | 音乐录影带 | 323·366·409·452·497 |
 | items.making | MAKING CLASS | 메이킹클래스 | メイキングクラス | Making Class | Making Class | 324·367·410·453·497 |
 | items.rental | STUDIO RENTAL | 스튜디오 대여 | スタジオ貸出 | 錄音室租借 | 录音室租借 | 325·368·411·454·497 |
-| inquiryOnly | INQUIRY ONLY | 문의 전용 | お問い合わせのみ | 僅接受洽詢 | 仅接受咨询 | 344·387·430·473·483 |
+| ~~inquiryOnly~~ → koreanOnly | KOREAN ONLY | 한국어 전용 | 韓国語のみ | 僅限韓語 | 仅限韩语 | 디자인 원문 344·387·430·473·483 은 "INQUIRY ONLY" — **이식 금지로 정정**(5d-2 결정 ②: 1Hour·1Pro = 즉시결제, PRD §5.2. `Studio_Slice_Spec.md` §2-②, 2026-08-05) |
 | rentalKoOnly (신규) | Korean-language bookings only | 한국어 예약 전용 | 韓国語での予約のみ | 只接受韓語預約 | 仅接受韩语预约 | — |
 | cap1Title | Vocal-director led | 보컬 디렉터 디렉팅 | ボーカルディレクター指導 | 聲樂總監指導 | 声乐总监指导 | 319·362·405·448·495 (**개정 ⑤** — 구 `Producer-directed` 계열) |
 | cap1Sub | every take, guided | 모든 테이크 지도 | 全テイクをディレクション | 每次錄製都有指導 | 每次录制都有指导 | 동상 |
