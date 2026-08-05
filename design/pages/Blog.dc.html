@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.bl-link:hover{color:#F5461E}
+.bl-card{transition:transform .18s ease,box-shadow .18s ease}
+.bl-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(20,18,16,.12)}
+</style>
+</helmet>
+
+<div style="font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;color:#141210;font-size:16px;line-height:1.5;background:#F0EEE9;background-image:linear-gradient(rgba(20,18,16,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(20,18,16,.045) 1px,transparent 1px);background-size:44px 44px;min-height:100vh">
+
+  <!-- NAV -->
+  <header style="position:sticky;top:0;z-index:50;background:rgba(240,238,233,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(20,18,16,.08)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;min-height:66px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <a href="KING STUDIO Editorial.dc.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex:none">
+        <span style="width:26px;height:26px;border-radius:7px;background:#141210;color:#F0EEE9;display:grid;place-items:center;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:14px">K</span>
+        <span style="font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:900;font-size:16px;letter-spacing:.02em">KING STUDIO</span>
+      </a>
+      <nav style="display:flex;gap:24px;flex:1 1 auto;justify-content:center;min-width:0;overflow-x:auto">
+        <a href="Service.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">SERVICE</a>
+        <a href="Studio.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">STUDIOS</a>
+        <a href="Product.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">PRODUCT</a>
+        <a href="Review.dc.html" style="font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;color:#141210">REVIEW</a>
+        <a href="Blog.dc.html" style="font-size:16px;font-weight:700;text-decoration:none;white-space:nowrap;border-bottom:2px solid #F5461E;padding:4px 0">BLOG</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;flex:none">
+        <span style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700">EN ▾</span>
+        <span style="border:1px solid rgba(20,18,16,.16);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700">₩ ▾</span>
+        <a href="Product.dc.html#book" style="background:#F5461E;color:#fff;border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">Book now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section style="max-width:1280px;margin:0 auto;padding:40px 24px 0;box-sizing:border-box">
+    <div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,18,16,.4);text-transform:uppercase;padding-bottom:20px;flex-wrap:wrap;gap:6px">
+      <span>BLOG</span><span>NOTES FROM THE STUDIO</span><span>SEOUL</span>
+    </div>
+    <h1 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(46px,9vw,110px);line-height:.9;text-transform:uppercase;letter-spacing:-.01em">Journal</h1>
+  </section>
+
+  <!-- CATEGORY TABS -->
+  <section style="max-width:1280px;margin:0 auto;padding:28px 24px 0;box-sizing:border-box">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+        <button type="button" onClick="{{ c.go }}" style="border:1px solid {{ c.border }};cursor:pointer;background:{{ c.bg }};color:{{ c.ink }};border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;white-space:nowrap">{{ c.label }}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <sc-if value="{{ hasFeatured }}" hint-placeholder-val="{{ true }}">
+  <section style="max-width:1280px;margin:0 auto;padding:22px 24px 0;box-sizing:border-box">
+    <a href="{{ featured.url }}" class="bl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));background:#111010;color:#F0EEE9;border-radius:20px;overflow:hidden;text-decoration:none">
+      <div style="position:relative;min-height:280px;display:flex;background:#1c1a19">
+        <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="bl-featured" shape="rect" fit="cover" placeholder="{{ featured.coverPh }}" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+      </div>
+      <div style="padding:clamp(26px,4vw,44px);display:flex;flex-direction:column;justify-content:center;gap:14px">
+        <span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#F5461E">{{ featured.cat }} · {{ featured.read }}</span>
+        <h2 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(26px,3.4vw,42px);line-height:1.05">{{ featured.title }}</h2>
+        <p style="margin:0;font-size:14.5px;line-height:1.65;color:rgba(240,238,233,.68);max-width:46ch">{{ featured.excerpt }}</p>
+        <span style="font-weight:800;font-size:14px;color:#F0EEE9">Read article →</span>
+      </div>
+    </a>
+  </section>
+  </sc-if>
+
+  <!-- POST GRID -->
+  <section style="max-width:1280px;margin:0 auto;padding:22px 24px 0;box-sizing:border-box">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px">
+      <sc-for list="{{ shown }}" as="p" hint-placeholder-count="6">
+        <a href="{{ p.url }}" class="bl-card" style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(20,18,16,.06);text-decoration:none;display:flex;flex-direction:column">
+          <div style="position:relative;aspect-ratio:16/10;display:flex;background:#e6e3dc">
+            <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ p.slotId }}" shape="rect" fit="cover" placeholder="{{ p.coverPh }}" dc-props="{{ slotFill }}" hint-size="100%,100%"></x-import>
+          </div>
+          <div style="padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;flex:1">
+            <span style="font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#F5461E">{{ p.cat }} · {{ p.read }}</span>
+            <h3 style="margin:0;font-weight:800;font-size:18px;line-height:1.2">{{ p.title }}</h3>
+            <p style="margin:0;font-size:13px;line-height:1.6;color:rgba(20,18,16,.6);flex:1">{{ p.excerpt }}</p>
+            <span style="font-size:11.5px;color:rgba(20,18,16,.45);margin-top:4px">{{ p.date }}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:30px 0 0">
+        <button type="button" onClick="{{ loadMore }}" style="border:1px solid #141210;cursor:pointer;background:transparent;border-radius:999px;padding:13px 30px;font-size:14px;font-weight:800">Load more ({{ remaining }})</button>
+      </div>
+    </sc-if>
+  </section>
+
+  <!-- NEWSLETTER (Mailchimp) -->
+  <section style="max-width:1280px;margin:0 auto;padding:56px 24px 64px;box-sizing:border-box">
+    <div style="background:#F5461E;color:#fff;border-radius:24px;padding:clamp(30px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;align-items:center">
+      <div>
+        <h2 style="margin:0;font-family:'Pretendard Variable',Pretendard,Inter,sans-serif;font-weight:800;font-size:clamp(28px,4vw,46px);text-transform:uppercase;line-height:.98">Notes in<br>your inbox</h2>
+        <p style="margin:12px 0 0;font-size:14px;color:rgba(255,255,255,.85);max-width:34ch">New customer stories, Seoul guides and studio notes — a few times a month.</p>
+      </div>
+      <!-- Real Mailchimp: set form action to your embedded-form URL (fill-in). action/method wired at build. -->
+      <div>
+        <sc-if value="{{ subDone }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <input value="{{ email }}" onInput="{{ setEmail }}" type="email" placeholder="you@example.com" aria-label="Email" style="border:none;border-radius:12px;padding:14px 16px;font-size:14px;color:#141210;width:100%;box-sizing:border-box" />
+            <label style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:rgba(255,255,255,.85);cursor:pointer">
+              <input type="checkbox" checked="{{ consent }}" onChange="{{ toggleConsent }}" style="margin-top:2px" />
+              <span>I agree to receive email updates and accept the <a href="#reach" style="color:#fff;font-weight:700">privacy policy</a>. Unsubscribe anytime.</span>
+            </label>
+            <button type="button" onClick="{{ subscribe }}" disabled="{{ subDisabled }}" style="border:none;cursor:pointer;background:{{ subBtnBg }};color:#F5461E;border-radius:12px;padding:14px;font-size:14px;font-weight:800">Subscribe</button>
+            <sc-if value="{{ subError }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#fff;font-weight:700">Please enter your email and agree to continue.</span></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ subSuccess }}" hint-placeholder-val="{{ false }}">
+          <div style="background:rgba(255,255,255,.14);border-radius:14px;padding:20px;text-align:center;font-size:15px;font-weight:700">✓ You're subscribed — check your inbox to confirm.</div>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <x-import component-from-global-scope="ks-footer" from="./ks-footer.js" hint-size="100%,260px"></x-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 1280, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  // NOTE: posts are PLACEHOLDER samples pending the Ghost export migration + 301 redirect map.
+  // Copy follows the corrected product model: no photo-shoot mentions; Gold ≠ mix (unedited/vocal-focused);
+  // Diamond = mix/master + custom CD; Premium = in-studio music video.
+  state = { cat: 'all', page: 1, email: '', consent: false, sub: 'idle' };
+
+  static PER_PAGE = 6;
+  static POSTS = [
+    { slug: 'mia-love-dive-seongsu', cat: 'Story', read: '6 min', date: 'Jun 2, 2026', feat: true,
+      title: "How Mia recorded IVE's 'LOVE DIVE' in a Seongsu booth",
+      excerpt: 'A first-timer from Taipei on choosing her song, the vocal directing that got her through the chorus, and the recording she took home the same day.' },
+    { slug: 'nyt-feature-2026', cat: 'Press', read: '3 min', date: 'Nov 29, 2024',
+      title: 'The New York Times: "Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help"',
+      excerpt: 'Our Seongsu recording experience, featured in The New York Times.' },
+    { slug: 'inside-vocal-directing', cat: 'Behind', read: '5 min', date: 'May 18, 2026',
+      title: 'Inside the booth: how vocal directing actually works',
+      excerpt: 'What a producer listens for, take after take — and why no experience is needed to leave with a track you are proud of.' },
+    { slug: 'kpop-day-in-seongsu', cat: 'Seoul travel', read: '7 min', date: 'May 4, 2026',
+      title: 'A K-pop day in Seongsu: cafes, record shops and your session',
+      excerpt: 'Build a full day around your recording — where to eat, dig for vinyl and shoot photos around the studio.' },
+    { slug: 'daniel-premium-mv', cat: 'Story', read: '6 min', date: 'Apr 22, 2026',
+      title: "Daniel flew from LA for a Premium session — and left with a music video",
+      excerpt: 'A Premium visit told start to finish: the song, the in-studio music video shoot, and the edit that landed a couple of weeks later.' },
+    { slug: 'diamond-mix-master', cat: 'Behind', read: '4 min', date: 'Apr 8, 2026',
+      title: 'From take to master: how Diamond mixing & mastering works',
+      excerpt: 'Auto-Tune and Melodyne, the mix, the master, and the custom CD — how a Diamond session becomes a release-ready track.' },
+    { slug: 'group-making-class', cat: 'Story', read: '5 min', date: 'Mar 30, 2026',
+      title: 'One song, one team: a school group makes a track together',
+      excerpt: 'The K-Pop Making Class through the eyes of a visiting class — three studio roles, one group track everyone took home.' },
+    { slug: 'song-picking-guide', cat: 'Seoul travel', read: '8 min', date: 'Mar 12, 2026',
+      title: 'How to pick the right K-pop song for your session',
+      excerpt: 'Range, tempo and lyrics you can actually enjoy — a practical guide to choosing a track before you fly to Seoul.' },
+    { slug: 'behind-the-mic-setup', cat: 'Behind', read: '4 min', date: 'Feb 28, 2026',
+      title: 'The gear behind the booth (and why it does not matter to you)',
+      excerpt: 'A peek at the signal chain — and why our directing, not the gear list, is what makes your take sing.' }
+  ];
+
+  slotId(slug) { return 'bl-' + slug; }
+
+  renderVals() {
+    const s = this.state;
+    const C = Component;
+    const catDefs = [['all', 'All'], ['Story', 'Story'], ['Press', 'Press'], ['Behind', 'Behind'], ['Seoul travel', 'Seoul travel']];
+    const cats = catDefs.map(([id, label]) => ({
+      label, go: () => this.setState({ cat: id, page: 1 }),
+      bg: s.cat === id ? '#141210' : 'transparent', ink: s.cat === id ? '#fff' : '#141210',
+      border: s.cat === id ? '#141210' : 'rgba(20,18,16,.2)'
+    }));
+
+    const withUrl = (p) => ({ slug: p.slug, cat: p.cat, read: p.read, date: p.date, title: p.title, excerpt: p.excerpt,
+      url: 'Blog Post.dc.html?slug=' + p.slug, slotId: this.slotId(p.slug), coverPh: p.cat + ' cover' });
+
+    // featured only on "all"
+    const featuredPost = C.POSTS.find((p) => p.feat);
+    const showFeatured = s.cat === 'all' && !!featuredPost;
+
+    let list = C.POSTS.filter((p) => s.cat === 'all' ? !p.feat : p.cat === s.cat);
+    const total = list.length;
+    const limit = s.page * C.PER_PAGE;
+    const shown = list.slice(0, limit).map(withUrl);
+    const remaining = Math.max(0, total - limit);
+
+    const subDisabled = !(s.email && s.consent);
+    return {
+      cats,
+      hasFeatured: showFeatured, featured: showFeatured ? { ...withUrl(featuredPost), coverPh: 'Featured story cover' } : {},
+      shown, hasMore: remaining > 0, remaining, loadMore: () => this.setState({ page: s.page + 1 }),
+      slotFill: { style: { width: '100%', height: '100%', display: 'block', flex: 1 } },
+      email: s.email, setEmail: (e) => this.setState({ email: e.target.value, sub: 'idle' }),
+      consent: s.consent, toggleConsent: (e) => this.setState({ consent: e.target.checked, sub: 'idle' }),
+      subDone: s.sub !== 'done', subSuccess: s.sub === 'done', subError: s.sub === 'error',
+      subDisabled, subBtnBg: subDisabled ? 'rgba(255,255,255,.55)' : '#fff',
+      subscribe: () => { if (subDisabled) { this.setState({ sub: 'error' }); return; } this.setState({ sub: 'done' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
