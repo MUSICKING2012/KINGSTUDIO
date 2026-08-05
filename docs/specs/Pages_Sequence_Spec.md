@@ -41,7 +41,7 @@
 - `.dc.html` href 이식 금지. 죽은 링크 0(미존재 라우트는 비링크).
 - messages 편집은 python splice, 5로케일 동시.
 - 각 슬라이스 게이트: tsc·biome·i18n:check·런타임 키체크·vitest·build(프리렌더 28 유지)·해당 E2E.
-- 리네임 슬라이스(5c·5d)는 301 redirect + sitemap + `lib/nav/items.ts` href + 홈 Categories href 동시 갱신.
+- 리네임 슬라이스(5c·5d)는 308 redirect(`permanentRedirect` — 5c·5d 구현 실측) + sitemap + `lib/nav/items.ts` href + 홈 Categories href 동시 갱신.
 
 ## 3. Service 카피 사전 플래그 (5a STEP 1-A 대조 목록 — 스냅샷 실측)
 
@@ -61,11 +61,12 @@
 ## 4. OPEN DECISION (A/B/C + 추천 — 확정 전 해당 슬라이스 착수 금지)
 
 ### ① 라우트 리네임 — `/experience`→`/product`, `/rental`→`/studios` (5c·5d 선행) — **확정 A (2026-08-04 Aiden "리네임 A 진행")**
-- **A. 리네임 실행**: nav 라벨(PRODUCT·STUDIOS)과 URL 일치. 301 redirect 영구 유지 + sitemap 갱신.
-  기존 URL 인바운드(홈 Categories·푸터·booking 백링크) 동시 갱신. SEO 리스크는 301 로 흡수.
+- **A. 리네임 실행**: nav 라벨(PRODUCT·STUDIOS)과 URL 일치. 308 redirect 영구 유지 + sitemap 갱신.
+  기존 URL 인바운드(홈 Categories·푸터·booking 백링크) 동시 갱신. SEO 리스크는 308 로 흡수.
+  (구 표기 301 은 308 로 정정 — 실제 구현은 `permanentRedirect` = 308, 5c·5d 동일. PR #36 리뷰 반영.)
 - **B. 현행 URL 유지**: nav 라벨만 PRODUCT/STUDIOS, URL 은 /experience·/rental. 작업 최소.
   라벨↔URL 불일치가 영구화.
-- **추천 = A.** 출시 전 greenfield 라 301 비용이 사실상 0 인 지금이 마지막 싼 시점. 출시 후엔 비싸진다.
+- **추천 = A.** 출시 전 greenfield 라 308 비용이 사실상 0 인 지금이 마지막 싼 시점. 출시 후엔 비싸진다.
 
 ### ② Service ↔ 기존 /faq·/about IA (5a 선행)
 - **A. Service 신설 + /faq·/about 존치**: Service 의 FAQ 섹션은 대표 5문항 + "전체 FAQ →" 링크.
