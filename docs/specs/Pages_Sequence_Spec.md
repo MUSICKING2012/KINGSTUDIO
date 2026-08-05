@@ -102,7 +102,7 @@
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
-| 5d Studio | **분할 진행(2026-08-05)**: 5d-1 리네임 = 이 브랜치(/studios 신설·카탈로그 이관 + /rental 308 + nav·홈·크로스링크·sitemap·e2e 전환, 신규 카피 0) / 5d-2 디자인 레이아웃 = **Studio.dc.html 스냅샷 대기**(하단 §6 주 참조) |
+| 5d Studio | **5d-1 리네임 ✅ 머지(PR #36, 2026-08-05)** — /studios 신설(카탈로그 이관) + /rental 308 + 인바운드 전환. **5d-2 디자인 레이아웃 = 스냅샷 확보·스펙 완료, OPEN DECISION ①·② 대기**(`Studio_Slice_Spec.md`) |
 | 5e Blog | **결정 ③ 대기** |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
