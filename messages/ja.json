@@ -242,6 +242,44 @@
       "line": "お客様都合のキャンセル：セッション3日前まで100% · 2日前80% · 1日前50% · 当日・無断キャンセルは返金不可。決済手数料（PG）を差し引きます。全文ポリシーは決済画面でご案内します。"
     }
   },
+  "studios": {
+    "metaTitle": "スタジオ紹介 — 聖水洞の2ルーム | KING STUDIO",
+    "metaDescription": "ソウル・聖水洞 KING STUDIO の2つの専用ルーム — ブースとデスク、セッションが生まれる場所。エンジニア付きスタジオレンタル（1Hour·1Pro）のご案内。",
+    "hero": {
+      "meta": {
+        "a": "スタジオ",
+        "b": "ソウル · 聖水",
+        "c": "2ルーム",
+        "d": "KST 2026"
+      },
+      "title1": "スタジオの",
+      "title2": "なかへ",
+      "sub": "聖水洞に構えた2つの専用ルーム — ブース、デスク、そしてすべてのセッションを支える人たち。あなたのトラックが生まれる場所です。",
+      "imageAlt": "スタジオ内部 — 全景"
+    },
+    "rooms": {
+      "a": {
+        "name": "STUDIO A",
+        "purpose": "メインセッションルーム — プロデューサーがディレクションするボーカルセッションが行われます。",
+        "mainAlt": "STUDIO A — メインルーム",
+        "boothAlt": "STUDIO A — ブース",
+        "deskAlt": "STUDIO A — デスク"
+      },
+      "b": {
+        "name": "STUDIO B",
+        "purpose": "2つ目のルーム — 個人セッションとグループワークに使用します。",
+        "mainAlt": "STUDIO B — メインルーム",
+        "boothAlt": "STUDIO B — ブース",
+        "deskAlt": "STUDIO B — デスク"
+      }
+    },
+    "cta": {
+      "title1": "さあ、",
+      "title2": "録音しよう",
+      "packages": "パッケージを見る",
+      "book": "セッションを予約"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — ソウルで自分だけのK-POP音源を録音",
     "metaDescription": "本物のソウルの録音スタジオでボーカルディレクターとK-POPを録音し、自分の音源と写真を持ち帰る体験。The New York Times掲載。",

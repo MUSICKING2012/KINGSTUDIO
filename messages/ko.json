@@ -242,6 +242,44 @@
       "line": "고객 변심 취소: 세션 3일 전까지 100% · 2일 전 80% · 1일 전 50% · 당일·노쇼 환불 불가. PG 수수료 공제. 전체 정책은 결제 화면에서 안내됩니다."
     }
   },
+  "studios": {
+    "metaTitle": "스튜디오 소개 — 성수동 2개 룸 | KING STUDIO",
+    "metaDescription": "성수동 KING STUDIO의 룸 A·B — 부스와 데스크, 세션이 만들어지는 공간. 엔지니어와 함께 쓰는 스튜디오 대여(1Hour·1Pro) 안내.",
+    "hero": {
+      "meta": {
+        "a": "스튜디오",
+        "b": "서울 · 성수",
+        "c": "룸 2개",
+        "d": "KST 2026"
+      },
+      "title1": "스튜디오",
+      "title2": "안으로",
+      "sub": "성수동에 마련된 2개의 전용 룸 — 부스와 데스크, 그리고 모든 세션 뒤에 있는 사람들. 당신의 트랙이 만들어지는 곳입니다.",
+      "imageAlt": "스튜디오 내부 — 전경"
+    },
+    "rooms": {
+      "a": {
+        "name": "STUDIO A",
+        "purpose": "메인 세션 룸 — 프로듀서 디렉팅 보컬 세션이 진행되는 공간입니다.",
+        "mainAlt": "STUDIO A — 메인 룸",
+        "boothAlt": "STUDIO A — 부스",
+        "deskAlt": "STUDIO A — 데스크"
+      },
+      "b": {
+        "name": "STUDIO B",
+        "purpose": "두 번째 룸 — 개인 세션과 단체 작업에 사용합니다.",
+        "mainAlt": "STUDIO B — 메인 룸",
+        "boothAlt": "STUDIO B — 부스",
+        "deskAlt": "STUDIO B — 데스크"
+      }
+    },
+    "cta": {
+      "title1": "이제",
+      "title2": "녹음할까요?",
+      "packages": "패키지 보기",
+      "book": "세션 예약"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — 서울에서 나만의 K-POP 음원을 녹음하세요",
     "metaDescription": "실제 서울 녹음실에서 보컬 디렉터와 함께 K-POP을 녹음하고, 나만의 음원과 사진을 가져가는 체험. The New York Times 소개.",

@@ -39,7 +39,12 @@ terms are CLIENT FILL-INS — placeholders rendered as [—]/[모델명], never 
 | D7 | 소형 텍스트 알파 `.4/.55/.6/.65` | 라이트 `/70`·다크 `/65` 상향 | §11-W |
 | D8 | CTA·크로스링크 → Product | 채택(기존 라우트·5a CTA 패턴) | — |
 
-## 2. OPEN DECISION (확정 전 5d-2 구현 착수 금지)
+## 2. OPEN DECISION — **전건 확정 (2026-08-05 Aiden 회신)**
+
+- **① = C (단계 분할)**: 현행 ko 전용 유지 + 데이터 실재 섹션(히어로·룸 카드 뼈대·대여 카드·CTA)만
+  구현. fill-in 도착 후 5d-3 에서 소개 페이지로 확장.
+- **② = 즉시결제가 정본**: PRD §5.2·DB 유지. 디자인 "문의제" 카피 이식 금지.
+  **후속 백로그: 홈 Categories 의 INQUIRY ONLY 필도 같은 사유로 정정 대상**(별도 슬라이스).
 
 ### ① STUDIOS 페이지 성격·로케일 노출
 - **A. 현행 유지 + 부분 채택**: `/studios` 는 ko 전용 대여 카탈로그로 남기고, 디자인 섹션 중
@@ -69,7 +74,20 @@ terms are CLIENT FILL-INS — placeholders rendered as [—]/[모델명], never 
 - 제공 전: D3·D4·D5 섹션 미구현(①-A/C 범위로 출시). 제공 후: 5d-3 확장. 데이터는 코드 하드코딩
   대신 어떤 저장소(DB 신규 테이블? messages? 어드민 모듈?)에 둘지도 그때 결정.
 
-## 3. 구현 범위 (결정 ① 확정 후 작성 — 현재는 게이트 목록만 예약)
+## 3. 구현 범위 (결정 ① = C 반영, 2026-08-05 구현)
 
-게이트: tsc·biome·i18n:check(5로케일 `studios` ns 신설 시)·vitest·build(프리렌더 수 기록, 현재
-43)·`e2e/studios-page.spec.ts` 확장·가격 하드코딩 스캔. §11-W 알파 하한. 죽은 링크 0.
+**수정:** `app/[locale]/(public)/studios/page.tsx`(카탈로그 단순 이관 → 5d-2 레이아웃) ·
+`messages ×5`(`studios` ns 신설: meta·hero·rooms a/b·cta — python splice) ·
+`e2e/studios-page.spec.ts`(레이아웃 단언 추가). **수정 금지 유지:** `CategoryCatalog`(/group 공유,
+자체 main+h1 이라 임베드 불가 → 카드 자체 렌더, 5c 선례) · nav·sitemap·리다이렉트(5d-1 그대로).
+
+구성: 히어로(메타 스트립·h1·sub·21/9 EditorialImage) → 룸 A/B 카드(이름·용도·이미지 3슬롯,
+B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카드(DB listPackages·formatKrw/≈·
+`/packages/{slug}`) → CTA(accent 패널 → /product·/product#bookbar). 렌더 = force-dynamic,
+비-ko 404 게이트는 rental 0건 notFound() 로 5d-1 과 동일.
+
+게이트: tsc·biome·i18n:check(5로케일 `studios` ns)·vitest·build(프리렌더 수 기록, 5d-1 시점
+43)·`e2e/studios-page.spec.ts`·가격 하드코딩 스캔. §11-W 알파 하한. 죽은 링크 0.
+
+**5d-3 백로그 (fill-in 도착 후):** 룸 스펙 표·room↔product 매핑·장비 리스트·팀 섹션(동의 확인
+필수)·실사진 교체·소개 페이지 전환 여부(로케일 노출·sitemap 재검토), 홈 INQUIRY ONLY 필 정정.

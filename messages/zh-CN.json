@@ -242,6 +242,44 @@
       "line": "顾客因素取消：体验前 3 天或以上退款 100% · 前 2 天 80% · 前 1 天 50% · 当日或未到场不予退款。扣除支付通道（PG）手续费。完整政策于结算页面显示。"
     }
   },
+  "studios": {
+    "metaTitle": "录音室介绍 — 圣水洞两间录音室 | KING STUDIO",
+    "metaDescription": "首尔圣水洞 KING STUDIO 的两间专属录音室 — 录音棚与控制台，音乐诞生的地方。附工程师的录音室租借（1Hour·1Pro）信息。",
+    "hero": {
+      "meta": {
+        "a": "录音室",
+        "b": "首尔 · 圣水",
+        "c": "两间录音室",
+        "d": "KST 2026"
+      },
+      "title1": "走进",
+      "title2": "录音室",
+      "sub": "位于圣水洞的两间专属录音室 — 录音棚、控制台，以及每一场录音背后的团队。你的歌曲就在这里诞生。",
+      "imageAlt": "录音室内部 — 全景"
+    },
+    "rooms": {
+      "a": {
+        "name": "STUDIO A",
+        "purpose": "主录音室 — 由制作人指导的人声录音在此进行。",
+        "mainAlt": "STUDIO A — 主室",
+        "boothAlt": "STUDIO A — 录音棚",
+        "deskAlt": "STUDIO A — 控制台"
+      },
+      "b": {
+        "name": "STUDIO B",
+        "purpose": "第二录音室 — 用于个人录音与团体课程。",
+        "mainAlt": "STUDIO B — 主室",
+        "boothAlt": "STUDIO B — 录音棚",
+        "deskAlt": "STUDIO B — 控制台"
+      }
+    },
+    "cta": {
+      "title1": "准备好",
+      "title2": "开始录音了吗？",
+      "packages": "查看套餐",
+      "book": "预约录音"
+    }
+  },
   "home": {
     "metaTitle": "KING STUDIO — 在首尔录制属于你的K-POP音源",
     "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报导。",
