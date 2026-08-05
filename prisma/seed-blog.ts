@@ -47,12 +47,16 @@ async function main() {
   for (const file of files) {
     const { front, body } = parse(file);
     const slug = required(front, file, 'slug');
+    const readMinutesRaw = required(front, file, 'readMinutes');
+    if (!/^\d+$/.test(readMinutesRaw) || Number.parseInt(readMinutesRaw, 10) < 1) {
+      throw new Error(`${file}: readMinutes must be a positive integer, got "${readMinutesRaw}"`);
+    }
     const data = {
       category: required(front, file, 'category'),
       title: required(front, file, 'title'),
       excerpt: required(front, file, 'excerpt'),
       body,
-      readMinutes: Number.parseInt(required(front, file, 'readMinutes'), 10),
+      readMinutes: Number.parseInt(readMinutesRaw, 10),
       featured: front.featured === 'true',
       isPublished: front.isPublished !== 'false',
       publishedAt: new Date(required(front, file, 'publishedAt')),

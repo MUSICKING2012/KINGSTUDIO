@@ -80,10 +80,17 @@ Gold ≠ 믹스, Diamond = 믹스/마스터+CD, Premium = 스튜디오 MV).
   별도 오너 결정 + M5 법무 트랙 이후.
 - **B. 지금 도입**: Mailchimp 계정·임베드 URL·개인정보 고지 문구 필요 — 스택 변경 승인 필수.
 
-## 3. 구현 범위 (결정 후 확정)
+## 3. 구현 범위 — 5e-1 확정 (2026-08-05 구현, PR #40)
 
-후보 구성: `/blog`(목록 — 카테고리 탭·featured·그리드·페이지네이션) + `/blog/[slug]`(상세 —
-본문·related·CTA) + nav BLOG 탭 활성 + sitemap(글별 URL, W4 불변식 계열) + per-post JSON-LD.
-게이트: tsc·biome·i18n:check·vitest·build·e2e(신설 blog spec)·가격 하드코딩 스캔·§11-W.
+**5e-1 구성:** `/blog`(목록 — 데이터 주도 카테고리 탭·featured·서버 페이지네이션) +
+`/blog/[slug]`(상세 — markdown 본문·related·CTA) + per-post JSON-LD(BlogPosting·Breadcrumb) +
+`BlogPost` 모델(category CHECK) + `pnpm seed:blog` 게시 파이프라인 + 초기 글 1건(NYT 보도, F8
+검증분). **nav BLOG 탭 활성·sitemap 편입은 5e-1 범위 밖 — §2-ⓐ대로 5e-2 전속**(e2e 가 비활성
+탭·sitemap 미포함을 단언해 조기 활성화를 회귀로 잡는다).
+게이트: tsc·biome·i18n:check·vitest·build·e2e(blog spec 신설)·가격 하드코딩 스캔·§11-W
+(소형 카테고리 라벨 = 중립 토큰, accent 텍스트 금지 — PR #40 리뷰 반영).
 
-**미구현(결정과 무관하게 이연):** 뉴스레터(ⓓ-A 시), 커버 실사진, 댓글·검색 (전부 백로그).
+**5e-2 (Ghost export 도착 후):** 이관 + 구 URL 301 맵 + nav 탭 켬 + sitemap 편입(목록 + 글별 URL,
+W4 불변식 계열).
+
+**미구현(결정과 무관하게 이연):** 뉴스레터(ⓓ), 커버 실사진, 댓글·검색 (전부 백로그).

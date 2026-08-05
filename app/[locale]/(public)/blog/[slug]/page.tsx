@@ -59,12 +59,12 @@ export default async function BlogPostPage({ params: { locale, slug } }: Params)
       {/* 헤더 — 브레드크럼·메타·h1·저자 배지·커버 */}
       <article className="mx-auto max-w-[960px] px-gutter pt-9">
         <div className="pb-3.5 text-[12px] text-foreground/70">
-          <Link href="/blog" className="font-semibold hover:text-primary">
+          <Link href="/blog" className="font-semibold underline-offset-4 hover:underline">
             {t('breadcrumb')}
           </Link>{' '}
           / {t(`categories.${post.category}`)}
         </div>
-        <div className="pb-3 text-[11px] font-extrabold uppercase tracking-[0.08em] text-primary">
+        <div className="pb-3 text-[11px] font-extrabold uppercase tracking-[0.08em] text-foreground/70">
           {t(`categories.${post.category}`)} · {dateFmt.format(post.publishedAt)} ·{' '}
           {t('readMinutes', { min: post.readMinutes })}
         </div>
@@ -103,7 +103,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Params)
           </span>
           <Link
             href="/product#bookbar"
-            className="rounded-full bg-primary px-6 py-[13px] text-[14px] font-extrabold text-white"
+            className="rounded-full bg-primary px-6 py-[13px] text-[14px] font-extrabold text-foreground"
           >
             {t('cta.book')} →
           </Link>
@@ -127,7 +127,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Params)
                   <EditorialImage alt={t('coverAlt', { title: r.title })} className="h-full" />
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-4 px-[18px] pb-[18px]">
-                  <span className="text-[10.5px] font-extrabold uppercase tracking-[0.07em] text-primary">
+                  <span className="text-[10.5px] font-extrabold uppercase tracking-[0.07em] text-foreground/70">
                     {t(`categories.${r.category}`)} · {t('readMinutes', { min: r.readMinutes })}
                   </span>
                   <h3 className="m-0 text-[16px] font-extrabold leading-[1.25] text-foreground">
@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Params)
           </h2>
           <Link
             href="/product#bookbar"
-            className="rounded-full bg-primary px-7 py-[15px] text-[15px] font-extrabold text-white"
+            className="rounded-full bg-primary px-7 py-[15px] text-[15px] font-extrabold text-foreground"
           >
             {t('cta.book')} →
           </Link>

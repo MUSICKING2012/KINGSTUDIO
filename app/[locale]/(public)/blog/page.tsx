@@ -119,7 +119,7 @@ export default async function BlogPage({
               <EditorialImage alt={t('coverAlt', { title: featured.title })} className="h-full" />
             </div>
             <div className="flex flex-col justify-center gap-3.5 p-[clamp(26px,4vw,44px)]">
-              <span className="text-[11px] font-extrabold uppercase tracking-[0.08em] text-primary">
+              <span className="text-[11px] font-extrabold uppercase tracking-[0.08em] text-background/65">
                 {t(`categories.${featured.category}`)} · {readLabel(featured.readMinutes)}
               </span>
               <h2 className="ks-display m-0 text-[clamp(26px,3.4vw,42px)] leading-[1.05]">
@@ -150,7 +150,7 @@ export default async function BlogPage({
                   <EditorialImage alt={t('coverAlt', { title: post.title })} className="h-full" />
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-[18px] pb-5">
-                  <span className="text-[10.5px] font-extrabold uppercase tracking-[0.07em] text-primary">
+                  <span className="text-[10.5px] font-extrabold uppercase tracking-[0.07em] text-foreground/70">
                     {t(`categories.${post.category}`)} · {readLabel(post.readMinutes)}
                   </span>
                   <h3 className="m-0 text-[18px] font-extrabold leading-[1.2] text-foreground">
