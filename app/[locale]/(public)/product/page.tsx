@@ -279,7 +279,7 @@ export default async function ProductPage({ params: { locale } }: { params: { lo
           {t('cross.rentalLine')}{' '}
           {rentalVisible ? (
             <Link
-              href="/rental"
+              href="/studios"
               className="font-extrabold text-foreground underline-offset-4 hover:underline"
             >
               {t('cross.rentalCta')} →

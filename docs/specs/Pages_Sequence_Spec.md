@@ -41,7 +41,7 @@
 - `.dc.html` href 이식 금지. 죽은 링크 0(미존재 라우트는 비링크).
 - messages 편집은 python splice, 5로케일 동시.
 - 각 슬라이스 게이트: tsc·biome·i18n:check·런타임 키체크·vitest·build(프리렌더 28 유지)·해당 E2E.
-- 리네임 슬라이스(5c·5d)는 301 redirect + sitemap + `lib/nav/items.ts` href + 홈 Categories href 동시 갱신.
+- 리네임 슬라이스(5c·5d)는 308 redirect(`permanentRedirect` — 5c·5d 구현 실측) + sitemap + `lib/nav/items.ts` href + 홈 Categories href 동시 갱신.
 
 ## 3. Service 카피 사전 플래그 (5a STEP 1-A 대조 목록 — 스냅샷 실측)
 
@@ -61,11 +61,12 @@
 ## 4. OPEN DECISION (A/B/C + 추천 — 확정 전 해당 슬라이스 착수 금지)
 
 ### ① 라우트 리네임 — `/experience`→`/product`, `/rental`→`/studios` (5c·5d 선행) — **확정 A (2026-08-04 Aiden "리네임 A 진행")**
-- **A. 리네임 실행**: nav 라벨(PRODUCT·STUDIOS)과 URL 일치. 301 redirect 영구 유지 + sitemap 갱신.
-  기존 URL 인바운드(홈 Categories·푸터·booking 백링크) 동시 갱신. SEO 리스크는 301 로 흡수.
+- **A. 리네임 실행**: nav 라벨(PRODUCT·STUDIOS)과 URL 일치. 308 redirect 영구 유지 + sitemap 갱신.
+  기존 URL 인바운드(홈 Categories·푸터·booking 백링크) 동시 갱신. SEO 리스크는 308 로 흡수.
+  (구 표기 301 은 308 로 정정 — 실제 구현은 `permanentRedirect` = 308, 5c·5d 동일. PR #36 리뷰 반영.)
 - **B. 현행 URL 유지**: nav 라벨만 PRODUCT/STUDIOS, URL 은 /experience·/rental. 작업 최소.
   라벨↔URL 불일치가 영구화.
-- **추천 = A.** 출시 전 greenfield 라 301 비용이 사실상 0 인 지금이 마지막 싼 시점. 출시 후엔 비싸진다.
+- **추천 = A.** 출시 전 greenfield 라 308 비용이 사실상 0 인 지금이 마지막 싼 시점. 출시 후엔 비싸진다.
 
 ### ② Service ↔ 기존 /faq·/about IA (5a 선행)
 - **A. Service 신설 + /faq·/about 존치**: Service 의 FAQ 섹션은 대표 5문항 + "전체 FAQ →" 링크.
@@ -101,7 +102,7 @@
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
-| 5d Studio | 결정 ① 확정(A) — 착수 대기 |
+| 5d Studio | **분할 진행(2026-08-05)**: 5d-1 리네임 = 이 브랜치(/studios 신설·카탈로그 이관 + /rental 308 + nav·홈·크로스링크·sitemap·e2e 전환, 신규 카피 0) / 5d-2 디자인 레이아웃 = **Studio.dc.html 스냅샷 대기**(하단 §6 주 참조) |
 | 5e Blog | **결정 ③ 대기** |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
@@ -112,6 +113,11 @@
 1. `git pull` 후 STEP 0 (worktree clean · main=origin/main 확인).
 2. `Studio.dc.html` 을 DesignSync 로 가져와 `design/pages/` 에 sha 고정 커밋. **주의: DesignSync 는
    서브에이전트에 전파되지 않음 — 메인 세션에서 직접 호출**(5c 실측).
+   **추가 실측(2026-08-05, 원격 세션): DesignSync 는 원격(claude.ai/code) 환경에서 인증 불가**
+   (/design-login 이 대화형 터미널 전용). 원격에서 스냅샷이 필요하면 Claude Design 의
+   "Send to Claude Code Web" 으로 시드하거나 파일을 직접 커밋해 제공해야 한다. 이 때문에 5d 는
+   5d-1(리네임 — 디자인 무관, 결정 ① 만으로 진행 가능)과 5d-2(디자인 레이아웃 — 스냅샷 필요)로
+   분할 진행됐다.
 3. `Product_Slice_Spec.md` §2 리네임 메커니즘 재사용 — 단, `/rental` 은 **ko 전용**이라 다름:
    nav localeGatedCategory('rental') 게이트 유지, 리다이렉트·sitemap 처리 시 비-ko 404 동작 검증 필수.
 4. 디자인 자체 데이터(가격·슬롯·문구)는 이식 0 — DB·PRD 정본 대체(5c 델타표 패턴).

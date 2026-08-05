@@ -53,7 +53,7 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'service' });
 
-  // 렌탈 크로스링크: 비-ko 에서 /rental 은 404(1Hour·1Pro ko 전용) — 링크를 만들지 않는다.
+  // 렌탈 크로스링크: 비-ko 에서 /studios 는 404(1Hour·1Pro ko 전용) — 링크를 만들지 않는다.
   const rentalVisible = await isCategoryVisibleForLocale('rental', locale as Locale);
 
   return (
@@ -216,7 +216,7 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
             <span className="text-[13px] text-foreground/70">{t('cross.rentalDesc')}</span>
             {rentalVisible ? (
               <Link
-                href="/rental"
+                href="/studios"
                 className="mt-1 text-[13px] font-extrabold text-foreground underline-offset-4 hover:underline"
               >
                 {t('cross.rentalCta')}

@@ -14,7 +14,7 @@ import type { Locale } from '@/lib/i18n/routing';
  *
  * **서버 컴포넌트 + DB read.** rental 노출 판정을 하드코딩 로케일 allow-list 가 아니라
  * `listPackages({locale})` 결과로 한다(§4-C). 1Hour·1Pro 는 `languagesAvailable = ['ko']`
- * 이므로 비-ko 에서는 rental 카테고리 패키지가 0건이고, `/rental` 은 `CategoryCatalog` 가
+ * 이므로 비-ko 에서는 rental 카테고리 패키지가 0건이고, `/studios` 는 `CategoryCatalog` 가
  * `notFound()` 로 죽인다(`components/catalog/category-catalog.tsx:38-39`). 그 라우트로
  * 링크를 걸면 404 를 만들므로 비-ko 에서는 비인터랙티브 `<span>` + `sr-only` 안내로 렌더한다
  * (Nav 슬라이스 `enabled:false` 패턴 재사용, 죽은 링크 0 원칙).
@@ -35,7 +35,7 @@ const CATEGORIES = [
   { key: 'vocal', href: '/product', localeGated: false },
   { key: 'mv', href: '/packages/premium', localeGated: false },
   { key: 'making', href: '/group', localeGated: false },
-  { key: 'rental', href: '/rental', localeGated: true },
+  { key: 'rental', href: '/studios', localeGated: true }, // 5d-1 리네임(구 /rental 은 308)
 ] as const;
 
 // 디자인 prop `catActiveIndex` 기본값 1 = MUSIC VIDEO. 순수 장식.

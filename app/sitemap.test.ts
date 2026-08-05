@@ -53,8 +53,9 @@ describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
     expect(urls.some((u) => /\/experience$/.test(new URL(u).pathname))).toBe(false);
   });
 
-  it('excludes /rental (ko-only route → non-200 in en/ja/zh-*)', async () => {
+  it('excludes /studios (ko-only route → non-200 in en/ja/zh-*) and the renamed /rental (5d-1: 308)', async () => {
     const urls = (await sitemap()).map((e) => e.url);
+    expect(urls.some((u) => /\/studios$/.test(new URL(u).pathname))).toBe(false);
     expect(urls.some((u) => /\/rental$/.test(new URL(u).pathname))).toBe(false);
   });
 
