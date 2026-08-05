@@ -102,7 +102,7 @@
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
-| 5d Studio | **5d-1 리네임 ✅ 머지(PR #36, 2026-08-05)** — /studios 신설(카탈로그 이관) + /rental 308 + 인바운드 전환. **5d-2 디자인 레이아웃 = 스냅샷 확보·스펙 완료, OPEN DECISION ①·② 대기**(`Studio_Slice_Spec.md`) |
+| 5d Studio | **5d-1 리네임 ✅ 머지(PR #36)** / **5d-2 레이아웃 ✅ 구현·게이트 통과·푸시(2026-08-05, 결정 ①C·②즉시결제 — `Studio_Slice_Spec.md`)** — 브랜치 `claude/pages-sequence-spec-5d-studio-kll3jy`(4058512), **PR 미생성**. 잔여 = PR 생성·머지 + ja·zh 감수 + 5d-3 fill-in 대기 |
 | 5e Blog | **결정 ③ 대기** |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
@@ -125,4 +125,16 @@
    가격 하드코딩 스캔.
 
 보류·백로그: 5e Blog 는 결정 ③(Ghost 운영 여부) 대기. ja·zh 기계번역 감수(service 76 + reviews 17 +
-product 신규)는 Aiden 몫. OPENEXCHANGERATES_APP_ID 미발급 → 환율 표시는 KRW 단독 강등 중(정상 동작).
+product 신규 + **studios 20**)는 Aiden 몫. OPENEXCHANGERATES_APP_ID 미발급 → 환율 표시는 KRW 단독 강등 중(정상 동작).
+
+### 6-A. 다산 인수인계 (2026-08-05 원격 세션 → 로컬)
+
+5d-2 는 구현·게이트·푸시까지 완료, **PR 만 미생성**. 로컬(다산)에서 이어받는 절차:
+1. `git fetch origin && git checkout claude/pages-sequence-spec-5d-studio-kll3jy && git pull` —
+   워킹트리 clean 확인. HEAD = 4058512(feat 5d-2) 이어야 함.
+2. 잔여 작업: ① 이 브랜치로 main 대상 **PR 생성**(제목 = feat 커밋 1행) → CodeRabbit → 머지.
+   ② studios ns ja·zh 감수. ③ 5d-3 은 fill-in(룸 스펙·room↔product 매핑·장비·팀 명단+동의·실사진)
+   도착 후 — 범위·백로그는 `Studio_Slice_Spec.md` §3 하단.
+3. 게이트 재검증 시 로컬 실 DB·Redis 필요(vitest 통합·e2e). 원격 세션은 스크래치 PG16(:5433)+
+   Redis+Upstash REST 셔임으로 통과함(447/447·71/71) — 로컬은 기존 .env 인프라 그대로 쓰면 됨.
+4. 홈 Categories INQUIRY ONLY 필 정정(결정 ② 후속)은 별도 소슬라이스 — 5d-3 에 묶어도 됨.
