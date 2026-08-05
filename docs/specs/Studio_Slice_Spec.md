@@ -110,7 +110,7 @@ B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카�
 ### 4-B. 확정 결정 (2026-08-05 AskUserQuestion 회신)
 
 - **저장 위치 = DB 신규 테이블.** 단 운영 `Room` 테이블(예약·슬롯 FK)은 **불변** — 마케팅
-  콘텐츠 전용 테이블(`studio_rooms`·`studio_equipment`·`team_members`)을 분리 신설한다.
+  콘텐츠 전용 테이블(`studio_room_profiles`·`studio_equipment`·`team_members`)을 분리 신설한다.
   근거: PRD §5.3 "고객 화면에 룸 선택 미노출(자동 배정)" — 운영 룸과 소개 콘텐츠는 결합할
   이유가 없고, 운영 테이블에 B 행을 추가하면 슬롯·가용성 로직에 영향 리스크(위험 구역 인접).
   어드민 콘텐츠 관리 모듈은 후속(백로그).

@@ -30,11 +30,16 @@ test('5d-3 콘텐츠 — 룸 스펙·장비·팀이 DB 값으로 렌더된다 (k
   // 값 자체는 DB 를 따르므로 "스펙 dt 라벨이 룸당 2개 존재"로 고정(표시가 데이터를 앞서지 않는다).
   const specRows = page.locator('main dl div');
   expect(await specRows.count()).toBeGreaterThanOrEqual(2);
-  // 장비 리스트: seed 기준 1개 이상. 무분류 평면 리스트(§4-A).
-  const equipment = page.locator('main ul.list-none li');
-  expect(await equipment.count()).toBeGreaterThan(0);
-  // 팀 카드: 이름+역할만(사진·bio 없음 — §4-A). seed 기준 1명 이상.
-  await expect(page.locator('main h2').nth(1)).toBeVisible();
+  // 섹션 스코프 로케이터 — ko 고정 실행이라 messages ko 헤딩으로 섹션을 특정한다
+  // (main 전역 ul/h2 인덱스 매칭은 대여 카드·CTA 로 오염될 수 있어 금지 — PR #39 리뷰 반영).
+  const equipmentSection = page.locator('main section').filter({
+    has: page.getByRole('heading', { name: '장비' }),
+  });
+  expect(await equipmentSection.locator('ul li').count()).toBeGreaterThan(0);
+  const teamSection = page.locator('main section').filter({
+    has: page.getByRole('heading', { name: '팀', exact: true }),
+  });
+  expect(await teamSection.locator('article').count()).toBeGreaterThan(0);
 });
 
 test('대여 섹션 로케일 조건부 — ko 는 KRW 카드 렌더, en 은 0 (데이터 주도)', async ({ page }) => {

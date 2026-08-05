@@ -236,7 +236,7 @@ flex flex-wrap items-center justify-between gap-5
 | VOCAL SESSION | `/experience` | 전 로케일 | gold/diamond/premium `languagesAvailable = ALL`(`seed-packages.ts:22,38,54`) |
 | MUSIC VIDEO | `/packages/premium` | 전 로케일 | Premium = MV 포함 패키지, 상세 라우트 실존 |
 | MAKING CLASS | `/group` | 전 로케일 | making-class `ALL`(`:102`) → `CategoryCatalog` notFound 미발동 |
-| STUDIO RENTAL | `/studios`(구 `/rental`, 5d-1 리네임 308) + `KOREAN ONLY` pill(구 `INQUIRY ONLY`, 5d-2 결정 ② 정정) | **ko 전용** | 1hour·1pro 둘 다 `KO`(`:70,86`) → 비-ko에서 `pkgs.length===0` → `notFound()`(`category-catalog.tsx:39`) |
+| STUDIO RENTAL | `/studios`(구 `/rental`, 5d-1 리네임 308) + `KOREAN ONLY` pill(구 `INQUIRY ONLY`, 5d-2 결정 ② 정정) | **전 로케일**(5d-3 — 페이지는 전 로케일 소개, 200) | 라우트는 전 로케일 200(`Studio_Slice_Spec.md` §4-B). 필이 가리키는 ko 전용은 **대여 서비스**(1hour·1pro `languagesAvailable=['ko']`)이지 라우트가 아니다 |
 
 - ~~비-ko 로케일에서 STUDIO RENTAL은 `<span>`(비링크) + `sr-only` 안내로 렌더~~ → **5d-3 폐기(2026-08-05)**:
   `/studios` 가 전 로케일 소개 페이지(200)로 전환돼 죽은 링크 위험이 사라짐 — 전 로케일 상시 링크,
@@ -434,7 +434,8 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | image1Alt (신규) | Studio look, take one | 스튜디오 룩 1 | スタジオルック 1 | 錄音室造型 1 | 录音室造型 1 | 140 |
 | image2Alt (신규) | Studio look, take two | 스튜디오 룩 2 | スタジオルック 2 | 錄音室造型 2 | 录音室造型 2 | 157 |
 
-> `rentalKoOnly`는 비-ko 로케일에서 STUDIO RENTAL이 비링크 `<span>`으로 렌더될 때의 `sr-only` 안내(§4-C).
+> ~~`rentalKoOnly` sr-only 안내~~ — **5d-3 에서 키째 제거**(2026-08-05): /studios 전 로케일 200 전환으로
+> 비링크 강등·sr-only 안내가 폐기됨(§4-C 개정 참조). 대여 서비스의 ko 전용 표기는 가시 필 `koreanOnly` 가 담당.
 
 ### 9-4. `home.bolder.*` / `home.packages.*`
 
