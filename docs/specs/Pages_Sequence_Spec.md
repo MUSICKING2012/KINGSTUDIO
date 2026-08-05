@@ -143,3 +143,40 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
    Redis+Upstash REST 셔임으로 통과함(447/447·71/71) — 로컬 재검증도 동일 결과로 재현됨.
 4. ~~홈 Categories INQUIRY ONLY 필 정정(결정 ② 후속)은 별도 소슬라이스~~ → **완료(2026-08-05,
    `fix/home-rental-pill-decision2`)** — `koreanOnly` 카피로 정정, `Studio_Slice_Spec.md` §3 하단.
+
+### 6-B. 선릉(Windows) 인수인계 (2026-08-06 다산 → 선릉)
+
+**상태: 시퀀스 5 의 개발 가능분 전부 main 머지 완료** — 5d-3(PR #39)·홈 필 정정(PR #38)·
+5e-1(PR #40)까지. 미머지 브랜치·미생성 PR **없음**. main = 472e20b 이후.
+
+선릉에서 이어받는 절차 (git pull 만으로 코드는 끝, 로컬 인프라 동기화만 필요):
+1. `git checkout main && git pull` — 워킹트리 clean 확인.
+2. `pnpm install --frozen-lockfile` — 5e-1 에서 의존성 신규 2건(react-markdown·remark-gfm).
+3. `.env` 는 기존 그대로(신규 환경변수 0). 로컬 Postgres 기동 확인.
+4. **`pnpm prisma migrate dev`** — 신규 마이그레이션 3건 적용(전부 additive CREATE/ALTER:
+   `add_studios_intro_content` · `studios_content_check_constraints` · `add_blog_posts`).
+   §7-B 대로 수동 승인 실행.
+5. **`pnpm seed:studios && pnpm seed:blog`** — 5d-3 스튜디오 콘텐츠(룸 프로필·장비·팀) +
+   5e-1 블로그 초기 글(nyt-feature-2024). 미실행 시 /studios 스펙·장비·팀 섹션이 비고
+   /blog 가 빈 상태로 뜬다(둘 다 200 은 유지 — 오류 아님).
+6. 게이트 재검증(선택): tsc·lint·i18n:check·`pnpm test`(447)·build·`pnpm e2e`(80, :3100).
+   ⚠ e2e 병렬 플레이크 패밀리(로그인 타임아웃·ECONNSET·dev cold-compile)는 머신 부하에
+   민감 — 광범위 실패 시 `--workers=2` 재실행으로 판별(2026-08-05 다산 실측).
+7. `.claude/` allowlist 는 머신 간 미공유(§7-B) — 선릉 쪽 정책이 §7-B 정본과 일치하는지 확인.
+8. CodeRabbit 무료 리뷰 rate limit 대응: 리밋 코멘트의 리셋 시간 대기 후 PR 에
+   `@coderabbitai review` 코멘트로 수동 트리거. check 의 "pass · Review rate limited"는
+   리뷰 미수행이다 — 인라인 코멘트 존재로 수행 여부를 판단.
+9. DesignSync 는 로컬 대화형 세션에서만 인증 가능(원격 불가 — §6 실측). 서브에이전트에
+   전파되지 않으므로 메인 세션에서 직접 호출.
+
+**잔여 작업 = 전부 Aiden 입력 대기** (도착 시 해당 스펙 §대로 소슬라이스 착수):
+- ① **5e-2**: Ghost export(JSON/마크다운) → 기존 글 이관 + 구 URL 301 맵 + nav BLOG 탭 켬 +
+  sitemap 편입 (`Blog_Slice_Spec.md` §3).
+- ② **5d-3 후속 fill-in**: 실사진(히어로 1+룸당 3)·장비 상세 모델·수량·팀 bio(동의 필수)·
+  룸 Size·Max guests (`Studio_Slice_Spec.md` §4-A).
+- ③ **ja·zh 기계번역 감수**: service·reviews·product·studios·blog ns (Aiden).
+- ④ NYT 블로그 글 본문 감수(`content/blog/nyt-feature-2024.md` — 에이전트 작성 카피).
+- 별건: CLAUDE.md §5 로케일 구본(zh-TW 서술)을 L-2 결정(zh-CN 정본)으로 동기화하는 작업이
+  분리되어 있음(다산 세션 칩) — 선릉에서 하려면 이 항목을 새 세션 프롬프트로 지시.
+
+**배포(Railway) 시**: 마이그레이션 3건 적용 + `pnpm seed:studios`·`pnpm seed:blog` 실행 필요.
