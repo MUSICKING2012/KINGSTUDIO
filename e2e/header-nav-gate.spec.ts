@@ -3,7 +3,8 @@ import { expect, test } from '@playwright/test';
 /**
  * 헤더 nav 의 로케일 게이트 회귀 방지.
  *
- * 2026-07-31 실측 결함: nav "STUDIOS" 가 로케일과 무관하게 `/rental` 로 링크를 만들었다.
+ * 2026-07-31 실측 결함: nav "STUDIOS" 가 로케일과 무관하게 대여 카탈로그(현 `/studios`,
+ * 구 `/rental`) 로 링크를 만들었다.
  * 1Hour·1Pro 는 `languagesAvailable = ['ko']` 이라 비-ko 에서 `CategoryCatalog` 가
  * `notFound()` 를 던지므로(`components/catalog/category-catalog.tsx:38-39`),
  * **사이트 전 페이지에서 4/5 로케일이 404 로 가는 링크**를 노출했다.
@@ -18,21 +19,21 @@ import { expect, test } from '@playwright/test';
 const LOCALES = ['ko', 'en', 'ja', 'zh-HK', 'zh-CN'] as const;
 
 for (const locale of LOCALES) {
-  test(`헤더 STUDIOS 링크는 /rental 이 살아있는 로케일에만 — ${locale}`, async ({
+  test(`헤더 STUDIOS 링크는 /studios 가 살아있는 로케일에만 — ${locale}`, async ({
     page,
     request,
   }) => {
-    // 라우트가 실제로 200 인지 404 인지가 기준값이다.
-    const routeOk = (await request.get(`/${locale}/rental`)).status() === 200;
+    // 라우트가 실제로 200 인지 404 인지가 기준값이다. (5d-1: /rental → /studios 리네임)
+    const routeOk = (await request.get(`/${locale}/studios`)).status() === 200;
 
     await page.goto(`/${locale}`);
     const header = page.locator('header');
     await expect(header).toBeVisible();
 
-    const link = header.locator('a[href$="/rental"]');
+    const link = header.locator('a[href$="/studios"]');
     if (routeOk) {
       await expect(link).toHaveCount(1);
-      await expect(link).toHaveAttribute('href', `/${locale}/rental`);
+      await expect(link).toHaveAttribute('href', `/${locale}/studios`);
     } else {
       // 404 로 가는 링크를 만들지 않는다. 항목 자체는 비링크로 남아 nav 5탭 구성은 유지된다.
       await expect(link).toHaveCount(0);
