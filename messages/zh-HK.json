@@ -113,8 +113,7 @@
       "groupCta": "團體方案詳情 →",
       "rentalTitle": "需要錄音室本身？",
       "rentalDesc": "含錄音師的錄音室租借 — 韓語專用商品。",
-      "rentalCta": "STUDIOS →",
-      "rentalKoOnly": "只接受韓語預約"
+      "rentalCta": "STUDIOS →"
     },
     "faq": {
       "heading": "常見問題",
@@ -212,8 +211,7 @@
       "serviceLine": "第一次進錄音室？逐步了解體驗如何進行。",
       "serviceCta": "了解流程 — SERVICE",
       "rentalLine": "尋找錄音室租用？租用為韓語本地服務。",
-      "rentalCta": "STUDIOS",
-      "rentalKoOnly": "僅限韓語網站"
+      "rentalCta": "STUDIOS"
     },
     "faq": {
       "heading": "FAQ",
@@ -271,13 +269,30 @@
         "mainAlt": "STUDIO B — 主室",
         "boothAlt": "STUDIO B — 錄音房",
         "deskAlt": "STUDIO B — 控制台"
-      }
+      },
+      "area": "{sqm}㎡",
+      "specs": {
+        "controlRoom": "控制室",
+        "booth": "隔音棚"
+      },
+      "allPackagesTag": "所有套餐均在此進行"
     },
     "cta": {
       "title1": "準備好",
       "title2": "開始錄音了嗎？",
       "packages": "查看套裝",
       "book": "預約錄音"
+    },
+    "equipment": {
+      "heading": "設備",
+      "sub": "錄音時使用的部分設備 — 詳細清單將持續更新。"
+    },
+    "team": {
+      "heading": "團隊",
+      "roles": {
+        "producer": "監製",
+        "vocalDirector": "聲樂指導"
+      }
     }
   },
   "home": {
@@ -331,7 +346,6 @@
         "rental": "錄音室租借"
       },
       "koreanOnly": "僅限韓語",
-      "rentalKoOnly": "只接受韓語預約",
       "cap1Title": "聲樂總監指導",
       "cap1Sub": "每次錄製都有指導",
       "cap2Title": "帶回家",

@@ -102,12 +102,16 @@
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
-| 5d Studio | **5d-1 리네임 ✅ 머지(PR #36)** / **5d-2 레이아웃 ✅ PR #37 생성(2026-08-05, 결정 ①C·②즉시결제 — `Studio_Slice_Spec.md`)** — 로컬(다산) 게이트 재검증 통과(vitest 447·e2e 71·build 정적 104). 잔여 = PR #37 머지 + ja·zh 감수 + 5d-3 fill-in 대기 |
+| 5d Studio | **5d-1 리네임 ✅ 머지(PR #36)** / **5d-2 레이아웃 ✅ 머지(PR #37, 2026-08-05)** / **5d-3 fill-in ✅ 구현(2026-08-05 — 룸 스펙·장비·팀 DB 3테이블 + 전 로케일 소개 전환, `Studio_Slice_Spec.md` §4)**. 잔여 = 5d-3 PR 머지 + ja·zh 감수 + 실사진·장비 상세·bio 후속 fill-in |
 | 5e Blog | **결정 ③ 대기** |
 
-## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
+## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용)
 
-다음 작업 = **5d Studio**: `/rental` → `/studios` 리네임(결정 ① A 기확정, 재질문 불필요) + STUDIOS 페이지 신설.
+> **2026-08-05 갱신:** 5d 는 5d-3(fill-in·전 로케일 전환)까지 구현 완료 — 아래 5d 킥오프 절차는
+> **이력 보존용**이다. 현재 잔여 = ① 5e Blog(결정 ③ 대기) ② 후속 fill-in 소슬라이스(실사진·
+> 장비 상세·팀 bio — `Studio_Slice_Spec.md` §4-A) ③ ja·zh 감수(Aiden).
+
+~~다음 작업 = **5d Studio**~~ (완료): `/rental` → `/studios` 리네임(결정 ① A 기확정) + STUDIOS 페이지 신설.
 
 킥오프 절차 (5c 와 동일 사이클):
 1. `git pull` 후 STEP 0 (worktree clean · main=origin/main 확인).

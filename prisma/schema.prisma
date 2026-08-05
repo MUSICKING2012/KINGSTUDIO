@@ -435,25 +435,25 @@ enum BookingFlow {
 /// be extended by the catalog CMS in M2. Display copy lives in next-intl messages (§5); `name`
 /// is the canonical/admin identifier. `Booking.packageSnapshot` freezes pricing per §3.2.
 model Package {
-  id                     String          @id @default(cuid())
-  slug                   String          @unique // URL slug, e.g. 'gold' (/packages/gold)
-  category               PackageCategory
-  name                   String // canonical name (e.g. 'Gold', 'Diamond')
-  basePriceKrw           Int             @map("base_price_krw") // per the pricingMode unit (per-person / flat / per-head)
-  pricingMode            PricingMode     @map("pricing_mode")
-  slotMinutes            Int             @map("slot_minutes") // session duration (Gold/Diamond 120, Premium 180, 1Hour 60, 1Pro 210)
-  headcountMin           Int             @default(1) @map("headcount_min")
-  headcountMax           Int             @map("headcount_max")
+  id                        String          @id @default(cuid())
+  slug                      String          @unique // URL slug, e.g. 'gold' (/packages/gold)
+  category                  PackageCategory
+  name                      String // canonical name (e.g. 'Gold', 'Diamond')
+  basePriceKrw              Int             @map("base_price_krw") // per the pricingMode unit (per-person / flat / per-head)
+  pricingMode               PricingMode     @map("pricing_mode")
+  slotMinutes               Int             @map("slot_minutes") // session duration (Gold/Diamond 120, Premium 180, 1Hour 60, 1Pro 210)
+  headcountMin              Int             @default(1) @map("headcount_min")
+  headcountMax              Int             @map("headcount_max")
   // Locale exposure filter (CLAUDE.md §5 languages_available). e.g. rental/꿈길/워크샵 = [ko] only.
-  languagesAvailable     Locale[]        @map("languages_available")
-  bookingFlow            BookingFlow     @default(instant_payment) @map("booking_flow")
-  friendReferralEligible Boolean         @default(false) @map("friend_referral_eligible") // Diamond/Premium/group only (CLAUDE.md §6)
-  returningDiscountEligible Boolean      @default(false) @map("returning_discount_eligible") // experience Gold/Diamond/Premium only (PRD §5.9 returning-member 10%)
-  cdIncluded             Boolean         @default(false) @map("cd_included") // physical CD handed on-site: Gold/Diamond/Premium (PRD §5.2/§5.6, Reconciliation §6)
-  isActive               Boolean         @default(true) @map("is_active")
-  displayOrder           Int             @default(0) @map("display_order")
-  createdAt              DateTime        @default(now()) @map("created_at")
-  updatedAt              DateTime        @updatedAt @map("updated_at")
+  languagesAvailable        Locale[]        @map("languages_available")
+  bookingFlow               BookingFlow     @default(instant_payment) @map("booking_flow")
+  friendReferralEligible    Boolean         @default(false) @map("friend_referral_eligible") // Diamond/Premium/group only (CLAUDE.md §6)
+  returningDiscountEligible Boolean         @default(false) @map("returning_discount_eligible") // experience Gold/Diamond/Premium only (PRD §5.9 returning-member 10%)
+  cdIncluded                Boolean         @default(false) @map("cd_included") // physical CD handed on-site: Gold/Diamond/Premium (PRD §5.2/§5.6, Reconciliation §6)
+  isActive                  Boolean         @default(true) @map("is_active")
+  displayOrder              Int             @default(0) @map("display_order")
+  createdAt                 DateTime        @default(now()) @map("created_at")
+  updatedAt                 DateTime        @updatedAt @map("updated_at")
 
   bookings Booking[]
   quotes   Quote[] // Stage 3 (B2B)
@@ -768,19 +768,19 @@ model Refund {
 /// Customer arrival check-in (PRD §5.5). 1:1 with a booking. checkedInBy = engineer/admin
 /// (logical ref to admin_users.id, left loose like engineerId). Feeds Dispute Evidence Pack.
 model Checkin {
-  id          String   @id @default(cuid())
-  bookingId   String   @unique @map("booking_id")
-  checkedInAt DateTime @map("checked_in_at")
-  checkedInBy String?  @map("checked_in_by") // logical ref to admin_users.id
+  id             String    @id @default(cuid())
+  bookingId      String    @unique @map("booking_id")
+  checkedInAt    DateTime  @map("checked_in_at")
+  checkedInBy    String?   @map("checked_in_by") // logical ref to admin_users.id
   // Physical CD handover (PRD §5.6 / Reconciliation §6). CD is NOT a download deliverable: engineer
   // burns the day's session takes to CD-R and hands it over on-site at session end (no shipping/
   // address). Mirrors checkedIn*; nullable = not yet handed over. Only bookings whose package has
   // cdIncluded=true get a CD.
   cdHandedOverAt DateTime? @map("cd_handed_over_at")
   cdHandedOverBy String?   @map("cd_handed_over_by") // logical ref to admin_users.id
-  memo        String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  memo           String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
@@ -941,16 +941,16 @@ model Song {
 /// — the pattern for dynamic catalog content (mirrors page_seo per-locale rows in Stage 7);
 /// `en` is the fallback locale (§5). Per-locale rows enable per-language full-text search.
 model SongTranslation {
-  id        String   @id @default(cuid())
-  songId    String   @map("song_id")
-  locale    Locale
-  title     String
-  artist    String
+  id          String   @id @default(cuid())
+  songId      String   @map("song_id")
+  locale      Locale
+  title       String
+  artist      String
   // Per-locale SEO description (PRD §6.3 / C18). Nullable; the locale fallback (req→en→canonical)
   // is applied at render time (2b-2b), not stored here.
   description String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
 
@@ -1809,4 +1809,55 @@ model SeoCodeSlot {
 
   @@index([slotType])
   @@map("seo_code_slots")
+}
+
+/// Marketing content for the STUDIOS intro page (5d-3, `Studio_Slice_Spec.md` §4). Deliberately
+/// SEPARATE from the operational `Room` model (bookings/blackouts FK, availability) — PRD §5.3
+/// hides rooms from customers (auto-assignment), so intro content must never touch slot logic.
+/// Specs are client fill-ins (never invented): nullable columns stay null until Aiden provides them.
+model StudioRoomProfile {
+  id                String   @id @default(cuid())
+  slug              String   @unique // 'a' | 'b' — matches studios.rooms.{slug} message keys
+  controlRoomPyeong Int?     @map("control_room_pyeong")
+  boothPyeong       Int?     @map("booth_pyeong")
+  /// true = the "all packages run here" tag renders (fill-in: STUDIO A only, 2026-08-05)
+  allPackages       Boolean  @default(false) @map("all_packages")
+  displayOrder      Int      @default(0) @map("display_order")
+  isVisible         Boolean  @default(true) @map("is_visible")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("studio_room_profiles")
+}
+
+/// STUDIOS page equipment list (5d-3). Flat list — the design's 5-category accordion is NOT
+/// modeled because the received data is uncategorized (categorizing it ourselves = invention).
+/// `category` exists for the follow-up detailed list; null renders in the single flat section.
+model StudioEquipment {
+  id           String   @id @default(cuid())
+  name         String // language-neutral brand/model, e.g. 'Avid Pro Tools'
+  category     String? // future: 'console' | 'microphones' | ... (design accordion keys)
+  displayOrder Int      @default(0) @map("display_order")
+  isVisible    Boolean  @default(true) @map("is_visible")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("studio_equipment")
+}
+
+/// STUDIOS page team section (5d-3). Name list provided directly by the owner (2026-08-05 —
+/// provision = publication consent for name+role). Photos/bios ship only when provided AND
+/// consented (design annotation: "얼굴·이름은 동의 시에만"). Role labels render via
+/// `studios.team.roles.{roleKey}` messages; the name column is language-neutral.
+model TeamMember {
+  id           String   @id @default(cuid())
+  name         String // display name as provided, e.g. 'Aiden'
+  roleKey      String   @map("role_key") // 'producer' | 'vocalDirector' — messages key suffix
+  bio          String? // fill-in, absent 2026-08-05
+  displayOrder Int      @default(0) @map("display_order")
+  isVisible    Boolean  @default(true) @map("is_visible")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("team_members")
 }

@@ -113,8 +113,7 @@
       "groupCta": "グループ詳細 →",
       "rentalTitle": "スタジオそのものが必要ですか？",
       "rentalDesc": "エンジニア付きスタジオレンタル — 韓国語専用の商品です。",
-      "rentalCta": "STUDIOS →",
-      "rentalKoOnly": "韓国語での予約のみ"
+      "rentalCta": "STUDIOS →"
     },
     "faq": {
       "heading": "よくある質問",
@@ -212,8 +211,7 @@
       "serviceLine": "スタジオが初めてですか？セッションの流れをステップごとにご確認ください。",
       "serviceCta": "流れを見る — SERVICE",
       "rentalLine": "スタジオレンタルをお探しですか？レンタルは韓国語の国内向けサービスです。",
-      "rentalCta": "STUDIOS",
-      "rentalKoOnly": "韓国語サイト限定"
+      "rentalCta": "STUDIOS"
     },
     "faq": {
       "heading": "FAQ",
@@ -271,13 +269,30 @@
         "mainAlt": "STUDIO B — メインルーム",
         "boothAlt": "STUDIO B — ブース",
         "deskAlt": "STUDIO B — デスク"
-      }
+      },
+      "area": "{sqm}㎡",
+      "specs": {
+        "controlRoom": "コントロールルーム",
+        "booth": "ブース"
+      },
+      "allPackagesTag": "全パッケージ対応"
     },
     "cta": {
       "title1": "さあ、",
       "title2": "録音しよう",
       "packages": "パッケージを見る",
       "book": "セッションを予約"
+    },
+    "equipment": {
+      "heading": "機材",
+      "sub": "セッションで使用する機材の一部 — 詳細リストは順次追加されます。"
+    },
+    "team": {
+      "heading": "チーム",
+      "roles": {
+        "producer": "プロデューサー",
+        "vocalDirector": "ボーカルディレクター"
+      }
     }
   },
   "home": {
@@ -331,7 +346,6 @@
         "rental": "スタジオ貸出"
       },
       "koreanOnly": "韓国語のみ",
-      "rentalKoOnly": "韓国語での予約のみ",
       "cap1Title": "ボーカルディレクター指導",
       "cap1Sub": "全テイクをディレクション",
       "cap2Title": "持ち帰り",

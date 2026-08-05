@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { isCategoryVisibleForLocale } from '@/lib/catalog/locale-visibility';
 import { Link } from '@/lib/i18n/navigation';
 import type { Locale } from '@/lib/i18n/routing';
 
@@ -9,8 +8,8 @@ import type { Locale } from '@/lib/i18n/routing';
  * SERVICE 페이지 (시퀀스 5a). 실측 소스 = `design/pages/Service.dc.html`
  * (sha256 a9405ef0…084e19). 스펙 = `docs/specs/Service_Slice_Spec.md`.
  *
- * 정적 프리렌더(28→33). DB 직접 조회 없음 — 렌탈 크로스링크 게이트만
- * `isCategoryVisibleForLocale`(unstable_cache) 경유라 정적 생성과 공존한다(헤더와 동일 경로).
+ * 정적 프리렌더(28→33). DB 직접 조회 없음 — 렌탈 크로스링크는 5d-3 부터 상시 링크
+ * (/studios 전 로케일 200 전환)라 게이트 자체가 사라져 완전 정적이다.
  *
  * 카피 정정(Pages_Sequence_Spec §3 판정 이행):
  *  - F1·F2: 인원 정액 숫자(from 2 / up to 5)를 카피에 두지 않는다 — 상세는 카탈로그 위임.
@@ -53,8 +52,8 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'service' });
 
-  // 렌탈 크로스링크: 비-ko 에서 /studios 는 404(1Hour·1Pro ko 전용) — 링크를 만들지 않는다.
-  const rentalVisible = await isCategoryVisibleForLocale('rental', locale as Locale);
+  // 렌탈 크로스링크: 5d-3 부터 /studios 는 전 로케일 소개 페이지(200) — 상시 링크.
+  // (구 게이트 이력: 5d-1~2 는 비-ko 404 라 isCategoryVisibleForLocale 로 비링크 강등했다.)
 
   return (
     <main>
@@ -214,19 +213,12 @@ export default async function ServicePage({ params: { locale } }: { params: { lo
               {t('cross.rentalTitle')}
             </span>
             <span className="text-[13px] text-foreground/70">{t('cross.rentalDesc')}</span>
-            {rentalVisible ? (
-              <Link
-                href="/studios"
-                className="mt-1 text-[13px] font-extrabold text-foreground underline-offset-4 hover:underline"
-              >
-                {t('cross.rentalCta')}
-              </Link>
-            ) : (
-              <span className="mt-1 cursor-default text-[13px] font-extrabold text-foreground/70">
-                {t('cross.rentalCta')}
-                <span className="sr-only"> ({t('cross.rentalKoOnly')})</span>
-              </span>
-            )}
+            <Link
+              href="/studios"
+              className="mt-1 text-[13px] font-extrabold text-foreground underline-offset-4 hover:underline"
+            >
+              {t('cross.rentalCta')}
+            </Link>
           </div>
         </div>
       </section>

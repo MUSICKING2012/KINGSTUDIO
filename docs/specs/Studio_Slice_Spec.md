@@ -93,3 +93,31 @@ B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카�
 필수)·실사진 교체·소개 페이지 전환 여부(로케일 노출·sitemap 재검토). ~~홈 INQUIRY ONLY 필 정정~~
 → **완료(2026-08-05 소슬라이스)**: `home.categories.inquiryOnly` → `koreanOnly`("한국어 전용" 계열
 ×5), 필 의미 = 문의제(오표기) → 한국어 전용(실제 제약).
+
+## 4. 5d-3 — fill-in 도착·확정 (2026-08-05 Aiden 회신)
+
+### 4-A. 접수 데이터 (발명 0 — 이대로만 게시)
+
+| 항목 | 값 | 비고 |
+|---|---|---|
+| STUDIO A 스펙 | 컨트롤룸 10평 · 부스 10평 | Size 총면적·Max guests 미제공 → **행 생략**(확정: "받은 2행만 표기") |
+| STUDIO B 스펙 | 컨트롤룸 6평 · 부스 6평 | 동일 |
+| room↔product | STUDIO A 에서 **전 패키지** 진행 | B 의 운영 용도는 미제공 — 5d-2 카피 유지, 태그 미부여 |
+| 장비 | Avid Pro Tools · Manley · Avalon · Genelec 1031 · Yamaha NS-10 | 원문 "PROTOOL·맥리·아발론·제네릭 1031·야마하 ns10" 브랜드 추정 → **Aiden 확정**. "등"의 추가 목록은 후속 제공 예정 — 상세 모델·수량 도착 시 갱신. **카테고리 5분할(디자인)은 미적용** — 접수 데이터가 무분류라 임의 분류는 발명 |
+| 팀 | 프로듀서 Aiden · 보컬 디렉터 Jiseon·Yena·Lucia | 명단 = 오너 직접 제공(게시 승인으로 간주). bio·사진 미제공 → 이름·역할만. 원문 "JIseon" 은 표기 정규화(Jiseon) — 오표기 시 정정 요 |
+| 실사진 | "첨부 가능" — 미첨부 | 도착 전 `EditorialImage` placeholder 유지 |
+
+### 4-B. 확정 결정 (2026-08-05 AskUserQuestion 회신)
+
+- **저장 위치 = DB 신규 테이블.** 단 운영 `Room` 테이블(예약·슬롯 FK)은 **불변** — 마케팅
+  콘텐츠 전용 테이블(`studio_room_profiles`·`studio_equipment`·`team_members`)을 분리 신설한다.
+  근거: PRD §5.3 "고객 화면에 룸 선택 미노출(자동 배정)" — 운영 룸과 소개 콘텐츠는 결합할
+  이유가 없고, 운영 테이블에 B 행을 추가하면 슬롯·가용성 로직에 영향 리스크(위험 구역 인접).
+  어드민 콘텐츠 관리 모듈은 후속(백로그).
+- **페이지 성격 = 전 로케일 소개 페이지 전환(①-B).** `/studios` notFound 게이트 제거,
+  대여 패널만 rental 노출 로케일(현 ko) 조건부. nav `localeGatedCategory` 해제, sitemap
+  `STATIC_PATHS` 에 `/studios` 포함(200 불변식 충족), service·product·홈 크로스링크 게이트
+  해제. 구 URL 308 은 불변(비-ko 최종 상태 404 → 200 으로 변경 — e2e 개정).
+- **단위 표기:** DB 는 평(정수) 저장, 렌더는 ko "N평 (M㎡)" / 비-ko "M㎡" (1평=3.3058㎡,
+  정수 반올림 — 결정적 환산이라 발명 아님).
+- **팀 역할 라벨**은 messages(`studios.team.roles.*`), 이름·수치·모델명은 DB(언어 중립).

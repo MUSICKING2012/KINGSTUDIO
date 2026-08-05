@@ -113,8 +113,7 @@
       "groupCta": "团体方案详情 →",
       "rentalTitle": "需要录音室本身？",
       "rentalDesc": "含录音师的录音室租借 — 韩语专用商品。",
-      "rentalCta": "STUDIOS →",
-      "rentalKoOnly": "仅接受韩语预约"
+      "rentalCta": "STUDIOS →"
     },
     "faq": {
       "heading": "常见问题",
@@ -212,8 +211,7 @@
       "serviceLine": "第一次进录音室？逐步了解体验如何进行。",
       "serviceCta": "了解流程 — SERVICE",
       "rentalLine": "寻找录音室租用？租用为韩语本地服务。",
-      "rentalCta": "STUDIOS",
-      "rentalKoOnly": "仅限韩语网站"
+      "rentalCta": "STUDIOS"
     },
     "faq": {
       "heading": "FAQ",
@@ -271,13 +269,30 @@
         "mainAlt": "STUDIO B — 主室",
         "boothAlt": "STUDIO B — 录音棚",
         "deskAlt": "STUDIO B — 控制台"
-      }
+      },
+      "area": "{sqm}㎡",
+      "specs": {
+        "controlRoom": "控制室",
+        "booth": "隔音棚"
+      },
+      "allPackagesTag": "所有套餐均在此进行"
     },
     "cta": {
       "title1": "准备好",
       "title2": "开始录音了吗？",
       "packages": "查看套餐",
       "book": "预约录音"
+    },
+    "equipment": {
+      "heading": "设备",
+      "sub": "录音时使用的部分设备 — 详细清单将持续更新。"
+    },
+    "team": {
+      "heading": "团队",
+      "roles": {
+        "producer": "制作人",
+        "vocalDirector": "声乐指导"
+      }
     }
   },
   "home": {
@@ -331,7 +346,6 @@
         "rental": "录音室租借"
       },
       "koreanOnly": "仅限韩语",
-      "rentalKoOnly": "仅接受韩语预约",
       "cap1Title": "声乐总监指导",
       "cap1Sub": "每次录制都有指导",
       "cap2Title": "带回家",
