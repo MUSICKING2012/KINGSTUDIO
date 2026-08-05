@@ -113,8 +113,7 @@
       "groupCta": "Group details →",
       "rentalTitle": "Want the room itself?",
       "rentalDesc": "Studio rental with an engineer — a Korean-language product.",
-      "rentalCta": "STUDIOS →",
-      "rentalKoOnly": "Korean-language bookings only"
+      "rentalCta": "STUDIOS →"
     },
     "faq": {
       "heading": "FAQ",
@@ -212,8 +211,7 @@
       "serviceLine": "First time in a studio? See how a session works, step by step.",
       "serviceCta": "How it works — SERVICE",
       "rentalLine": "Looking for studio rental? Rental is a Korean-language domestic service.",
-      "rentalCta": "STUDIOS",
-      "rentalKoOnly": "available on the Korean site"
+      "rentalCta": "STUDIOS"
     },
     "faq": {
       "heading": "FAQ",
@@ -271,13 +269,30 @@
         "mainAlt": "STUDIO B — main room",
         "boothAlt": "STUDIO B — booth",
         "deskAlt": "STUDIO B — desk"
-      }
+      },
+      "area": "{sqm} m²",
+      "specs": {
+        "controlRoom": "Control room",
+        "booth": "Booth"
+      },
+      "allPackagesTag": "All packages run here"
     },
     "cta": {
       "title1": "Ready to",
       "title2": "record?",
       "packages": "See packages",
       "book": "Book a session"
+    },
+    "equipment": {
+      "heading": "Equipment",
+      "sub": "A selection of what we record with — the detailed list keeps growing."
+    },
+    "team": {
+      "heading": "The team",
+      "roles": {
+        "producer": "Producer",
+        "vocalDirector": "Vocal Director"
+      }
     }
   },
   "home": {
@@ -331,7 +346,6 @@
         "rental": "STUDIO RENTAL"
       },
       "koreanOnly": "KOREAN ONLY",
-      "rentalKoOnly": "Korean-language bookings only",
       "cap1Title": "Vocal-director led",
       "cap1Sub": "every take, guided",
       "cap2Title": "Take it home",

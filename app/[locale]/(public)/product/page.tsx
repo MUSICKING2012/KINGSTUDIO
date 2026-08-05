@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation';
 import { PackageComparison } from '@/components/catalog/package-comparison';
 import { BookingBarSection } from '@/components/home/booking-bar-section';
 import { buildComparison } from '@/lib/catalog/comparison';
-import { isCategoryVisibleForLocale } from '@/lib/catalog/locale-visibility';
 import { computePackageTotal } from '@/lib/catalog/pricing';
 import { listPackages } from '@/lib/catalog/queries';
 import { LOCALE_DEFAULT_CURRENCY } from '@/lib/currency/config';
@@ -79,9 +78,8 @@ export default async function ProductPage({ params: { locale } }: { params: { lo
   const tp = await getTranslations({ locale, namespace: 'packages' });
 
   const prismaLocale = toPrismaLocale(locale as Locale);
-  const [all, rentalVisible, rates] = await Promise.all([
+  const [all, rates] = await Promise.all([
     listPackages({ locale: prismaLocale }),
-    isCategoryVisibleForLocale('rental', locale as Locale),
     getExchangeRates().catch((e) => {
       console.error('[product] exchange rate fetch failed, KRW-only fallback:', e);
       return null;
@@ -273,23 +271,16 @@ export default async function ProductPage({ params: { locale } }: { params: { lo
         </div>
       </section>
 
-      {/* Studios 크로스링크 — 대여는 ko 전용이라 비-ko는 비링크 강등(죽은 링크 0, 5a와 동일 패턴) */}
+      {/* Studios 크로스링크 — 5d-3 부터 /studios 는 전 로케일 200 → 상시 링크 */}
       <section className="mx-auto max-w-container-max px-gutter pt-[22px]">
         <p className="m-0 text-[13px] text-foreground/70">
           {t('cross.rentalLine')}{' '}
-          {rentalVisible ? (
-            <Link
-              href="/studios"
-              className="font-extrabold text-foreground underline-offset-4 hover:underline"
-            >
-              {t('cross.rentalCta')} →
-            </Link>
-          ) : (
-            <span className="cursor-default font-extrabold text-foreground/70">
-              {t('cross.rentalCta')}
-              <span className="sr-only"> ({t('cross.rentalKoOnly')})</span>
-            </span>
-          )}
+          <Link
+            href="/studios"
+            className="font-extrabold text-foreground underline-offset-4 hover:underline"
+          >
+            {t('cross.rentalCta')} →
+          </Link>
         </p>
       </section>
 

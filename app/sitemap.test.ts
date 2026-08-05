@@ -38,13 +38,14 @@ beforeEach(() => {
 });
 
 describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
-  it('emits home + /songs + /product + /group for every locale', async () => {
+  it('emits home + /songs + /product + /group + /studios for every locale', async () => {
     const urls = (await sitemap()).map((e) => e.url);
     for (const l of locales) {
       expect(urls).toContain(`https://example.test/${l}`);
       expect(urls).toContain(`https://example.test/${l}/songs`);
       expect(urls).toContain(`https://example.test/${l}/product`);
       expect(urls).toContain(`https://example.test/${l}/group`);
+      expect(urls).toContain(`https://example.test/${l}/studios`);
     }
   });
 
@@ -53,9 +54,8 @@ describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
     expect(urls.some((u) => /\/experience$/.test(new URL(u).pathname))).toBe(false);
   });
 
-  it('excludes /studios (ko-only route → non-200 in en/ja/zh-*) and the renamed /rental (5d-1: 308)', async () => {
+  it('excludes the renamed /rental (5d-1: 308) — /studios itself is INCLUDED as of 5d-3', async () => {
     const urls = (await sitemap()).map((e) => e.url);
-    expect(urls.some((u) => /\/studios$/.test(new URL(u).pathname))).toBe(false);
     expect(urls.some((u) => /\/rental$/.test(new URL(u).pathname))).toBe(false);
   });
 
@@ -104,8 +104,8 @@ describe('app/sitemap — song URLs (2b-2b-4 / W4)', () => {
     expect(songDetail).toHaveLength(locales.length);
   });
 
-  it('total = static (locales×4) + song (visible×locales)', async () => {
-    expect(await sitemap()).toHaveLength(locales.length * 4 + 1 * locales.length);
+  it('total = static (locales×5) + song (visible×locales)', async () => {
+    expect(await sitemap()).toHaveLength(locales.length * 5 + 1 * locales.length);
   });
 });
 

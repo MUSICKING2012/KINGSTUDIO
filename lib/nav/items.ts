@@ -21,21 +21,20 @@ export type NavItem = {
    * 이 카테고리 상품이 노출되는 로케일에서만 링크로 렌더한다. 나머지는 `enabled:false` 와
    * 같은 비링크 `<span>`.
    *
-   * `/studios`(구 /rental) 는 1Hour·1Pro 가 `languagesAvailable = ['ko']`
-   * (`prisma/seed-packages.ts`) 이라 비-ko 에서 `CategoryCatalog` 가 `notFound()` 를 던진다
-   * (`components/catalog/category-catalog.tsx:38-39`). 2026-07-31 실측(구 URL):
-   * ko 200 · en|ja|zh-HK|zh-CN 404. 무조건 링크하면 헤더가 layout 에
-   * 있어 **사이트 전 페이지에서 4/5 로케일이 404 로 가는 링크**를 노출한다.
-   *
    * 판정은 하드코딩 로케일 목록이 아니라 DB(`isCategoryVisibleForLocale`)로 한다 —
    * `languagesAvailable` 이 바뀌면 자동으로 따라간다(Home_Slice_Spec §4-C 원칙).
+   *
+   * studios 의 게이트는 5d-3 에서 해제 — `/studios` 가 전 로케일 소개 페이지(200)로
+   * 전환됐다(`Studio_Slice_Spec.md` §4-B). 대여 카탈로그 시절(5d-1~2)의 비-ko 404 게이트
+   * 이력은 위 스펙 §2-① 참조. 현재 이 필드를 쓰는 항목은 없지만, 로케일 제한 카테고리
+   * 라우트가 다시 생기면 재사용한다.
    */
   localeGatedCategory?: PackageCategory;
 };
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'service', href: '/service', enabled: true }, // 5a 에서 켬 (라우트 신설)
-  { key: 'studios', href: '/studios', enabled: true, localeGatedCategory: 'rental' }, // 5d-1 에서 최종 URL 확정
+  { key: 'studios', href: '/studios', enabled: true }, // 5d-1 URL 확정 · 5d-3 전 로케일 전환(게이트 해제)
   { key: 'product', href: '/product', enabled: true }, // 5c 에서 최종 URL 확정
   { key: 'reviews', href: '/reviews', enabled: true }, // 5b 에서 켬 (라우트 신설)
   { key: 'blog', href: '/blog', enabled: false },

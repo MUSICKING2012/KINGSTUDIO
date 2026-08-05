@@ -238,10 +238,10 @@ flex flex-wrap items-center justify-between gap-5
 | MAKING CLASS | `/group` | 전 로케일 | making-class `ALL`(`:102`) → `CategoryCatalog` notFound 미발동 |
 | STUDIO RENTAL | `/studios`(구 `/rental`, 5d-1 리네임 308) + `KOREAN ONLY` pill(구 `INQUIRY ONLY`, 5d-2 결정 ② 정정) | **ko 전용** | 1hour·1pro 둘 다 `KO`(`:70,86`) → 비-ko에서 `pkgs.length===0` → `notFound()`(`category-catalog.tsx:39`) |
 
-- 비-ko 로케일에서 STUDIO RENTAL은 **`<span>`(비링크) + `sr-only` 안내**로 렌더. Nav 슬라이스 `enabled:false` 패턴 재사용
-  (`site-header.tsx:65-73`). 죽은 링크·오답 404 방지.
-- 판정은 **하드코딩 로케일 allow-list가 아니라** `listPackages({locale}).some(p => p.category==='rental')` 데이터 기반으로
-  한다(`category-catalog.tsx:38` 주석의 동일 원칙). → 이 섹션은 서버 컴포넌트이며 DB read가 필요 → 4d의 렌더 모드 전환(결정 ⑦)에 동승.
+- ~~비-ko 로케일에서 STUDIO RENTAL은 `<span>`(비링크) + `sr-only` 안내로 렌더~~ → **5d-3 폐기(2026-08-05)**:
+  `/studios` 가 전 로케일 소개 페이지(200)로 전환돼 죽은 링크 위험이 사라짐 — 전 로케일 상시 링크,
+  DB 게이트(listPackages 판정)·sr-only(`rentalKoOnly` 키) 제거. 섹션은 DB read 없는 순수 프리젠테이션으로 복귀.
+  "한국어 전용" 필(`koreanOnly`)은 대여 서비스 제약 표기로 유지(`Studio_Slice_Spec.md` §4-B).
 - rental pill(현행 `KOREAN ONLY`) `rounded-full border border-foreground/25 px-2.5 py-1 text-[10px] font-extrabold tracking-[0.06em] text-foreground/70`
   (디자인 `/.55` → 10px 소형 AA 미달로 `/70` 상향).
 
@@ -426,7 +426,7 @@ Nav 스펙 §7-④에 따라 legal 링크는 legal 슬라이스가 켠다).
 | items.making | MAKING CLASS | 메이킹클래스 | メイキングクラス | Making Class | Making Class | 324·367·410·453·497 |
 | items.rental | STUDIO RENTAL | 스튜디오 대여 | スタジオ貸出 | 錄音室租借 | 录音室租借 | 325·368·411·454·497 |
 | ~~inquiryOnly~~ → koreanOnly | KOREAN ONLY | 한국어 전용 | 韓国語のみ | 僅限韓語 | 仅限韩语 | 디자인 원문 344·387·430·473·483 은 "INQUIRY ONLY" — **이식 금지로 정정**(5d-2 결정 ②: 1Hour·1Pro = 즉시결제, PRD §5.2. `Studio_Slice_Spec.md` §2-②, 2026-08-05) |
-| rentalKoOnly (신규) | Korean-language bookings only | 한국어 예약 전용 | 韓国語での予約のみ | 只接受韓語預約 | 仅接受韩语预约 | — |
+| ~~rentalKoOnly~~ | — | — | — | — | — | 4c 신설(sr-only 안내) → **5d-3 제거**: /studios 전 로케일 200 전환으로 비링크 강등 자체가 폐기됨 |
 | cap1Title | Vocal-director led | 보컬 디렉터 디렉팅 | ボーカルディレクター指導 | 聲樂總監指導 | 声乐总监指导 | 319·362·405·448·495 (**개정 ⑤** — 구 `Producer-directed` 계열) |
 | cap1Sub | every take, guided | 모든 테이크 지도 | 全テイクをディレクション | 每次錄製都有指導 | 每次录制都有指导 | 동상 |
 | cap2Title | Take it home | 집으로 | 持ち帰り | 帶回家 | 带回家 | 320·363·406·449·496 |
