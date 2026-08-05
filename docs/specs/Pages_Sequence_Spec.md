@@ -101,7 +101,7 @@
 | 5a Service | ✅ 머지(PR #33) — /service 라이브, nav 탭 활성 |
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
-| 5d Studio | 결정 ① 확정(A) — 착수 대기 |
+| 5d Studio | **분할 진행(2026-08-05)**: 5d-1 리네임 = 이 브랜치(/studios 신설·카탈로그 이관 + /rental 308 + nav·홈·크로스링크·sitemap·e2e 전환, 신규 카피 0) / 5d-2 디자인 레이아웃 = **Studio.dc.html 스냅샷 대기**(하단 §6 주 참조) |
 | 5e Blog | **결정 ③ 대기** |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용, 2026-08-04 다산 기록)
@@ -112,6 +112,11 @@
 1. `git pull` 후 STEP 0 (worktree clean · main=origin/main 확인).
 2. `Studio.dc.html` 을 DesignSync 로 가져와 `design/pages/` 에 sha 고정 커밋. **주의: DesignSync 는
    서브에이전트에 전파되지 않음 — 메인 세션에서 직접 호출**(5c 실측).
+   **추가 실측(2026-08-05, 원격 세션): DesignSync 는 원격(claude.ai/code) 환경에서 인증 불가**
+   (/design-login 이 대화형 터미널 전용). 원격에서 스냅샷이 필요하면 Claude Design 의
+   "Send to Claude Code Web" 으로 시드하거나 파일을 직접 커밋해 제공해야 한다. 이 때문에 5d 는
+   5d-1(리네임 — 디자인 무관, 결정 ① 만으로 진행 가능)과 5d-2(디자인 레이아웃 — 스냅샷 필요)로
+   분할 진행됐다.
 3. `Product_Slice_Spec.md` §2 리네임 메커니즘 재사용 — 단, `/rental` 은 **ko 전용**이라 다름:
    nav localeGatedCategory('rental') 게이트 유지, 리다이렉트·sitemap 처리 시 비-ko 404 동작 검증 필수.
 4. 디자인 자체 데이터(가격·슬롯·문구)는 이식 0 — DB·PRD 정본 대체(5c 델타표 패턴).
