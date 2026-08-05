@@ -75,11 +75,10 @@
   디자인 5문항 — 정보 손실 또는 Service 비대화.
 - **추천 = A.** 5a 를 정적 신설로 유지(리네임·redirect 무관). 통합은 콘텐츠가 안정된 뒤 별도 판단.
 
-### ③ Blog 범위 (5e 선행)
-- **A. 이연**: nav BLOG 탭 비활성 유지. 데이터 소스(Ghost 연동? 자체 CMS?) 확정 후 착수.
-- **B. Ghost 외부 링크**: nav BLOG 를 외부 블로그 URL 로. 사이트 이탈 발생, 최소 작업.
-- **C. Ghost Content API 연동 목록 페이지**: 사이트 내 통합. API 키·인프라 결정 필요(M 범위 검토).
-- **추천 = A.** Ghost 운영 여부·URL·통합 수준은 Aiden 만 아는 사실. 확인 전 착수 불가.
+### ③ Blog 범위 (5e 선행) — **확정 = D(신규안): 자체 운영, Ghost 배제 (2026-08-05 Aiden)**
+- ~~A. 이연~~ / ~~B. Ghost 외부 링크~~ / ~~C. Ghost Content API 연동~~ — 전부 기각.
+- **D. 자체 블로그**: 사이트 내 /blog 신설, Ghost 미사용. 세부(기존 글 이관·저장소·로케일·
+  뉴스레터)는 `Blog_Slice_Spec.md` §2 OPEN ⓐ~ⓓ.
 
 ### ④ Review 노출 정책 (5b 선행)
 - 표시 = `status=published` 만 + `authorDisplay`(마스킹) + `packageSnapshot` + rating + body.
@@ -103,12 +102,12 @@
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
 | 5d Studio | **5d-1 리네임 ✅ 머지(PR #36)** / **5d-2 레이아웃 ✅ 머지(PR #37, 2026-08-05)** / **5d-3 fill-in ✅ 구현(2026-08-05 — 룸 스펙·장비·팀 DB 3테이블 + 전 로케일 소개 전환, `Studio_Slice_Spec.md` §4)**. 잔여 = 5d-3 PR 머지 + ja·zh 감수 + 실사진·장비 상세·bio 후속 fill-in |
-| 5e Blog | **결정 ③ 대기** |
+| 5e Blog | **결정 ③ ✅ D안(자체 운영·Ghost 배제) + ⓐ~ⓓ 전건 확정(2026-08-05)** / **5e-1 ✅ 구현(PR #40 — /blog·/blog/[slug]·BlogPost 모델·seed:blog·JSON-LD, nav 탭 비활성 유지)**. 잔여 = **5e-2**: Ghost export 이관 + 301 맵 + nav 탭 켬 + sitemap 편입 (`Blog_Slice_Spec.md` §3) |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용)
 
 > **2026-08-05 갱신:** 5d 는 5d-3(fill-in·전 로케일 전환)까지 구현 완료 — 아래 5d 킥오프 절차는
-> **이력 보존용**이다. 현재 잔여 = ① 5e Blog(결정 ③ 대기) ② 후속 fill-in 소슬라이스(실사진·
+> **이력 보존용**이다. 현재 잔여 = ① 5e-2(Ghost export 이관·301 맵·nav 탭·sitemap) ② 후속 fill-in 소슬라이스(실사진·
 > 장비 상세·팀 bio — `Studio_Slice_Spec.md` §4-A) ③ ja·zh 감수(Aiden).
 
 ~~다음 작업 = **5d Studio**~~ (완료): `/rental` → `/studios` 리네임(결정 ① A 기확정) + STUDIOS 페이지 신설.
@@ -128,7 +127,7 @@
 5. 게이트: tsc·biome·i18n:check·vitest·build(정적 라우트 수 기록, 현재 38)·e2e(리다이렉트 단언 포함)·
    가격 하드코딩 스캔.
 
-보류·백로그: 5e Blog 는 결정 ③(Ghost 운영 여부) 대기. ja·zh 기계번역 감수(service 76 + reviews 17 +
+보류·백로그: ~~5e Blog 결정 ③ 대기~~ → 확정·5e-1 구현(위 §5). ja·zh 기계번역 감수(service 76 + reviews 17 +
 product 신규 + **studios 20**)는 Aiden 몫. OPENEXCHANGERATES_APP_ID 미발급 → 환율 표시는 KRW 단독 강등 중(정상 동작).
 
 ### 6-A. 다산 인수인계 (2026-08-05 원격 세션 → 로컬)

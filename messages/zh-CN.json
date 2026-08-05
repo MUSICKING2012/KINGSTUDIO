@@ -891,5 +891,44 @@
         "highlight_vertical": "直式精华视频 (9:16)"
       }
     }
+  },
+  "blog": {
+    "metaTitle": "日志 — 录音室笔记 | KING STUDIO",
+    "metaDescription": "来自圣水洞录音室的故事 — 客户故事、媒体报道、幕后与首尔旅行指南。",
+    "hero": {
+      "meta": {
+        "a": "博客",
+        "b": "录音室笔记",
+        "c": "首尔"
+      },
+      "title": "日志"
+    },
+    "categories": {
+      "all": "全部",
+      "story": "故事",
+      "press": "媒体",
+      "behind": "幕后",
+      "seoulTravel": "首尔旅行"
+    },
+    "readMinutes": "{min}分钟阅读",
+    "readArticle": "阅读文章",
+    "loadMore": "加载更多 ({count})",
+    "empty": "暂无文章 — 第一批故事即将上线。",
+    "coverAlt": "{title} — 封面图片",
+    "breadcrumb": "博客",
+    "related": "相关文章",
+    "inlineCta": {
+      "line1": "你的歌",
+      "line2": "在首尔等你"
+    },
+    "endCta": {
+      "line1": "录下你",
+      "line2": "自己的故事"
+    },
+    "cta": {
+      "title1": "准备好",
+      "title2": "录音了吗？",
+      "book": "预约录音"
+    }
   }
 }

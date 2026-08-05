@@ -899,5 +899,44 @@
         "highlight_vertical": "縦型ハイライト (9:16)"
       }
     }
+  },
+  "blog": {
+    "metaTitle": "ジャーナル — スタジオノート | KING STUDIO",
+    "metaDescription": "聖水洞スタジオからの物語 — お客様のストーリー、プレス、ビハインド、ソウル旅行ガイド。",
+    "hero": {
+      "meta": {
+        "a": "ブログ",
+        "b": "スタジオノート",
+        "c": "ソウル"
+      },
+      "title": "ジャーナル"
+    },
+    "categories": {
+      "all": "すべて",
+      "story": "ストーリー",
+      "press": "プレス",
+      "behind": "ビハインド",
+      "seoulTravel": "ソウル旅行"
+    },
+    "readMinutes": "{min}分で読める",
+    "readArticle": "記事を読む",
+    "loadMore": "もっと見る ({count})",
+    "empty": "まだ記事がありません — 最初のストーリーを準備中です。",
+    "coverAlt": "{title} — カバー画像",
+    "breadcrumb": "ブログ",
+    "related": "関連記事",
+    "inlineCta": {
+      "line1": "あなたの歌が",
+      "line2": "ソウルで待っています"
+    },
+    "endCta": {
+      "line1": "あなたの物語を",
+      "line2": "録音しよう"
+    },
+    "cta": {
+      "title1": "さあ、",
+      "title2": "録音しますか？",
+      "book": "セッションを予約"
+    }
   }
 }
