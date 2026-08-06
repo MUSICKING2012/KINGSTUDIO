@@ -16,12 +16,12 @@
     "currencyAria": "顯示貨幣"
   },
   "service": {
-    "metaTitle": "KING STUDIO 課程內容說明 | 首爾K-POP錄音",
+    "metaTitle": "KING STUDIO 體驗內容說明 | 首爾K-POP錄音",
     "metaDescription": "聲樂訓練、製作人指導錄音、混音到音樂錄影帶 — 介紹 KING STUDIO 各方案內容，以及在首爾的錄音下午如何進行。",
     "hero": {
       "meta": {
         "a": "服務",
-        "b": "首爾 · 聖水",
+        "b": "首爾 · 聖水洞",
         "c": "EN · KO · JA · ZH",
         "d": "KST 2026",
         "e": "(D2C)"
@@ -34,7 +34,7 @@
       "badge": "傳媒報導",
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
-      "languages": "體驗以英語·韓語·日語·中文進行 · 首爾聖水",
+      "languages": "體驗以英語·韓語·日語·中文進行 · 首爾聖水洞",
       "reviewsCta": "查看旅客評價 →"
     },
     "pillars": {
@@ -199,7 +199,7 @@
     "group": {
       "badge": "團體項目",
       "notSolo": "非個人方案",
-      "desc": "學校、企業與旅行團隊一起完成一首歌。親身體驗主唱、製作人、音響工程師三種角色的實作體驗 — 包含 Pro Tools 實習與導錄錄音。成果為團體代表收取的一套共享成品（團體音軌與相片）。",
+      "desc": "學校、企業與旅行團隊一起完成一首歌。親身實作主唱、製作人、音響工程師三種錄音室角色 — 包含 Pro Tools 實習與指導錄音。成果為團體代表收取的一套共享成品（團體音軌與相片）。",
       "perPerson": "每人",
       "total": "總額 = 每人價格 × 人數（{min}~{max} 人）· 以韓元結算。",
       "cta": "團體預約查詢"
@@ -246,7 +246,7 @@
     "hero": {
       "meta": {
         "a": "錄音室",
-        "b": "首爾 · 聖水",
+        "b": "首爾 · 聖水洞",
         "c": "兩間錄音室",
         "d": "KST 2026"
       },
@@ -273,14 +273,14 @@
       "area": "{sqm}㎡",
       "specs": {
         "controlRoom": "控制室",
-        "booth": "隔音棚"
+        "booth": "錄音房"
       },
-      "allPackagesTag": "所有套餐均在此進行"
+      "allPackagesTag": "所有方案均在此進行"
     },
     "cta": {
       "title1": "準備好",
-      "title2": "開始錄音了嗎？",
-      "packages": "查看套裝",
+      "title2": "錄音了嗎？",
+      "packages": "查看方案",
       "book": "預約錄音"
     },
     "equipment": {
@@ -291,7 +291,7 @@
       "heading": "團隊",
       "roles": {
         "producer": "監製",
-        "vocalDirector": "聲樂指導"
+        "vocalDirector": "聲樂總監"
       }
     }
   },
