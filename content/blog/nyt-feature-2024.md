@@ -2,13 +2,13 @@
 slug: nyt-feature-2024
 category: press
 title: 'The New York Times: "Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help"'
-excerpt: Our Seongsu recording experience, featured in The New York Times.
+excerpt: Our K-pop recording experience, featured in The New York Times.
 readMinutes: 2
 featured: true
 publishedAt: 2024-11-29
 ---
 
-In November 2024, The New York Times visited our Seongsu studio and wrote about the
+In November 2024, The New York Times visited KING STUDIO and wrote about the
 K-pop recording experience we run for visitors from around the world.
 
 The piece follows what actually happens in a session — choosing a song, stepping into
