@@ -17,11 +17,11 @@
   },
   "service": {
     "metaTitle": "KING STUDIO 体验内容说明 | 首尔K-POP录音",
-    "metaDescription": "声乐训练、制作人指导录音、混音到音乐录影带 — 介绍 KING STUDIO 各方案内容，以及在首尔的录音下午如何进行。",
+    "metaDescription": "声乐训练、制作人指导录音、混音到音乐视频 — 介绍 KING STUDIO 各方案内容，以及在首尔的录音下午如何进行。",
     "hero": {
       "meta": {
         "a": "服务",
-        "b": "首尔 · 圣水",
+        "b": "首尔 · 圣水洞",
         "c": "EN · KO · JA · ZH",
         "d": "KST 2026",
         "e": "(D2C)"
@@ -31,10 +31,10 @@
       "sub": "无需任何唱歌经验。声乐总监会引导每一次录制，直到你唱出最好的自己 — 然后带着完成的K-POP歌曲离开首尔。悠闲的一个下午，约2至3小时。"
     },
     "trust": {
-      "badge": "媒体报导",
+      "badge": "媒体报道",
       "source": "The New York Times",
       "quote": "“Dreams of Being a K-Pop Star? A Seoul Studio Wants to Help.” — The New York Times, 2024",
-      "languages": "体验以英语·韩语·日语·中文进行 · 首尔圣水",
+      "languages": "体验以英语·韩语·日语·中文进行 · 首尔圣水洞",
       "reviewsCta": "查看旅客评价 →"
     },
     "pillars": {
@@ -53,7 +53,7 @@
       "p3": {
         "tier": "PREMIUM",
         "dur": "约3小时",
-        "title": "音乐录影带",
+        "title": "音乐视频",
         "desc": "含 Diamond 全部内容，加上录音室内电影感 MV 拍摄、剪辑版 MV 与尊享迎宾礼包。"
       },
       "more": "完整价格与团体 K-Pop Making Class → 查看方案"
@@ -62,7 +62,7 @@
       "heading": "体验流程",
       "s1": {
         "title": "声乐训练",
-        "desc": "与声乐教练开声并练习你的歌曲。无需经验 — 录音前先建立基础。"
+        "desc": "与声乐教练开嗓并练习你的歌曲。无需经验 — 录音前先建立基础。"
       },
       "s2": {
         "title": "声乐指导",
@@ -98,7 +98,7 @@
         "note": "收藏你的录音"
       },
       "d4": {
-        "label": "音乐录影带",
+        "label": "音乐视频",
         "note": "录音室拍摄 — Premium"
       },
       "d5": {
@@ -199,7 +199,7 @@
     "group": {
       "badge": "团体项目",
       "notSolo": "非个人方案",
-      "desc": "学校、企业与旅行团队一起完成一首歌。亲身体验主唱、制作人、音响工程师三种角色的实操体验 — 包含 Pro Tools 实习与导录录音。成果为团体代表领取的一套共享成品（团体音轨与照片）。",
+      "desc": "学校、企业与旅行团队一起完成一首歌。亲身实操主唱、制作人、音响工程师三种录音室角色 — 包含 Pro Tools 实操与指导录音。成果为团体代表领取的一套共享成品（团体音轨与照片）。",
       "perPerson": "每人",
       "total": "总额 = 每人价格 × 人数（{min}~{max} 人）· 以韩元结算。",
       "cta": "团体预约咨询"
@@ -246,7 +246,7 @@
     "hero": {
       "meta": {
         "a": "录音室",
-        "b": "首尔 · 圣水",
+        "b": "首尔 · 圣水洞",
         "c": "两间录音室",
         "d": "KST 2026"
       },
@@ -273,14 +273,14 @@
       "area": "{sqm}㎡",
       "specs": {
         "controlRoom": "控制室",
-        "booth": "隔音棚"
+        "booth": "录音棚"
       },
-      "allPackagesTag": "所有套餐均在此进行"
+      "allPackagesTag": "所有方案均在此进行"
     },
     "cta": {
       "title1": "准备好",
-      "title2": "开始录音了吗？",
-      "packages": "查看套餐",
+      "title2": "录音了吗？",
+      "packages": "查看方案",
       "book": "预约录音"
     },
     "equipment": {
@@ -291,13 +291,13 @@
       "heading": "团队",
       "roles": {
         "producer": "制作人",
-        "vocalDirector": "声乐指导"
+        "vocalDirector": "声乐总监"
       }
     }
   },
   "home": {
     "metaTitle": "KING STUDIO — 在首尔录制属于你的K-POP音源",
-    "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报导。",
+    "metaDescription": "在真正的首尔录音室与声乐总监一起录制K-POP，带走自己的音源与照片的体验。获The New York Times报道。",
     "hero": {
       "kicker1": "属于你的",
       "kicker2": "K-POP 歌曲",
@@ -321,9 +321,9 @@
       }
     },
     "nyt": {
-      "label": "媒体报导",
+      "label": "媒体报道",
       "source": "The New York Times · 2024年11月",
-      "cta": "阅读报导"
+      "cta": "阅读报道"
     },
     "provide": {
       "titlePre": "为你提供",
@@ -341,7 +341,7 @@
     "categories": {
       "items": {
         "vocal": "人声录音",
-        "mv": "音乐录影带",
+        "mv": "音乐视频",
         "making": "Making Class",
         "rental": "录音室租借"
       },
@@ -558,7 +558,7 @@
       "rowFullMaster": "正式混音及母带处理",
       "rowPhotos": "未修图照片 30 张",
       "rowVocalReport": "个人声乐报告",
-      "rowMusicVideo": "音乐录影带",
+      "rowMusicVideo": "音乐视频",
       "rowVerticalCut": "竖版精华片段 (9:16)",
       "rowCd": "CD (于录音室领取)",
       "rowDuration": "录音时长",
@@ -585,7 +585,7 @@
   },
   "about": {
     "metaTitle": "关于KING STUDIO — 首尔真正的K-POP录音室",
-    "metaDescription": "KING STUDIO自2017年起在首尔为访客提供K-POP录音体验 — 获The New York Times报导的直营、以录音室为内核的体验。",
+    "metaDescription": "KING STUDIO自2017年起在首尔为访客提供K-POP录音体验 — 获The New York Times报道的直营、以录音室为内核的体验。",
     "hero": {
       "eyebrow": "我们的故事",
       "title": "真正的录音室，属于你的K-POP音源。",
@@ -612,10 +612,10 @@
       }
     },
     "nyt": {
-      "label": "媒体报导",
-      "title": "获The New York Times报导",
-      "body": "2024年11月，The New York Times报导了在首尔录制K-POP，以及KING STUDIO为访客提供的体验。",
-      "cta": "阅读报导"
+      "label": "媒体报道",
+      "title": "获The New York Times报道",
+      "body": "2024年11月，The New York Times报道了在首尔录制K-POP，以及KING STUDIO为访客提供的体验。",
+      "cta": "阅读报道"
     },
     "cta": {
       "heading": "来和我们一起录音",
