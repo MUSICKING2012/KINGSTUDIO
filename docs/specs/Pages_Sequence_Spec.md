@@ -169,12 +169,20 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
 9. DesignSync 는 로컬 대화형 세션에서만 인증 가능(원격 불가 — §6 실측). 서브에이전트에
    전파되지 않으므로 메인 세션에서 직접 호출.
 
-**잔여 작업 = 전부 Aiden 입력 대기** (도착 시 해당 스펙 §대로 소슬라이스 착수):
+**잔여 작업** (도착 시 해당 스펙 §대로 소슬라이스 착수):
 - ① **5e-2**: Ghost export(JSON/마크다운) → 기존 글 이관 + 구 URL 301 맵 + nav BLOG 탭 켬 +
-  sitemap 편입 (`Blog_Slice_Spec.md` §3).
+  sitemap 편입 (`Blog_Slice_Spec.md` §3). **코드 준비 완료(2026-08-06 선릉)** — 이관 스크립트
+  (`scripts/import-ghost-export.ts`)·legacyPath 301 맵·nav 탭·sitemap·e2e 반전이
+  `feat/blog-5e2-ghost-migration` 브랜치에 커밋됨. **export JSON 만 대기**(Ghost Admin →
+  Settings → Import/Export). 라이브 Ghost 6.55, 발행 글 ~100건 실측(sitemap-posts.xml).
+  주의: NYT 원글 slug 는 중복 스킵 + legacyPath 연결 처리됨. Ghost 태그 `service` 의
+  카테고리 매핑 미정(실행 시 목록 출력 후 Aiden 결정).
 - ② **5d-3 후속 fill-in**: 실사진(히어로 1+룸당 3)·장비 상세 모델·수량·팀 bio(동의 필수)·
-  룸 Size·Max guests (`Studio_Slice_Spec.md` §4-A).
-- ③ **ja·zh 기계번역 감수**: service·reviews·product·studios·blog ns (Aiden).
+  룸 Size·Max guests (`Studio_Slice_Spec.md` §4-A). — Aiden 입력 대기.
+- ③ ~~ja·zh 기계번역 감수~~ **완료(2026-08-06, PR #41 머지)**: service·reviews·product·
+  studios·blog ns 185키 전량 대조 검수, 27건 교정(ja 聖水→聖水洞·CTA 통일 / zh-HK 용어
+  통일·비단어 정정 / zh-CN 대륙 표준어휘 报道·音乐视频·实操 등). CodeRabbit 1차 리뷰
+  수행·지적 1건 반영(증분 재검토는 rate limit — 델타가 리뷰어 제안 원문 적용 2줄이라 수용).
 - ④ NYT 블로그 글 본문 감수(`content/blog/nyt-feature-2024.md` — 에이전트 작성 카피).
 - 별건: CLAUDE.md §5 로케일 구본(zh-TW 서술)을 L-2 결정(zh-CN 정본)으로 동기화하는 작업이
   분리되어 있음(다산 세션 칩) — 선릉에서 하려면 이 항목을 새 세션 프롬프트로 지시.
