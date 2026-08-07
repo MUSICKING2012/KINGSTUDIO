@@ -1,0 +1,7 @@
+# CodeRabbit 설정 (§7.6 — PR마다 리뷰).
+# content/blog/*.md 는 Ghost 이관 스크립트 산출물(자동 생성 콘텐츠)이라 리뷰 제외 —
+# 5e-2에서 99건이 한 PR에 실려 "Too many files" 스킵을 유발했다. 코드 리뷰 대상은
+# 스크립트·설정·앱 코드이며, 글 본문 감수는 오너 몫(발명 0 정책).
+reviews:
+  path_filters:
+    - "!content/blog/*.md"

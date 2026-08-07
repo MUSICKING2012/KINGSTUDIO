@@ -7,7 +7,10 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 // and resolved it the same way). The REAL isSongPubliclyVisible predicate runs against mock songs, so
 // the sitemap↔route gate is exercised, not re-implemented.
 vi.mock('@/lib/catalog/song-queries', () => ({ listSongs: vi.fn() }));
+// blog_posts likewise owned by its own DB test file — mock keeps this file DB-free (5e-2).
+vi.mock('@/lib/blog/queries', () => ({ listBlogPosts: vi.fn() }));
 
+import { listBlogPosts } from '@/lib/blog/queries';
 import { listSongs } from '@/lib/catalog/song-queries';
 import sitemap, { revalidate } from './sitemap';
 
@@ -35,6 +38,10 @@ beforeAll(() => {
 });
 beforeEach(() => {
   vi.mocked(listSongs).mockResolvedValue(SEED_MIX);
+  // published-only 는 listBlogPosts 모듈 보장 — 여기서는 반환 1건이면 충분(5e-2).
+  vi.mocked(listBlogPosts).mockResolvedValue([
+    { slug: 'nyt-feature-2024' } as Awaited<ReturnType<typeof listBlogPosts>>[number],
+  ]);
 });
 
 describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
@@ -46,6 +53,7 @@ describe('app/sitemap — structural routes (infra-A + CategoryIA)', () => {
       expect(urls).toContain(`https://example.test/${l}/product`);
       expect(urls).toContain(`https://example.test/${l}/group`);
       expect(urls).toContain(`https://example.test/${l}/studios`);
+      expect(urls).toContain(`https://example.test/${l}/blog`);
     }
   });
 
@@ -104,8 +112,17 @@ describe('app/sitemap — song URLs (2b-2b-4 / W4)', () => {
     expect(songDetail).toHaveLength(locales.length);
   });
 
-  it('total = static (locales×5) + song (visible×locales)', async () => {
-    expect(await sitemap()).toHaveLength(locales.length * 5 + 1 * locales.length);
+  it('total = static (locales×6) + song (visible×locales) + blog (published×locales)', async () => {
+    expect(await sitemap()).toHaveLength(
+      locales.length * 6 + 1 * locales.length + 1 * locales.length,
+    );
+  });
+
+  it('emits a blog post URL per locale (5e-2)', async () => {
+    const urls = (await sitemap()).map((e) => e.url);
+    for (const l of locales) {
+      expect(urls).toContain(`https://example.test/${l}/blog/nyt-feature-2024`);
+    }
   });
 });
 
