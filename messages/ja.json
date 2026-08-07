@@ -253,22 +253,22 @@
       "title1": "スタジオの",
       "title2": "なかへ",
       "sub": "聖水洞に構えた2つの専用ルーム — ブース、デスク、そしてすべてのセッションを支える人たち。あなたのトラックが生まれる場所です。",
-      "imageAlt": "スタジオ内部 — 全景"
+      "imageAlt": "KING STUDIO のコントロールルームで進行中のレコーディングセッション"
     },
     "rooms": {
       "a": {
         "name": "STUDIO A",
         "purpose": "メインセッションルーム — プロデューサーがディレクションするボーカルセッションが行われます。",
-        "mainAlt": "STUDIO A — メインルーム",
-        "boothAlt": "STUDIO A — ブース",
-        "deskAlt": "STUDIO A — デスク"
+        "mainAlt": "STUDIO A — コントロールルーム",
+        "boothAlt": "STUDIO A — レコーディングブース",
+        "deskAlt": "STUDIO A — レコーディングブース別アングル"
       },
       "b": {
         "name": "STUDIO B",
         "purpose": "2つ目のルーム — 個人セッションとグループワークに使用します。",
-        "mainAlt": "STUDIO B — メインルーム",
-        "boothAlt": "STUDIO B — ブース",
-        "deskAlt": "STUDIO B — デスク"
+        "mainAlt": "STUDIO B — コントロールルーム",
+        "boothAlt": "STUDIO B — レコーディングブース",
+        "deskAlt": "STUDIO B — レコーディングブース別アングル"
       },
       "area": "{sqm}㎡",
       "specs": {
@@ -285,7 +285,15 @@
     },
     "equipment": {
       "heading": "機材",
-      "sub": "セッションで使用する機材の一部 — 詳細リストは順次追加されます。"
+      "sub": "セッションで使用する機材の一部 — 詳細リストは順次追加されます。",
+      "categories": {
+        "coreSystem": "コアシステム",
+        "outboards": "アウトボード",
+        "monitorController": "モニターコントローラー",
+        "speaker": "スピーカー",
+        "mic": "マイク",
+        "headphone": "ヘッドホン"
+      }
     },
     "team": {
       "heading": "チーム",

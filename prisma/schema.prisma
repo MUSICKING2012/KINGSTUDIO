@@ -1835,8 +1835,10 @@ model StudioRoomProfile {
 /// `category` exists for the follow-up detailed list; null renders in the single flat section.
 model StudioEquipment {
   id           String   @id @default(cuid())
-  name         String // language-neutral brand/model, e.g. 'Avid Pro Tools'
-  category     String? // future: 'console' | 'microphones' | ... (design accordion keys)
+  name         String // language-neutral brand/model, e.g. 'Avid Pro Tools HD'
+  category     String? // slug key into studios.equipment.categories.* messages (owner list 2026-08-07)
+  /// unit count from the owner's gear list ('2ea' → 2); null = not provided
+  quantity     Int?
   displayOrder Int      @default(0) @map("display_order")
   isVisible    Boolean  @default(true) @map("is_visible")
   createdAt    DateTime @default(now()) @map("created_at")

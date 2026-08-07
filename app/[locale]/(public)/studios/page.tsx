@@ -30,15 +30,37 @@ import {
  *
  * 디자인 대비 의도적 델타(5d-2 유지분 포함):
  *  - 대여 패널의 "온라인 예약 없이 문의로 진행"은 **이식 금지**(결정 ② — PRD §5.2 즉시결제).
- *  - 장비 아코디언 5카테고리 → 무분류 평면 리스트(접수 데이터가 무분류 — §4-A).
+ *  - 장비: 2026-08-07 오너 리스트(카테고리·모델·수량) 반영 — 카테고리 그룹 + 수량 ×N(≥2만).
+ *    디자인 아코디언 대신 그룹 라벨 + 필 리스트(기존 패턴 유지).
  *  - 팀 카드 얼굴 슬롯 없음 — 사진·bio 미제공, 이름·역할만(오너 제공 = 게시 승인).
- *  - 이미지 7슬롯은 실사진 미첨부 — `EditorialImage` placeholder(4b 패턴).
+ *  - 이미지 7슬롯 = 실사진(2026-08-07 오너 제공 9장 — A 4·B 4·세션 현장 1 — 중 7슬롯 배치,
+ *    `STUDIO_PHOTOS`). 스페어 2장(A/B 컨트롤룸 2앵글)은 원본 폴더 보존, 미커밋.
  *  - 소형 텍스트 알파 상향: 라이트 /70 (§11-W).
  *
  * 면적 표기: DB 는 평, 렌더는 `studios.rooms.area` 메시지({pyeong}·{sqm}) — ko "10평 (33㎡)",
  * 비-ko "33㎡" 계열. 환산은 결정적(1평=3.3058㎡, 정수 반올림).
  */
 export const dynamic = 'force-dynamic';
+
+/** 실사진 슬롯 매핑 (원본 = 오너 제공, `scripts/optimize-studio-images.ts` 산출물).
+ *  배치 순서 = 오너 지정(2026-08-07 2차): 히어로 = 세션 현장 컷(인물 — 오너 제공 = 게시 승인),
+ *  A = 컨트롤룸·부스·부스 2앵글 / B = 컨트롤룸·부스 2앵글·부스. 슬롯 키(main/booth/desk)는
+ *  레이아웃 위치명일 뿐 사진 내용과 1:1 아님 — alt 는 실제 내용을 기술(messages). */
+const STUDIO_PHOTOS = {
+  hero: '/images/studios/studio-hero-session.jpg',
+  rooms: {
+    a: {
+      main: '/images/studios/studio-a-control-room-1.jpg',
+      booth: '/images/studios/studio-a-booth-1.jpg',
+      desk: '/images/studios/studio-a-booth-2.jpg',
+    },
+    b: {
+      main: '/images/studios/studio-b-control-room-1.jpg',
+      booth: '/images/studios/studio-b-booth-2.jpg',
+      desk: '/images/studios/studio-b-booth-1.jpg',
+    },
+  } as Record<string, { main: string; booth: string; desk: string }>,
+};
 
 export async function generateMetadata({
   params: { locale },
@@ -79,6 +101,14 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
 
   const area = (pyeong: number) => t('rooms.area', { pyeong, sqm: pyeongToSquareMeters(pyeong) });
 
+  // displayOrder 순서를 유지한 카테고리 그룹핑(인접 동일 카테고리 병합 — 시드가 카테고리 연속 배치).
+  const equipmentGroups: { category: string | null; items: typeof equipment }[] = [];
+  for (const item of equipment) {
+    const last = equipmentGroups[equipmentGroups.length - 1];
+    if (last && last.category === item.category) last.items.push(item);
+    else equipmentGroups.push({ category: item.category, items: [item] });
+  }
+
   return (
     <main>
       {/* Hero — 메타 스트립은 디자인 /40 대신 /70 (§11-W) */}
@@ -98,7 +128,13 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
           {t('hero.sub')}
         </p>
         <div className="mt-[30px] aspect-[21/9] overflow-hidden rounded-ks-bar">
-          <EditorialImage alt={t('hero.imageAlt')} className="h-full" />
+          <EditorialImage
+            alt={t('hero.imageAlt')}
+            src={STUDIO_PHOTOS.hero}
+            sizes="(min-width: 1280px) 1232px, 100vw"
+            priority
+            className="h-full"
+          />
         </div>
       </section>
 
@@ -111,14 +147,29 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
           >
             <div className={`flex flex-col gap-3 ${i % 2 === 1 ? 'md:order-2' : ''}`}>
               <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                <EditorialImage alt={t(`rooms.${room.slug}.mainAlt`)} className="h-full" />
+                <EditorialImage
+                  alt={t(`rooms.${room.slug}.mainAlt`)}
+                  src={STUDIO_PHOTOS.rooms[room.slug]?.main}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="h-full"
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                  <EditorialImage alt={t(`rooms.${room.slug}.boothAlt`)} className="h-full" />
+                  <EditorialImage
+                    alt={t(`rooms.${room.slug}.boothAlt`)}
+                    src={STUDIO_PHOTOS.rooms[room.slug]?.booth}
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="h-full"
+                  />
                 </div>
                 <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                  <EditorialImage alt={t(`rooms.${room.slug}.deskAlt`)} className="h-full" />
+                  <EditorialImage
+                    alt={t(`rooms.${room.slug}.deskAlt`)}
+                    src={STUDIO_PHOTOS.rooms[room.slug]?.desk}
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="h-full"
+                  />
                 </div>
               </div>
             </div>
@@ -159,23 +210,43 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
         ))}
       </section>
 
-      {/* Equipment — 무분류 평면 리스트(§4-A: 카테고리 미제공, 임의 분류는 발명) */}
+      {/* Equipment — 카테고리 그룹 리스트(2026-08-07 오너 리스트가 분류·수량 포함 — 구 무분류 델타 해소).
+          카테고리 라벨은 messages(`studios.equipment.categories.*`), 모델명·수량은 DB(언어 중립).
+          수량은 2 이상만 ×N 병기(1대는 표기 생략 — 표기 방식이지 데이터 발명 아님). */}
       {equipment.length > 0 && (
         <section className="mx-auto max-w-container-max px-gutter pt-14">
           <h2 className="ks-display mb-1 text-[clamp(28px,4vw,44px)] leading-none text-foreground">
             {t('equipment.heading')}
           </h2>
           <p className="m-0 mb-5 text-[14px] text-foreground/70">{t('equipment.sub')}</p>
-          <ul className="m-0 flex list-none flex-wrap gap-2.5 p-0">
-            {equipment.map((item) => (
-              <li
-                key={item.id}
-                className="rounded-full bg-paper-raise px-4 py-2.5 text-[13.5px] font-bold text-foreground"
+          {/* 룸 스펙 dl 과 동일한 에디토리얼 행 패턴 — 카테고리 레일(고정폭) + 아이템, 행 구분선 */}
+          <div className="border-t border-foreground/10">
+            {equipmentGroups.map((group) => (
+              <div
+                key={group.category ?? 'uncategorized'}
+                className="grid gap-2.5 border-b border-foreground/10 py-4 md:grid-cols-[220px_1fr] md:gap-4"
               >
-                {item.name}
-              </li>
+                {group.category && (
+                  <h3 className="m-0 pt-2 text-[10.5px] font-bold uppercase tracking-[0.08em] text-foreground/70">
+                    {t.has(`equipment.categories.${group.category}`)
+                      ? t(`equipment.categories.${group.category}`)
+                      : group.category}
+                  </h3>
+                )}
+                <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
+                  {group.items.map((item) => (
+                    <li
+                      key={item.id}
+                      className="rounded-full bg-paper-raise px-3.5 py-2 text-[13px] font-bold text-foreground"
+                    >
+                      {item.name}
+                      {item.quantity != null && item.quantity > 1 ? ` ×${item.quantity}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
       )}
 

@@ -253,22 +253,22 @@
       "title1": "스튜디오",
       "title2": "안으로",
       "sub": "성수동에 마련된 2개의 전용 룸 — 부스와 데스크, 그리고 모든 세션 뒤에 있는 사람들. 당신의 트랙이 만들어지는 곳입니다.",
-      "imageAlt": "스튜디오 내부 — 전경"
+      "imageAlt": "KING STUDIO 컨트롤룸에서 진행 중인 녹음 세션"
     },
     "rooms": {
       "a": {
         "name": "STUDIO A",
         "purpose": "메인 세션 룸 — 프로듀서 디렉팅 보컬 세션이 진행되는 공간입니다.",
-        "mainAlt": "STUDIO A — 메인 룸",
-        "boothAlt": "STUDIO A — 부스",
-        "deskAlt": "STUDIO A — 데스크"
+        "mainAlt": "STUDIO A — 컨트롤룸",
+        "boothAlt": "STUDIO A — 녹음 부스",
+        "deskAlt": "STUDIO A — 녹음 부스 다른 각도"
       },
       "b": {
         "name": "STUDIO B",
         "purpose": "두 번째 룸 — 개인 세션과 단체 작업에 사용합니다.",
-        "mainAlt": "STUDIO B — 메인 룸",
-        "boothAlt": "STUDIO B — 부스",
-        "deskAlt": "STUDIO B — 데스크"
+        "mainAlt": "STUDIO B — 컨트롤룸",
+        "boothAlt": "STUDIO B — 녹음 부스",
+        "deskAlt": "STUDIO B — 녹음 부스 다른 각도"
       },
       "area": "{pyeong}평 ({sqm}㎡)",
       "specs": {
@@ -285,7 +285,15 @@
     },
     "equipment": {
       "heading": "장비",
-      "sub": "세션에 쓰는 장비 일부 — 상세 리스트는 계속 추가됩니다."
+      "sub": "세션에 쓰는 장비 일부 — 상세 리스트는 계속 추가됩니다.",
+      "categories": {
+        "coreSystem": "코어 시스템",
+        "outboards": "아웃보드",
+        "monitorController": "모니터 컨트롤러",
+        "speaker": "스피커",
+        "mic": "마이크",
+        "headphone": "헤드폰"
+      }
     },
     "team": {
       "heading": "팀",

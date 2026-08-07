@@ -121,3 +121,21 @@ B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카�
 - **단위 표기:** DB 는 평(정수) 저장, 렌더는 ko "N평 (M㎡)" / 비-ko "M㎡" (1평=3.3058㎡,
   정수 반올림 — 결정적 환산이라 발명 아님).
 - **팀 역할 라벨**은 messages(`studios.team.roles.*`), 이름·수치·모델명은 DB(언어 중립).
+
+### 4-C. 5d-3 fill-in 2차 — 실사진·장비 상세 도착 (2026-08-07, `feat/studios-5d3-photos`)
+
+- **실사진 반영**: 오너 제공 원본(A 4장·B 4장·세션 현장 1장)을 `scripts/optimize-studio-images.ts`
+  (max 2400px·q82·EXIF 제거)로 최적화, 7슬롯 배치. **배치 순서 = 오너 지정(2차 지시)**:
+  히어로 = 세션 현장 컷(인물 포함 — 오너 직접 제공 = 게시 승인 간주) / A = 컨트롤룸·부스·부스 2앵글 /
+  B = 컨트롤룸·부스 2앵글·부스. 미사용 스페어: A CR 2앵글·B CR 2앵글(원본 폴더 보존, 미커밋).
+  `EditorialImage`에 `src` 옵션 추가(placeholder 호출처 무변경, fill+비율 박스 CLS 0).
+  alt 는 실제 사진 내용 기술로 갱신(슬롯 키 main/booth/desk 는 레이아웃 위치명일 뿐).
+  중간 사고 1건: A/B 폴더 간 동일 파일 중복(md5 일치) → 오너 확인으로 A CR2 재업로드·해소.
+- **장비 상세 반영**: 오너 리스트(카테고리 6종·모델·수량) 도착 → `quantity` 컬럼 추가
+  (마이그레이션 `add_studio_equipment_quantity`, §7-B 수동 승인), 19항목 전량 교체 시드.
+  오너 승인 3건: ① additive 마이그레이션 ② CORE System 'MACKIE Big Knob'(수량 빈칸) 행 =
+  중복 오기로 제외 ③ 표기 공식 정규화(Protools→Pro Tools 등, 제품 사실 불변).
+  카테고리 라벨 = messages `studios.equipment.categories.*`(slug 키), 렌더 = 룸 스펙 dl 과 같은
+  행 패턴(220px 카테고리 레일 + 필, 행 구분선 — 오너 피드백 "정렬" 반영). 수량 ×N 은 2 이상만.
+- **잔여(§4-A 유지)**: 룸 Size 총면적·Max guests, 팀 bio·프로필 사진, B 운영 용도 카피.
+- **신규 ja·zh 기계번역 감수 대상**: `studios.equipment.categories.*` 6키 + alt 7키 (Aiden 몫).

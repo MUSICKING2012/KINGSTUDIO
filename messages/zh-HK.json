@@ -253,22 +253,22 @@
       "title1": "走進",
       "title2": "錄音室",
       "sub": "位於聖水洞的兩間專屬錄音室 — 錄音房、控制台，以及每一場錄音背後的團隊。你的歌曲就在這裡誕生。",
-      "imageAlt": "錄音室內部 — 全景"
+      "imageAlt": "KING STUDIO 控制室內進行中的錄音現場"
     },
     "rooms": {
       "a": {
         "name": "STUDIO A",
         "purpose": "主錄音室 — 由製作人指導的人聲錄音在此進行。",
-        "mainAlt": "STUDIO A — 主室",
-        "boothAlt": "STUDIO A — 錄音房",
-        "deskAlt": "STUDIO A — 控制台"
+        "mainAlt": "STUDIO A — 控制室",
+        "boothAlt": "STUDIO A — 錄音間",
+        "deskAlt": "STUDIO A — 錄音間另一角度"
       },
       "b": {
         "name": "STUDIO B",
         "purpose": "第二錄音室 — 用於個人錄音與團體課程。",
-        "mainAlt": "STUDIO B — 主室",
-        "boothAlt": "STUDIO B — 錄音房",
-        "deskAlt": "STUDIO B — 控制台"
+        "mainAlt": "STUDIO B — 控制室",
+        "boothAlt": "STUDIO B — 錄音間",
+        "deskAlt": "STUDIO B — 錄音間另一角度"
       },
       "area": "{sqm}㎡",
       "specs": {
@@ -285,7 +285,15 @@
     },
     "equipment": {
       "heading": "設備",
-      "sub": "錄音時使用的部分設備 — 詳細清單將持續更新。"
+      "sub": "錄音時使用的部分設備 — 詳細清單將持續更新。",
+      "categories": {
+        "coreSystem": "核心系統",
+        "outboards": "外置器材",
+        "monitorController": "監聽控制器",
+        "speaker": "監聽喇叭",
+        "mic": "咪高峰",
+        "headphone": "耳筒"
+      }
     },
     "team": {
       "heading": "團隊",

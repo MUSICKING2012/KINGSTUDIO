@@ -253,22 +253,22 @@
       "title1": "走进",
       "title2": "录音室",
       "sub": "位于圣水洞的两间专属录音室 — 录音棚、控制台，以及每一场录音背后的团队。你的歌曲就在这里诞生。",
-      "imageAlt": "录音室内部 — 全景"
+      "imageAlt": "KING STUDIO 控制室内进行中的录音现场"
     },
     "rooms": {
       "a": {
         "name": "STUDIO A",
         "purpose": "主录音室 — 由制作人指导的人声录音在此进行。",
-        "mainAlt": "STUDIO A — 主室",
-        "boothAlt": "STUDIO A — 录音棚",
-        "deskAlt": "STUDIO A — 控制台"
+        "mainAlt": "STUDIO A — 控制室",
+        "boothAlt": "STUDIO A — 录音间",
+        "deskAlt": "STUDIO A — 录音间另一角度"
       },
       "b": {
         "name": "STUDIO B",
         "purpose": "第二录音室 — 用于个人录音与团体课程。",
-        "mainAlt": "STUDIO B — 主室",
-        "boothAlt": "STUDIO B — 录音棚",
-        "deskAlt": "STUDIO B — 控制台"
+        "mainAlt": "STUDIO B — 控制室",
+        "boothAlt": "STUDIO B — 录音间",
+        "deskAlt": "STUDIO B — 录音间另一角度"
       },
       "area": "{sqm}㎡",
       "specs": {
@@ -285,7 +285,15 @@
     },
     "equipment": {
       "heading": "设备",
-      "sub": "录音时使用的部分设备 — 详细清单将持续更新。"
+      "sub": "录音时使用的部分设备 — 详细清单将持续更新。",
+      "categories": {
+        "coreSystem": "核心系统",
+        "outboards": "外置设备",
+        "monitorController": "监听控制器",
+        "speaker": "监听音箱",
+        "mic": "麦克风",
+        "headphone": "耳机"
+      }
     },
     "team": {
       "heading": "团队",
