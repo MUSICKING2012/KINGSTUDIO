@@ -37,5 +37,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { key: 'studios', href: '/studios', enabled: true }, // 5d-1 URL 확정 · 5d-3 전 로케일 전환(게이트 해제)
   { key: 'product', href: '/product', enabled: true }, // 5c 에서 최종 URL 확정
   { key: 'reviews', href: '/reviews', enabled: true }, // 5b 에서 켬 (라우트 신설)
-  { key: 'blog', href: '/blog', enabled: false },
+  // 5e-2: Ghost 이관 완료로 활성(빈 목록 회피 게이트 해제 — Blog_Slice_Spec §2-ⓐ).
+  { key: 'blog', href: '/blog', enabled: true },
 ] as const;

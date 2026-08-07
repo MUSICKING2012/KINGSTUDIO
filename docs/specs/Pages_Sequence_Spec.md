@@ -102,7 +102,7 @@
 | 5b Review | ✅ 머지(PR #34) — /reviews + nav 탭 + Service 링크 활성 |
 | 5c Product | ✅ 머지(PR #35, 2026-08-04) — /product 신설 + /experience·/packages 308 직결 + nav·sitemap·인바운드 7곳 전환 (`Product_Slice_Spec.md`) |
 | 5d Studio | **5d-1 리네임 ✅ 머지(PR #36)** / **5d-2 레이아웃 ✅ 머지(PR #37, 2026-08-05)** / **5d-3 fill-in ✅ 구현(2026-08-05 — 룸 스펙·장비·팀 DB 3테이블 + 전 로케일 소개 전환, `Studio_Slice_Spec.md` §4)**. 잔여 = 5d-3 PR 머지 + ja·zh 감수 + 실사진·장비 상세·bio 후속 fill-in |
-| 5e Blog | **결정 ③ ✅ D안(자체 운영·Ghost 배제) + ⓐ~ⓓ 전건 확정(2026-08-05)** / **5e-1 ✅ 구현(PR #40 — /blog·/blog/[slug]·BlogPost 모델·seed:blog·JSON-LD, nav 탭 비활성 유지)**. 잔여 = **5e-2**: Ghost export 이관 + 301 맵 + nav 탭 켬 + sitemap 편입 (`Blog_Slice_Spec.md` §3) |
+| 5e Blog | **결정 ③ ✅ D안(자체 운영·Ghost 배제) + ⓐ~ⓓ 전건 확정(2026-08-05)** / **5e-1 ✅ 구현(PR #40 — /blog·/blog/[slug]·BlogPost 모델·seed:blog·JSON-LD, nav 탭 비활성 유지)**. **5e-2 ✅ 구현(2026-08-07 다산, `feat/blog-5e2-ghost-migration`)** — Ghost 발행 글 99건 이관(press 14·story 74·behind 12, 무태그→story·artistplace→behind Aiden 확정) + 영구 리다이렉트(308) 맵 99건 + nav 탭 활성 + sitemap 편입. 잔여 = PR 머지 |
 
 ## 6. 다음 착수 가이드 (머신 무관 — 새 세션 킥오프용)
 
@@ -170,13 +170,9 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
    전파되지 않으므로 메인 세션에서 직접 호출.
 
 **잔여 작업** (도착 시 해당 스펙 §대로 소슬라이스 착수):
-- ① **5e-2**: Ghost export(JSON/마크다운) → 기존 글 이관 + 구 URL 301 맵 + nav BLOG 탭 켬 +
-  sitemap 편입 (`Blog_Slice_Spec.md` §3). **코드 준비 완료(2026-08-06 선릉)** — 이관 스크립트
-  (`scripts/import-ghost-export.ts`)·legacyPath 301 맵·nav 탭·sitemap·e2e 반전이
-  `feat/blog-5e2-ghost-migration` 브랜치에 커밋됨. **export JSON 만 대기**(Ghost Admin →
-  Settings → Import/Export). 라이브 Ghost 6.55, 발행 글 ~100건 실측(sitemap-posts.xml).
-  주의: NYT 원글 slug 는 중복 스킵 + legacyPath 연결 처리됨. Ghost 태그 `service` 의
-  카테고리 매핑 미정(실행 시 목록 출력 후 Aiden 결정).
+- ① ~~5e-2~~ **구현 완료(2026-08-07 다산)**: 이관 스크립트를 다산에서 재구성(선릉 브랜치 미푸시로
+  유실 — 재발 방지 위해 이번 브랜치는 즉시 원격 푸시). export JSON 수령·99건 이관·게이트 통과.
+  구 선릉 로컬 브랜치는 폐기 대상(다산본이 정본).
 - ② **5d-3 후속 fill-in**: ~~실사진·장비 상세~~ **실사진 7슬롯 + 장비 19항목(카테고리·수량)
   반영 완료(2026-08-07 다산, `feat/studios-5d3-photos` — `Studio_Slice_Spec.md` §4-C)**.
   팀 카테고리·포트레이트(매니저 Jinny·사진 2명분·공란 처리)도 반영(2026-08-07,
