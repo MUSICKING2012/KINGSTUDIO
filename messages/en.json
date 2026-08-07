@@ -253,22 +253,22 @@
       "title1": "Inside the",
       "title2": "studios",
       "sub": "Two purpose-built rooms in Seongsu — the booths, the desks and the people behind every session. This is where your track gets made.",
-      "imageAlt": "Studio interior — hero view"
+      "imageAlt": "A recording session in progress in the KING STUDIO control room"
     },
     "rooms": {
       "a": {
         "name": "STUDIO A",
         "purpose": "The main session room — where producer-directed vocal sessions run.",
-        "mainAlt": "STUDIO A — main room",
-        "boothAlt": "STUDIO A — booth",
-        "deskAlt": "STUDIO A — desk"
+        "mainAlt": "STUDIO A — control room",
+        "boothAlt": "STUDIO A — recording booth",
+        "deskAlt": "STUDIO A — recording booth, second view"
       },
       "b": {
         "name": "STUDIO B",
         "purpose": "The second room — sessions and group work.",
-        "mainAlt": "STUDIO B — main room",
-        "boothAlt": "STUDIO B — booth",
-        "deskAlt": "STUDIO B — desk"
+        "mainAlt": "STUDIO B — control room",
+        "boothAlt": "STUDIO B — recording booth",
+        "deskAlt": "STUDIO B — recording booth, second view"
       },
       "area": "{sqm} m²",
       "specs": {
@@ -285,7 +285,15 @@
     },
     "equipment": {
       "heading": "Equipment",
-      "sub": "A selection of what we record with — the detailed list keeps growing."
+      "sub": "A selection of what we record with — the detailed list keeps growing.",
+      "categories": {
+        "coreSystem": "Core System",
+        "outboards": "Outboards",
+        "monitorController": "Monitor Controllers",
+        "speaker": "Speakers",
+        "mic": "Microphones",
+        "headphone": "Headphones"
+      }
     },
     "team": {
       "heading": "The team",

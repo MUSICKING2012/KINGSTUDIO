@@ -177,8 +177,9 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
   Settings → Import/Export). 라이브 Ghost 6.55, 발행 글 ~100건 실측(sitemap-posts.xml).
   주의: NYT 원글 slug 는 중복 스킵 + legacyPath 연결 처리됨. Ghost 태그 `service` 의
   카테고리 매핑 미정(실행 시 목록 출력 후 Aiden 결정).
-- ② **5d-3 후속 fill-in**: 실사진(히어로 1+룸당 3)·장비 상세 모델·수량·팀 bio(동의 필수)·
-  룸 Size·Max guests (`Studio_Slice_Spec.md` §4-A). — Aiden 입력 대기.
+- ② **5d-3 후속 fill-in**: ~~실사진·장비 상세~~ **실사진 7슬롯 + 장비 19항목(카테고리·수량)
+  반영 완료(2026-08-07 다산, `feat/studios-5d3-photos` — `Studio_Slice_Spec.md` §4-C)**.
+  잔여 = 팀 bio(동의 필수)·룸 Size·Max guests — Aiden 입력 대기.
 - ③ ~~ja·zh 기계번역 감수~~ **완료(2026-08-06, PR #41 머지)**: service·reviews·product·
   studios·blog ns 185키 전량 대조 검수, 27건 교정(ja 聖水→聖水洞·CTA 통일 / zh-HK 용어
   통일·비단어 정정 / zh-CN 대륙 표준어휘 报道·音乐视频·实操 등). CodeRabbit 1차 리뷰
