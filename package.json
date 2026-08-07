@@ -25,7 +25,8 @@
     "seed:studios": "tsx prisma/seed-studios.ts",
     "seed:blog": "tsx prisma/seed-blog.ts",
     "seed:schema-templates": "tsx prisma/seed-schema-templates.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -39,7 +40,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
-    "next": "14.2.21",
+    "next": "14.2.35",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^3.26.3",
     "otplib": "^12.0.1",
