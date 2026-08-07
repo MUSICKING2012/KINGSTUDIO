@@ -1,4 +1,7 @@
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
+
+import symbolMark from '@/public/images/brand/kingstudio-symbol.png';
 
 import { CurrencySelector } from './currency-selector';
 import { LocaleSelector } from './locale-selector';
@@ -44,15 +47,10 @@ export async function SiteHeader({ locale }: { locale: string }) {
   return (
     <header className="sticky top-0 z-50 border-b border-foreground/[0.08] bg-background/90 backdrop-blur-[8px]">
       <div className="mx-auto flex min-h-[66px] max-w-container-max flex-wrap items-center gap-5 px-gutter">
-        {/* 접근 이름 = 링크 텍스트(KING STUDIO). aria-label="Home" 은 보이는 라벨과 불일치라
-            음성 입력("KING STUDIO 클릭")이 매칭되지 않아 제거(WCAG 2.5.3 Label in Name). */}
+        {/* 공식 크라운 심볼(원본 그라디언트 유지 — 배경판·라운딩·필터 금지, 2026-08-07 교체).
+            alt="KING STUDIO" 지정(브랜드 고유명사 — i18n 키 불요). */}
         <Link href="/" className="flex flex-none items-center gap-[9px] no-underline">
-          <span
-            aria-hidden="true"
-            className="grid h-[26px] w-[26px] place-items-center rounded-[7px] bg-foreground text-[14px] font-extrabold text-background"
-          >
-            K
-          </span>
+          <Image src={symbolMark} alt="KING STUDIO" priority className="h-7 w-auto" />
           <span className="ks-display ks-display-strong text-[16px] tracking-[0.02em] text-foreground">
             KING STUDIO
           </span>
