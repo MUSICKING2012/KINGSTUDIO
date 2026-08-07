@@ -32,7 +32,8 @@ import {
  *  - 대여 패널의 "온라인 예약 없이 문의로 진행"은 **이식 금지**(결정 ② — PRD §5.2 즉시결제).
  *  - 장비: 2026-08-07 오너 리스트(카테고리·모델·수량) 반영 — 카테고리 그룹 + 수량 ×N(≥2만).
  *    디자인 아코디언 대신 그룹 라벨 + 필 리스트(기존 패턴 유지).
- *  - 팀 카드 얼굴 슬롯 없음 — 사진·bio 미제공, 이름·역할만(오너 제공 = 게시 승인).
+ *  - 팀 카드 3:4 포트레이트 슬롯(2026-08-07 fill-in 2차) — 오너 제공분만 실사진, 나머지는
+ *    공란 placeholder(오너 지시). bio 미제공 → 이름·역할까지만.
  *  - 이미지 7슬롯 = 실사진(2026-08-07 오너 제공 9장 — A 4·B 4·세션 현장 1 — 중 7슬롯 배치,
  *    `STUDIO_PHOTOS`). 스페어 2장(A/B 컨트롤룸 2앵글)은 원본 폴더 보존, 미커밋.
  *  - 소형 텍스트 알파 상향: 라이트 /70 (§11-W).
@@ -250,7 +251,9 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
         </section>
       )}
 
-      {/* Team — 이름·역할만(사진·bio 미제공, 오너 제공 명단 = 게시 승인 — §4-A) */}
+      {/* Team — 오너 지정 순서(프로듀서 → 보컬 디렉터 → 매니저). 세로 포트레이트는 제공분만
+          (제공 = 게시 동의 — §4-A), 미제공 인원은 공란(placeholder 박스 — 오너 지시 2026-08-07).
+          bio 는 여전히 미제공 → 이름·역할까지만. */}
       {team.length > 0 && (
         <section className="mx-auto max-w-container-max px-gutter pt-14">
           <h2 className="ks-display mb-5 text-[clamp(28px,4vw,44px)] leading-none text-foreground">
@@ -260,12 +263,20 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
             {team.map((member) => (
               <article
                 key={member.id}
-                className="flex flex-col gap-1 rounded-ks-bar bg-paper-raise p-6"
+                className="flex flex-col gap-1 overflow-hidden rounded-ks-bar bg-paper-raise"
               >
-                <span className="ks-display text-[24px] leading-tight">{member.name}</span>
-                <span className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-foreground/70">
-                  {t(`team.roles.${member.roleKey}`)}
-                </span>
+                <EditorialImage
+                  alt={member.name}
+                  src={member.photoPath ?? undefined}
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  className="aspect-[3/4]"
+                />
+                <div className="flex flex-col gap-1 p-6 pt-4">
+                  <span className="ks-display text-[24px] leading-tight">{member.name}</span>
+                  <span className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-foreground/70">
+                    {t(`team.roles.${member.roleKey}`)}
+                  </span>
+                </div>
               </article>
             ))}
           </div>

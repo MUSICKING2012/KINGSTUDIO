@@ -64,23 +64,46 @@ async function main() {
   }
 
   // Names provided directly by the owner (provision = publication consent for name+role).
-  const team = [
-    { name: 'Aiden', roleKey: 'producer', displayOrder: 1 },
-    { name: 'Jiseon', roleKey: 'vocalDirector', displayOrder: 2 },
-    { name: 'Yena', roleKey: 'vocalDirector', displayOrder: 3 },
-    { name: 'Lucia', roleKey: 'vocalDirector', displayOrder: 4 },
+  // 2026-08-07 2차: 순서·카테고리 = 오너 지정(프로듀서 → 보컬 디렉터 Jiseon·Lucia·Yena → 매니저
+  // Jinny). 포트레이트 = 오너 제공 2명분만(제공 = 게시 동의); 나머지는 공란(placeholder 카드).
+  const team: {
+    name: string;
+    roleKey: string;
+    displayOrder: number;
+    photoPath: string | null;
+  }[] = [
+    {
+      name: 'Aiden',
+      roleKey: 'producer',
+      displayOrder: 1,
+      photoPath: '/images/studios/team-aiden.jpg',
+    },
+    {
+      name: 'Jiseon',
+      roleKey: 'vocalDirector',
+      displayOrder: 2,
+      photoPath: '/images/studios/team-jiseon.jpg',
+    },
+    { name: 'Lucia', roleKey: 'vocalDirector', displayOrder: 3, photoPath: null },
+    { name: 'Yena', roleKey: 'vocalDirector', displayOrder: 4, photoPath: null },
+    { name: 'Jinny', roleKey: 'manager', displayOrder: 5, photoPath: null },
   ];
   for (const member of team) {
     const existing = await prisma.teamMember.findFirst({ where: { name: member.name } });
     if (existing) {
       await prisma.teamMember.update({
         where: { id: existing.id },
-        data: { roleKey: member.roleKey, displayOrder: member.displayOrder },
+        data: {
+          roleKey: member.roleKey,
+          displayOrder: member.displayOrder,
+          photoPath: member.photoPath,
+        },
       });
     } else {
       await prisma.teamMember.create({ data: member });
     }
-    console.log(`Seeded team member: ${member.name} (${member.roleKey})`);
+    // 이름은 로그 생략 — 공개 게시 동의분이지만 §3.6 방어적 준수(역할·순번으로 충분히 식별).
+    console.log(`Seeded team member #${member.displayOrder} (${member.roleKey})`);
   }
 }
 

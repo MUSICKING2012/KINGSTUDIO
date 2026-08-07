@@ -299,7 +299,8 @@
       "heading": "チーム",
       "roles": {
         "producer": "プロデューサー",
-        "vocalDirector": "ボーカルディレクター"
+        "vocalDirector": "ボーカルディレクター",
+        "manager": "マネージャー"
       }
     }
   },

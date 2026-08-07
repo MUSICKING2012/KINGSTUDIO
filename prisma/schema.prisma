@@ -1854,8 +1854,10 @@ model StudioEquipment {
 model TeamMember {
   id           String   @id @default(cuid())
   name         String // display name as provided, e.g. 'Aiden'
-  roleKey      String   @map("role_key") // 'producer' | 'vocalDirector' — messages key suffix
+  roleKey      String   @map("role_key") // 'producer' | 'vocalDirector' | 'manager' — messages key suffix
   bio          String? // fill-in, absent 2026-08-05
+  /// portrait under /public (owner-provided = publication consent); null = placeholder card
+  photoPath    String?  @map("photo_path")
   displayOrder Int      @default(0) @map("display_order")
   isVisible    Boolean  @default(true) @map("is_visible")
   createdAt    DateTime @default(now()) @map("created_at")

@@ -299,7 +299,8 @@
       "heading": "團隊",
       "roles": {
         "producer": "監製",
-        "vocalDirector": "聲樂總監"
+        "vocalDirector": "聲樂總監",
+        "manager": "經理"
       }
     }
   },

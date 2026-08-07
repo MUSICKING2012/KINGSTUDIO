@@ -299,7 +299,8 @@
       "heading": "The team",
       "roles": {
         "producer": "Producer",
-        "vocalDirector": "Vocal Director"
+        "vocalDirector": "Vocal Director",
+        "manager": "Manager"
       }
     }
   },
