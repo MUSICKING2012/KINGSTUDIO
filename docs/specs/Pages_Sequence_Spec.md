@@ -193,4 +193,7 @@ build 정적 104 · 가격 하드코딩 0). 원격 세션 시점 기록은 아�
   §5 로케일 목록·§5 GFW 항목 3곳을 PRD C14(2026-07-18 zh-TW 폐지·zh-CN 신설) 정본으로 정정,
   코드 SoT(`lib/i18n/routing.ts`·`lib/currency/config.ts`) 대조 확인.
 
-**배포(Railway) 시**: 마이그레이션 3건 적용 + `pnpm seed:studios`·`pnpm seed:blog` 실행 필요.
+**배포(Railway) 시**: `pnpm prisma migrate deploy`(미적용분 전부 — 시퀀스 5 누적 5건:
+`add_studios_intro_content`·`studios_content_check_constraints`·`add_blog_posts`·
+`add_studio_equipment_quantity`·`add_team_member_photo_path`+`team_role_key_check_add_manager`)
++ `pnpm seed:studios`·`pnpm seed:blog` 재실행 필요. (개별 건수 나열은 stale 위험 — migrate deploy 가 정본.)

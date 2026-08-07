@@ -102,7 +102,8 @@ async function main() {
     } else {
       await prisma.teamMember.create({ data: member });
     }
-    console.log(`Seeded team member: ${member.name} (${member.roleKey})`);
+    // 이름은 로그 생략 — 공개 게시 동의분이지만 §3.6 방어적 준수(역할·순번으로 충분히 식별).
+    console.log(`Seeded team member #${member.displayOrder} (${member.roleKey})`);
   }
 }
 
