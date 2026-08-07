@@ -1,3 +1,4 @@
+import { listBlogPosts } from '@/lib/blog/queries';
 import { listSongs } from '@/lib/catalog/song-queries';
 import { isSongPubliclyVisible } from '@/lib/catalog/song-visibility';
 import { toPrismaLocale } from '@/lib/i18n/locale';
@@ -19,7 +20,8 @@ export const revalidate = 86400;
 // NOTE: MetadataRoute.Sitemap's `alternates` only supports `languages` (no canonical), so entries use
 // hreflangLanguages (5 locales + x-default=en) — buildAlternates (which adds canonical, for page
 // generateMetadata) does not fit the sitemap shape.
-const STATIC_PATHS = ['', '/songs', '/product', '/group', '/studios'] as const;
+// '/blog' 는 5e-2(Ghost 이관 완료)부터 포함 — 빈 목록 색인 회피 게이트 해제(Blog_Slice_Spec §2-ⓐ).
+const STATIC_PATHS = ['', '/songs', '/product', '/group', '/studios', '/blog'] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
@@ -44,6 +46,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // narrows slug to string for songPath below.
     if (!isSongPubliclyVisible(song) || song.slug === null) continue;
     const path = songPath(song.slug);
+    for (const locale of locales) {
+      entries.push({
+        url: absoluteUrl(locale, path),
+        alternates: { languages: hreflangLanguages(path) },
+      });
+    }
+  }
+  // Blog post URLs (5e-2, W4 계열): listBlogPosts 는 published-only 를 모듈 차원에서 보장하므로
+  // 여기 등재된 URL 은 항상 200(라우트도 같은 read layer 사용). 본문은 en 단일(결정 ⓒ)이지만
+  // 페이지는 전 로케일 200 — songs 와 동일하게 로케일별 entry + hreflang alternates.
+  const posts = await listBlogPosts();
+  for (const post of posts) {
+    const path = `/blog/${post.slug}`;
     for (const locale of locales) {
       entries.push({
         url: absoluteUrl(locale, path),

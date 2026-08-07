@@ -14,12 +14,12 @@ import { expect, test } from '@playwright/test';
 const LOCALES = ['ko', 'en', 'ja', 'zh-HK', 'zh-CN'] as const;
 
 for (const locale of LOCALES) {
-  test(`/blog 전 로케일 200 + nav 탭 비활성 유지 — ${locale}`, async ({ page }) => {
+  test(`/blog 전 로케일 200 + nav 탭 활성 — ${locale}`, async ({ page }) => {
     const res = await page.goto(`/${locale}/blog`);
     expect(res?.status()).toBe(200);
     await expect(page.locator('main h1')).toBeVisible();
-    // 5e-2 전까지 BLOG 는 비링크(빈 목록·이관 전 색인 회피 — 스펙 §2-ⓐ).
-    await expect(page.locator(`header nav a[href="/${locale}/blog"]`)).toHaveCount(0);
+    // 5e-2: Ghost 이관 완료로 BLOG 탭 활성(§2-ⓐ 게이트 해제) — 링크가 사라지면 회귀.
+    await expect(page.locator(`header nav a[href="/${locale}/blog"]`)).toHaveCount(1);
   });
 }
 
@@ -51,9 +51,9 @@ test('미존재 slug 는 404', async ({ request }) => {
   expect((await request.get('/en/blog/this-slug-does-not-exist')).status()).toBe(404);
 });
 
-test('sitemap 은 /blog 를 아직 포함하지 않는다 (5e-2 이관 후 편입 — 스펙 §2-ⓐ)', async ({
-  request,
-}) => {
+test('sitemap 이 /blog 목록 + 발행 글 URL 을 포함한다 (5e-2 편입)', async ({ request }) => {
   const xml = await (await request.get('/sitemap.xml')).text();
-  expect(xml).not.toContain('/blog');
+  expect(xml).toContain('/en/blog');
+  // 글별 URL — seed:blog 전제(nyt-feature-2024 ≥ 1건). W4 계열: 등재 URL = published-only.
+  expect(xml).toContain('/en/blog/nyt-feature-2024');
 });
