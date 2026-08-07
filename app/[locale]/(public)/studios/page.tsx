@@ -32,13 +32,32 @@ import {
  *  - 대여 패널의 "온라인 예약 없이 문의로 진행"은 **이식 금지**(결정 ② — PRD §5.2 즉시결제).
  *  - 장비 아코디언 5카테고리 → 무분류 평면 리스트(접수 데이터가 무분류 — §4-A).
  *  - 팀 카드 얼굴 슬롯 없음 — 사진·bio 미제공, 이름·역할만(오너 제공 = 게시 승인).
- *  - 이미지 7슬롯은 실사진 미첨부 — `EditorialImage` placeholder(4b 패턴).
+ *  - 이미지 7슬롯 = 실사진(2026-08-07 오너 제공 8장 중 7슬롯 배치, `STUDIO_PHOTOS`).
+ *    히어로 = A 컨트롤룸 1(오너 선택). A desk 슬롯은 히어로와 동일 컷 재사용 — A 의 콘솔
+ *    정면 컷이 1장뿐(발명 0, 추가 사진 도착 시 교체). 스페어: A/B Booth 2.
  *  - 소형 텍스트 알파 상향: 라이트 /70 (§11-W).
  *
  * 면적 표기: DB 는 평, 렌더는 `studios.rooms.area` 메시지({pyeong}·{sqm}) — ko "10평 (33㎡)",
  * 비-ko "33㎡" 계열. 환산은 결정적(1평=3.3058㎡, 정수 반올림).
  */
 export const dynamic = 'force-dynamic';
+
+/** 실사진 슬롯 매핑 (원본 = 오너 제공, `scripts/optimize-studio-images.ts` 산출물). */
+const STUDIO_PHOTOS = {
+  hero: '/images/studios/studio-a-control-room-1.jpg',
+  rooms: {
+    a: {
+      main: '/images/studios/studio-a-control-room-2.jpg',
+      booth: '/images/studios/studio-a-booth-1.jpg',
+      desk: '/images/studios/studio-a-control-room-1.jpg',
+    },
+    b: {
+      main: '/images/studios/studio-b-control-room-1.jpg',
+      booth: '/images/studios/studio-b-booth-1.jpg',
+      desk: '/images/studios/studio-b-control-room-2.jpg',
+    },
+  } as Record<string, { main: string; booth: string; desk: string }>,
+};
 
 export async function generateMetadata({
   params: { locale },
@@ -98,7 +117,13 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
           {t('hero.sub')}
         </p>
         <div className="mt-[30px] aspect-[21/9] overflow-hidden rounded-ks-bar">
-          <EditorialImage alt={t('hero.imageAlt')} className="h-full" />
+          <EditorialImage
+            alt={t('hero.imageAlt')}
+            src={STUDIO_PHOTOS.hero}
+            sizes="(min-width: 1280px) 1232px, 100vw"
+            priority
+            className="h-full"
+          />
         </div>
       </section>
 
@@ -111,14 +136,29 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
           >
             <div className={`flex flex-col gap-3 ${i % 2 === 1 ? 'md:order-2' : ''}`}>
               <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                <EditorialImage alt={t(`rooms.${room.slug}.mainAlt`)} className="h-full" />
+                <EditorialImage
+                  alt={t(`rooms.${room.slug}.mainAlt`)}
+                  src={STUDIO_PHOTOS.rooms[room.slug]?.main}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="h-full"
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                  <EditorialImage alt={t(`rooms.${room.slug}.boothAlt`)} className="h-full" />
+                  <EditorialImage
+                    alt={t(`rooms.${room.slug}.boothAlt`)}
+                    src={STUDIO_PHOTOS.rooms[room.slug]?.booth}
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="h-full"
+                  />
                 </div>
                 <div className="aspect-[4/3] overflow-hidden rounded-ks-img">
-                  <EditorialImage alt={t(`rooms.${room.slug}.deskAlt`)} className="h-full" />
+                  <EditorialImage
+                    alt={t(`rooms.${room.slug}.deskAlt`)}
+                    src={STUDIO_PHOTOS.rooms[room.slug]?.desk}
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="h-full"
+                  />
                 </div>
               </div>
             </div>
