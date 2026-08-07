@@ -116,6 +116,35 @@ export function CheckoutForm({
     setHydrated(true);
   }, []);
 
+  // 이니시스 return/close 는 전체 페이지 이동으로 복귀한다 — 쿼리 파라미터로 결과를 수신.
+  // (성공 시 draft 정리 · 실패 시 코드 표시. 파라미터는 주소창 노출값이라 표시 외 용도 없음 —
+  //  금액·예약의 진실은 서버 기록이며 confirmed 뷰는 안내용.)
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const st = sp.get('inicis');
+    if (!st) return;
+    if (st === 'success' && sp.get('bookingId')) {
+      try {
+        window.sessionStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // non-fatal
+      }
+      setConfirmed({
+        bookingId: sp.get('bookingId') as string,
+        totalKrw: Number(sp.get('totalKrw')) || 0,
+      });
+    } else if (st === 'fail') {
+      setErrorCode(sp.get('code') || 'payment_failed');
+    }
+    // 새로고침 시 중복 처리 방지 — 쿼리 정리(멱등이지만 주소창 위생).
+    sp.delete('inicis');
+    sp.delete('bookingId');
+    sp.delete('totalKrw');
+    sp.delete('code');
+    const qs = sp.toString();
+    window.history.replaceState(null, '', window.location.pathname + (qs ? `?${qs}` : ''));
+  }, []);
+
   const options = draft?.options;
   const draftReady = Boolean(draft && draft.package === packageSlug && draft.date && options);
 
@@ -132,6 +161,19 @@ export function CheckoutForm({
     }
   }, [options, pricing, returningEligible]);
 
+  if (confirmed) {
+    return (
+      <div className="mt-stack-lg max-w-2xl rounded-brand-card border border-border bg-card p-stack-lg">
+        <h2 className="font-display text-headline-lg text-foreground">{labels.success.title}</h2>
+        <p className="mt-stack-md text-body-md text-muted-foreground">{labels.success.message}</p>
+        <p className="mt-stack-md text-body-md text-foreground">
+          {labels.success.refLabel}: <span className="font-mono">{confirmed.bookingId}</span>
+        </p>
+        <p className="mt-stack-sm text-headline-md text-foreground">{krw(confirmed.totalKrw)}</p>
+      </div>
+    );
+  }
+
   if (hydrated && (!draftReady || !preview)) {
     return (
       <div className="mt-stack-lg rounded-brand-card border border-border bg-card p-stack-lg">
@@ -146,22 +188,39 @@ export function CheckoutForm({
     );
   }
 
-  if (confirmed) {
-    return (
-      <div className="mt-stack-lg max-w-2xl rounded-brand-card border border-border bg-card p-stack-lg">
-        <h2 className="font-display text-headline-lg text-foreground">{labels.success.title}</h2>
-        <p className="mt-stack-md text-body-md text-muted-foreground">{labels.success.message}</p>
-        <p className="mt-stack-md text-body-md text-foreground">
-          {labels.success.refLabel}: <span className="font-mono">{confirmed.bookingId}</span>
-        </p>
-        <p className="mt-stack-sm text-headline-md text-foreground">{krw(confirmed.totalKrw)}</p>
-      </div>
-    );
-  }
-
   if (!hydrated || !draft || !options || !preview) {
     return <div className="mt-stack-lg h-40" aria-hidden />;
   }
+
+  // 이니시스 표준결제창 기동: prepare 응답의 scriptUrl(스테이징/운영 SDK)을 동적 로드 후
+  // hidden form(SendPayForm_id)으로 INIStdPay.pay 호출. 이후 흐름은 인증창 → return 라우트가
+  // 전체 페이지 이동으로 이어받는다(위 쿼리 수신 effect). 서버 전용 키는 formFields 에 없다(§3.7).
+  const launchInicis = async (scriptUrl: string, formFields: Record<string, string>) => {
+    await new Promise<void>((resolve, reject) => {
+      if (document.querySelector(`script[src="${scriptUrl}"]`)) return resolve();
+      const el = document.createElement('script');
+      el.src = scriptUrl;
+      el.onload = () => resolve();
+      el.onerror = () => reject(new Error('inicis_sdk_load_failed'));
+      document.head.appendChild(el);
+    });
+    document.getElementById('SendPayForm_id')?.remove();
+    const form = document.createElement('form');
+    form.id = 'SendPayForm_id';
+    form.method = 'POST';
+    form.style.display = 'none';
+    for (const [name, value] of Object.entries(formFields)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    }
+    document.body.appendChild(form);
+    const sdk = (window as { INIStdPay?: { pay: (formId: string) => void } }).INIStdPay;
+    if (!sdk) throw new Error('inicis_sdk_missing');
+    sdk.pay('SendPayForm_id');
+  };
 
   const onPay = async () => {
     if (!paymentConsent || submitting) return;
@@ -171,23 +230,53 @@ export function CheckoutForm({
     // Step 3 consents + the Step 4 payment consent (dedup).
     const consents = Array.from(new Set<ConsentType>([...options.consents, 'payment']));
 
+    const payload = {
+      package: draft.package,
+      date: draft.date,
+      startTime: draft.startTime,
+      headcount: options.headcount,
+      songId: options.songId,
+      reservant: options.reservant,
+      participantDobs: options.participantDobs,
+      guardian: options.guardian,
+      consents,
+      pg,
+      locale,
+    };
+
+    if (pg === 'inicis') {
+      try {
+        const res = await fetch('/api/payment/inicis/prepare', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = (await res.json().catch(() => ({}))) as {
+          ok?: boolean;
+          scriptUrl?: string;
+          formFields?: Record<string, string>;
+          error?: string;
+        };
+        if (!res.ok || !data.ok || !data.scriptUrl || !data.formFields) {
+          setErrorCode(data.error ?? 'internal_error');
+          setSubmitting(false);
+          return;
+        }
+        await launchInicis(data.scriptUrl, data.formFields);
+        // 결제창이 떠 있는 동안 submitting 유지 — 이후 상태 전이는 return/close 전체 이동이 담당.
+        return;
+      } catch {
+        setErrorCode('payment_failed');
+        setSubmitting(false);
+        return;
+      }
+    }
+
     try {
       const res = await fetch('/api/booking/confirm', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          package: draft.package,
-          date: draft.date,
-          startTime: draft.startTime,
-          headcount: options.headcount,
-          songId: options.songId,
-          reservant: options.reservant,
-          participantDobs: options.participantDobs,
-          guardian: options.guardian,
-          consents,
-          pg,
-          locale,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;

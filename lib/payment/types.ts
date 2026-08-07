@@ -41,3 +41,39 @@ export interface PaymentGateway {
   capture(input: CaptureInput): Promise<CaptureResult>;
   refund(input: RefundInput): Promise<RefundResult>;
 }
+
+// ── Redirect(인증창) 계열 2단 계약 (Inicis_Slice_Spec §3, 오너 확정 2026-08-07) ──────────────
+// KG이니시스 표준결제(INIStdPay)는 브라우저 인증창 → returnUrl POST → 서버 승인의 3단 흐름이라
+// 단일 capture 로 시작할 수 없다. prepareCheckout 이 결제창 파라미터(서명 포함)를 만들고,
+// approve 가 인증 결과를 승인(=실청구)한다. Mock·PayPal 은 기존 capture 경로를 유지한다.
+
+export type PrepareCheckoutInput = {
+  oid: string; // 주문번호 = 예약 draft 키 (idempotency — 재시도 시 동일 oid)
+  amountKrw: number;
+  goodName: string;
+  buyerName: string;
+  buyerEmail: string;
+  returnUrl: string;
+  closeUrl: string;
+};
+
+// 클라이언트가 그대로 폼 제출/SDK 호출에 쓰는 값. 서버 전용 키(signKey)는 절대 포함 금지(§3.7).
+export type PreparedCheckout = {
+  kind: 'inicis-stdpay';
+  scriptUrl: string;
+  formFields: Record<string, string>;
+};
+
+export type ApproveInput = {
+  authToken: string;
+  authUrl: string;
+  netCancelUrl: string;
+  oid: string;
+  // 금액 위변조 검증 기준 — 서버 보관 예약 스냅샷 금액(클라이언트 값 불신, §4 위험 구역).
+  expectedAmountKrw: number;
+};
+
+export interface RedirectPaymentGateway {
+  prepareCheckout(input: PrepareCheckoutInput): PreparedCheckout;
+  approve(input: ApproveInput): Promise<CaptureResult>;
+}

@@ -867,7 +867,9 @@
         "slot_unavailable": "That time just sold out. Please pick another slot.",
         "payment_failed": "Payment failed. Please try again.",
         "concurrent_booking_lost": "The slot was taken by a concurrent booking. Your payment has been automatically refunded — please pick another time.",
-        "internal_error": "A temporary error occurred. Please try again shortly."
+        "internal_error": "A temporary error occurred. Please try again shortly.",
+        "payment_auth_failed": "The payment window was cancelled or authentication failed. No charge was made.",
+        "payment_expired": "The payment session expired. Please try again — no charge was made."
       },
       "success": {
         "title": "Your booking is confirmed",
