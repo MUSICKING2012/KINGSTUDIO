@@ -7,7 +7,7 @@
  * - 카테고리 = Ghost primary tag → TAG_TO_CATEGORY 매핑. **미매핑 태그 발견 시 전체 census 를
  *   출력하고 실패** — 임의 분류는 발명(Aiden 이 맵을 확장해 재실행).
  * - legacyPath = `/${ghost slug}/` (현 kingstudio.co.kr Ghost URL 구조). 이관 후
- *   content/blog/legacy-redirects.json 을 전체 md 기준으로 재생성(빌드 시 next.config 301 소스).
+ *   content/blog/legacy-redirects.json 을 전체 md 기준으로 재생성(빌드 시 next.config 영구 리다이렉트(308) 소스).
  * - 기존 md 와 slug 충돌(예: NYT 원글) → 본문은 기존 파일 유지(스킵), legacyPath 만 주입.
  * - 멱등: 같은 export 로 재실행하면 동일 결과. DB 반영은 별도 `pnpm seed:blog`.
  */
@@ -107,7 +107,12 @@ function main() {
   const existing = new Set(readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md')));
   let written = 0;
   let merged = 0;
+  const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/; // Ghost slug 형식 — 경로 탈출(../) 차단 (PR #46 리뷰)
   for (const p of posts) {
+    if (!SLUG_RE.test(p.slug)) {
+      console.error(`비정상 slug — 건너뜀(경로 탈출 방지): ${JSON.stringify(p.slug)}`);
+      continue;
+    }
     const legacyPath = `/${p.slug}/`;
     const file = `${p.slug}.md`;
     if (existing.has(file)) {
@@ -161,7 +166,7 @@ function main() {
   }
   writeFileSync(REDIRECTS_PATH, `${JSON.stringify(redirects, null, 2)}\n`);
   console.log(
-    `\nmd 신규 ${written}건 · legacyPath 병합 ${merged}건 · 301 맵 ${redirects.length}건`,
+    `\nmd 신규 ${written}건 · legacyPath 병합 ${merged}건 · 영구 리다이렉트(308) 맵 ${redirects.length}건`,
   );
   console.log('다음 단계: pnpm seed:blog (DB 반영) → 게이트 → 커밋');
 }

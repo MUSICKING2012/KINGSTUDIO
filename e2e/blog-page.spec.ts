@@ -57,3 +57,13 @@ test('sitemap 이 /blog 목록 + 발행 글 URL 을 포함한다 (5e-2 편입)',
   // 글별 URL — seed:blog 전제(nyt-feature-2024 ≥ 1건). W4 계열: 등재 URL = published-only.
   expect(xml).toContain('/en/blog/nyt-feature-2024');
 });
+
+test('legacy Ghost URL 은 308 + /en/blog/{slug} 직결 (맵 존재 시)', async ({ request }) => {
+  const { existsSync, readFileSync } = await import('node:fs');
+  const p = 'content/blog/legacy-redirects.json';
+  test.skip(!existsSync(p), 'legacy-redirects.json 미존재(콘텐츠 PR 미병합 체크아웃)');
+  const [first] = JSON.parse(readFileSync(p, 'utf8'));
+  const res = await request.get(first.source, { maxRedirects: 0 });
+  expect(res.status()).toBe(308);
+  expect(res.headers().location).toBe(first.destination);
+});
