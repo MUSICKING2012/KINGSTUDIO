@@ -24,7 +24,11 @@ const TAG_TO_CATEGORY: Record<string, string> = {
   press: 'press',
   behind: 'behind',
   'seoul-travel': 'seoulTravel',
+  // 2026-08-07 Aiden 확정: 아이돌 팬투어 서울 스팟 시리즈 → behind
+  artistplace: 'behind',
 };
+/** 태그 없는 글의 기본 카테고리 (2026-08-07 Aiden 확정 — 고객 세션 후기 성격). */
+const UNTAGGED_CATEGORY = 'story';
 
 type GhostPost = {
   id: string;
@@ -58,13 +62,20 @@ function main() {
   const tagsById = new Map<string, string>(
     (data.tags ?? []).map((t: { id: string; slug: string }) => [t.id, t.slug]),
   );
-  // sort_order 0 = primary tag (Ghost 규약)
-  const primaryTagByPost = new Map<string, string>();
+  // primary = sort_order 최솟값의 태그 (Ghost 규약). 단 내부 태그(#foo → export 시 hash-foo)는
+  // 분류가 아니라 테마 제어용이므로 건너뛰고 다음 태그를 쓴다.
+  const tagsByPost = new Map<string, { order: number; slug: string }[]>();
   for (const pt of data.posts_tags ?? []) {
-    if (pt.sort_order === 0) {
-      const slug = tagsById.get(pt.tag_id);
-      if (slug) primaryTagByPost.set(pt.post_id, slug);
-    }
+    const slug = tagsById.get(pt.tag_id);
+    if (!slug || slug.startsWith('hash-')) continue;
+    const list = tagsByPost.get(pt.post_id) ?? [];
+    list.push({ order: pt.sort_order ?? 0, slug });
+    tagsByPost.set(pt.post_id, list);
+  }
+  const primaryTagByPost = new Map<string, string>();
+  for (const [postId, list] of tagsByPost) {
+    list.sort((a, b) => a.order - b.order);
+    primaryTagByPost.set(postId, list[0].slug);
   }
 
   const posts: GhostPost[] = (data.posts as GhostPost[]).filter(
@@ -78,12 +89,12 @@ function main() {
     const tag = primaryTagByPost.get(p.id) ?? '(태그 없음)';
     census.set(tag, (census.get(tag) ?? 0) + 1);
   }
-  const unmapped = [...census.keys()].filter((t) => !TAG_TO_CATEGORY[t]);
+  const resolve = (tag: string) =>
+    TAG_TO_CATEGORY[tag] ?? (tag === '(태그 없음)' ? UNTAGGED_CATEGORY : undefined);
+  const unmapped = [...census.keys()].filter((t) => !resolve(t));
   console.log('primary 태그 census:');
   for (const [tag, n] of census) {
-    console.log(
-      `  ${tag}: ${n}건 ${TAG_TO_CATEGORY[tag] ? `→ ${TAG_TO_CATEGORY[tag]}` : '⚠ 미매핑'}`,
-    );
+    console.log(`  ${tag}: ${n}건 ${resolve(tag) ? `→ ${resolve(tag)}` : '⚠ 미매핑'}`);
   }
   if (unmapped.length > 0) {
     console.error(
@@ -119,7 +130,7 @@ function main() {
     const excerpt = excerptSrc.replace(/\s+/g, ' ').slice(0, 200);
     const words = markdown.split(/\s+/).length;
     const readMinutes = Math.max(1, Math.round(words / 200));
-    const category = TAG_TO_CATEGORY[primaryTagByPost.get(p.id) ?? ''];
+    const category = resolve(primaryTagByPost.get(p.id) ?? '(태그 없음)');
     const publishedAt = (p.published_at ?? '').slice(0, 10);
     const front = [
       '---',
@@ -134,7 +145,7 @@ function main() {
       '---',
       '',
     ].join('\n');
-    writeFileSync(path.join(CONTENT_DIR, file), front + markdown + '\n');
+    writeFileSync(path.join(CONTENT_DIR, file), `${front}${markdown}\n`);
     written++;
   }
 
