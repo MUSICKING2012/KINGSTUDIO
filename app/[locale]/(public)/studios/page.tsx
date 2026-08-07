@@ -250,7 +250,9 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
         </section>
       )}
 
-      {/* Team — 이름·역할만(사진·bio 미제공, 오너 제공 명단 = 게시 승인 — §4-A) */}
+      {/* Team — 오너 지정 순서(프로듀서 → 보컬 디렉터 → 매니저). 세로 포트레이트는 제공분만
+          (제공 = 게시 동의 — §4-A), 미제공 인원은 공란(placeholder 박스 — 오너 지시 2026-08-07).
+          bio 는 여전히 미제공 → 이름·역할까지만. */}
       {team.length > 0 && (
         <section className="mx-auto max-w-container-max px-gutter pt-14">
           <h2 className="ks-display mb-5 text-[clamp(28px,4vw,44px)] leading-none text-foreground">
@@ -260,12 +262,20 @@ export default async function StudiosPage({ params: { locale } }: { params: { lo
             {team.map((member) => (
               <article
                 key={member.id}
-                className="flex flex-col gap-1 rounded-ks-bar bg-paper-raise p-6"
+                className="flex flex-col gap-1 overflow-hidden rounded-ks-bar bg-paper-raise"
               >
-                <span className="ks-display text-[24px] leading-tight">{member.name}</span>
-                <span className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-foreground/70">
-                  {t(`team.roles.${member.roleKey}`)}
-                </span>
+                <EditorialImage
+                  alt={member.name}
+                  src={member.photoPath ?? undefined}
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  className="aspect-[3/4]"
+                />
+                <div className="flex flex-col gap-1 p-6 pt-4">
+                  <span className="ks-display text-[24px] leading-tight">{member.name}</span>
+                  <span className="text-[11.5px] font-bold uppercase tracking-[0.06em] text-foreground/70">
+                    {t(`team.roles.${member.roleKey}`)}
+                  </span>
+                </div>
               </article>
             ))}
           </div>

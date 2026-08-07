@@ -139,3 +139,14 @@ B 는 `md:order` 교차 — 스펙 표·태그 이연) → 대여 패키지 카�
   행 패턴(220px 카테고리 레일 + 필, 행 구분선 — 오너 피드백 "정렬" 반영). 수량 ×N 은 2 이상만.
 - **잔여(§4-A 유지)**: 룸 Size 총면적·Max guests, 팀 bio·프로필 사진, B 운영 용도 카피.
 - **신규 ja·zh 기계번역 감수 대상**: `studios.equipment.categories.*` 6키 + alt 7키 (Aiden 몫).
+
+### 4-D. 팀 fill-in 2차 — 카테고리·포트레이트 (2026-08-07, `feat/studios-team-fill-in`)
+
+- **구조 = 오너 지정**: 프로듀서(Aiden) → 보컬 디렉터(Jiseon·Lucia·Yena — Yena↔Lucia 순서 변경) →
+  매니저(Jinny 신규). 오너 메시지의 빈 "4." 항목은 미지정으로 무시(추가 카테고리 도착 시 확장).
+- **세로 포트레이트**: 카드에 3:4 슬롯 신설. 사진 = 오너 제공분만(Aiden·Jiseon — 제공 = 게시 동의),
+  **나머지(Lucia·Yena·Jinny)는 공란(placeholder) — 오너 지시** ("나머지 스태프는 공란으로").
+  bio 는 여전히 미제공 → 이름·역할까지만.
+- **DB**: `team_members.photo_path` 추가(`add_team_member_photo_path`) + role_key CHECK 확장
+  producer·vocalDirector·**manager** (`team_role_key_check_add_manager`) — §7-B 개별 승인 2건.
+- **i18n**: `studios.team.roles.manager` 5로케일 신설 — ja·zh 기계번역 감수 대상(Aiden 몫).

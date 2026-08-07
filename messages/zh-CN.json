@@ -299,7 +299,8 @@
       "heading": "团队",
       "roles": {
         "producer": "制作人",
-        "vocalDirector": "声乐总监"
+        "vocalDirector": "声乐总监",
+        "manager": "经理"
       }
     }
   },
