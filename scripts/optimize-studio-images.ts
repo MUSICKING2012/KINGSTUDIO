@@ -41,6 +41,24 @@ async function main() {
     process.exit(1);
   }
 
+  // 출력명 충돌 사전 검증 — recursive 순회는 부모 경로를 출력명에 반영하지 않으므로 같은
+  // basename 이 서로 덮어쓸 수 있고, 비 ASCII 전용 basename 은 빈 stem 이 된다. 쓰기 전 전량 검사.
+  const outNames = new Map<string, string>();
+  for (const entry of images) {
+    const srcPath = path.join(entry.parentPath, entry.name);
+    const stem = toKebab(entry.name);
+    if (!stem) {
+      console.error(`빈 출력명(비 ASCII basename?): ${srcPath}`);
+      process.exit(1);
+    }
+    const dup = outNames.get(stem);
+    if (dup) {
+      console.error(`출력명 충돌: ${dup} ↔ ${srcPath} → ${stem}.jpg`);
+      process.exit(1);
+    }
+    outNames.set(stem, srcPath);
+  }
+
   for (const entry of images) {
     const srcPath = path.join(entry.parentPath, entry.name);
     const outName = `${toKebab(entry.name)}.jpg`;

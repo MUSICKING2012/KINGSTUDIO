@@ -51,9 +51,15 @@ async function main() {
   ];
   // Full-list replacement: the 2026-08-05 provisional 5 rows used different (brand-only) names,
   // so name-keyed upserts would leave stale rows behind. Marketing-content table — safe to reset.
-  await prisma.studioEquipment.deleteMany({});
-  for (const [i, item] of equipment.entries()) {
-    await prisma.studioEquipment.create({ data: { ...item, displayOrder: i + 1 } });
+  // Single transaction: a partial failure must not leave the live table empty/half-seeded
+  // (listStudioEquipment() feeds the public page directly — PR #42 review).
+  await prisma.$transaction([
+    prisma.studioEquipment.deleteMany({}),
+    ...equipment.map((item, i) =>
+      prisma.studioEquipment.create({ data: { ...item, displayOrder: i + 1 } }),
+    ),
+  ]);
+  for (const item of equipment) {
     console.log(`Seeded equipment: ${item.name} (${item.category} ×${item.quantity})`);
   }
 
