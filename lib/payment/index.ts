@@ -19,5 +19,11 @@ export type {
   CaptureResult,
   RefundInput,
   RefundResult,
+  PrepareCheckoutInput,
+  PreparedCheckout,
+  ApproveInput,
+  RedirectPaymentGateway,
 } from './types';
+// redirect(인증창) 계열은 capture 심과 별개 계약 — 이니시스 라우트가 직접 소비한다(spec §3).
+export { inicisGateway, InicisGateway, type NetCancelInput } from './inicis';
 export { computePgFeeKrw, PG_FEE_TABLE } from './fees';

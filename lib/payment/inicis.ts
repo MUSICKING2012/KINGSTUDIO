@@ -20,6 +20,9 @@ const STDPAY_JS = process.env.INICIS_STDPAY_JS ?? 'https://stgstdpay.inicis.com/
 
 const sha256 = (s: string) => createHash('sha256').update(s, 'utf8').digest('hex');
 
+/** 망취소에 필요한 최소 입력 — ApproveInput 의 부분집합(구조적 호환). */
+export type NetCancelInput = { authToken: string; netCancelUrl: string; oid: string };
+
 /** 이니시스 승인/망취소 공통 페이로드 (문서 규격 — timestamp·signature 재계산). */
 function authPayload(authToken: string) {
   const timestamp = String(Date.now());
@@ -99,7 +102,9 @@ export class InicisGateway implements RedirectPaymentGateway {
     return { ok: true, pgTransactionId: tid, pgFeeKrw: computePgFeeKrw('inicis', totPrice) };
   }
 
-  private async netCancel(input: ApproveInput): Promise<void> {
+  // public: 승인 성공 後 예약 기록 실패(슬롯 경합 패배·동의 가드 등) 시 호출부가 청구를 원복하는
+  // 경로(§5.5-D의 이니시스 판 — 환불 API 대신 망취소). 실패해도 던지지 않는다(수동 대사 대상).
+  async netCancel(input: NetCancelInput): Promise<void> {
     try {
       await postForm(input.netCancelUrl, authPayload(input.authToken));
     } catch {

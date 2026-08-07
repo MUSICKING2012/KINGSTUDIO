@@ -855,7 +855,9 @@
         "slot_unavailable": "该时段刚刚额满，请选择其他时段。",
         "payment_failed": "付款失败，请再试一次。",
         "concurrent_booking_lost": "因同时预约竞争而未能取得时段。款项将自动退还，请选择其他时间。",
-        "internal_error": "发生暂时性错误，请稍后再试。"
+        "internal_error": "发生暂时性错误，请稍后再试。",
+        "payment_auth_failed": "支付窗口认证已取消或失败。未产生任何扣款。",
+        "payment_expired": "支付会话已过期，请重试 — 未产生任何扣款。"
       },
       "success": {
         "title": "您的预约已确认",

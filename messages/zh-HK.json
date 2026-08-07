@@ -855,7 +855,9 @@
         "slot_unavailable": "該時段剛剛滿額，請選擇其他時段。",
         "payment_failed": "付款失敗，請再試一次。",
         "concurrent_booking_lost": "因同時預約競爭而未能取得時段。款項將自動退還，請選擇其他時間。",
-        "internal_error": "發生暫時性錯誤，請稍後再試。"
+        "internal_error": "發生暫時性錯誤，請稍後再試。",
+        "payment_auth_failed": "付款視窗認證已取消或失敗。未產生任何扣款。",
+        "payment_expired": "付款工作階段已逾時，請重試 — 未產生任何扣款。"
       },
       "success": {
         "title": "您的預約已確認",
